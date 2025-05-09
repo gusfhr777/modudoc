@@ -1,3 +1,3 @@
 rootProject.name = "modudoc"
 
-include("client", "server")
+include("client", "server", "common")

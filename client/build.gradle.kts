@@ -12,7 +12,7 @@ javafx {
 
 application {
     // Main 클래스 패키지 경로에 맞춰 수정하세요
-    mainClass.set("com.piltong.modudoc.client.Main")
+    mainClass.set("com.piltong.modudoc.client.ModudocClientApplication")
 }
 
 java {
@@ -31,6 +31,9 @@ dependencies {
 
     // 웹소켓 API
     implementation("org.java-websocket:Java-WebSocket:1.5.6")
+
+    // 프로젝트 공통 부분
+    implementation(project(":common"))
 }
 
 
