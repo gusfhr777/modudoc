@@ -12,7 +12,7 @@ javafx {
 
 application {
     // Main 클래스 패키지 경로에 맞춰 수정하세요
-    mainClass.set("ClientApp")
+    mainClass.set("com.piltong.modudoc.client.ClientApp")
 }
 
 java {

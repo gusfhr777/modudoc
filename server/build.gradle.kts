@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClass = "ServerApp"
+    mainClass = "com.piltong.modudoc.server.ServerApp"
 }
 
 dependencies {
