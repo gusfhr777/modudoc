@@ -1,33 +1,35 @@
 plugins {
-    java
+    id("java")
 }
 
-allprojects {
-    repositories {
-        mavenCentral()
-    }
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // test
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+
+
 }
 
 subprojects {
-    group = "com.piltong.modudoc"
-    version = "1.0.0"
+    group = "com.piltong"
+    version = "1.0-SNAPSHOT"
 
-    apply(plugin = "java")
-
-    java {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
-    }
-
-    tasks.withType<JavaCompile> {
-        options.encoding = "UTF-8"
+    repositories {
+        mavenCentral()
     }
 
     dependencies {
-        testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     }
+}
 
-    tasks.test {
-        useJUnitPlatform()
-    }
+
+
+
+tasks.test {
+    useJUnitPlatform()
 }

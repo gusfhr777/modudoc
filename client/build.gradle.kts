@@ -12,7 +12,7 @@ javafx {
 
 application {
     // Main 클래스 패키지 경로에 맞춰 수정하세요
-    mainClass.set("com.piltong.modudoc.client.ModudocClientApplication")
+    mainClass.set("ClientApp")
 }
 
 java {
@@ -20,6 +20,7 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
+
 dependencies {
     // JavaFX 컨트롤, FXML 모듈
     implementation("org.openjfx:javafx-controls:21")
@@ -29,8 +30,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    // 웹소켓 API
-    implementation("org.java-websocket:Java-WebSocket:1.5.6")
+
+    // Jackson
+//    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
 
     // 프로젝트 공통 부분
     implementation(project(":common"))
