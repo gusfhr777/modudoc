@@ -1,4 +1,4 @@
-package com.piltong.modudoc.server;
+package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.server.core.OT;
 

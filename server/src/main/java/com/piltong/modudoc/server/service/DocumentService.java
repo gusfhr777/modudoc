@@ -1,4 +1,4 @@
-package com.piltong.modudoc.server;
+package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.server.repository.DocumentRepository;
 
@@ -9,17 +9,17 @@ public class DocumentService {
 
     // 생성자에서 저장소 객체 초기화
     public DocumentService() {
-        this.documentRepository = new DocumentService();
+        this.documentRepository = new DocumentRepository();
     }
 
-    // 문서를 업데이트/저장.
+    // 문서를 업데이트/저장
     public void updateDocument(String documentId, String content) {
         documentRepository.saveDocument(documentId, content);
     }
 
     // 문서를 불러옴
     public String getDocument(String documentId) {
-        return documentId.loadDocument(documentId);
+        return documentRepository.loadDocument(documentId);
     }
 
     // 문서를 삭제함

@@ -1,4 +1,4 @@
-package com.piltong.modudoc.server;
+package com.piltong.modudoc.server.repository;
 
 import java.util.HashMap;
 import java.util.Map;

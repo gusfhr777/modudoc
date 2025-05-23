@@ -1,4 +1,4 @@
-package com.piltong.modudoc.server;
+package com.piltong.modudoc.server.core;
 
 import java.util.*;
 
