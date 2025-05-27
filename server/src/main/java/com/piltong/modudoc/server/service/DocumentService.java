@@ -8,7 +8,7 @@ public class DocumentService {
     // 실제 문서 데이터 저장소 역할을 하는 객체
     private final DocumentRepository documentRepository;
 
-    // 생성자에서 저장소 객체 초기화
+    // 생성자: 저장소 객체 초기화
     public DocumentService() {
         this.documentRepository = new DocumentRepository();
     }
@@ -26,16 +26,6 @@ public class DocumentService {
         documentRepository.saveDocument(document);
     }
 
-    // 문서를 불러옴
-    public Document getDocument(String documentId) {
-        return documentRepository.loadDocument(documentId);
-    }
-
-    // 문서를 삭제함
-    public void removeDocument(String documentId) {
-        documentRepository.deleteDocument(documentId);
-    }
-
     // 문서를 저장
     /**
      * [수정된 Document 객체 그대로 저장할 때 사용]
@@ -45,5 +35,15 @@ public class DocumentService {
      */
     public void saveDocument(Document document) {
         documentRepository.saveDocument(document);
+    }
+
+    // 문서를 불러옴
+    public Document getDocument(String documentId) {
+        return documentRepository.loadDocument(documentId);
+    }
+
+    // 문서를 삭제함
+    public void removeDocument(String documentId) {
+        documentRepository.deleteDocument(documentId);
     }
 }

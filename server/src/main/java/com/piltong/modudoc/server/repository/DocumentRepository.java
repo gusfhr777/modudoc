@@ -6,6 +6,7 @@ import com.piltong.modudoc.common.document.Document;
 
 // DB나 파일 기반 문서 저장소와 직접 연동
 public class DocumentRepository {
+    // Map을 사용. documentId를 키값으로 가진다.
     private final Map<String, Document> documentStorage = new HashMap<>();
 
     // DB 또는 파일 시스템에 저장

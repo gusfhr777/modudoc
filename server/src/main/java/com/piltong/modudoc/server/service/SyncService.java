@@ -12,7 +12,7 @@ public class SyncService {
     // 동시 편집 충돌을 해결하기 위한 OT
     private final OT operationalTransformer;
 
-    // 생성자로 문서 서비스와 OT 초기화
+    // 생성자: 문서 서비스와 OT 초기화
     public SyncService() {
         this.documentService = new DocumentService();
         this.operationalTransformer = new OT();
@@ -20,23 +20,23 @@ public class SyncService {
 
     // 클라이언트 변경사항 반영 및 브로드캐스트
     public synchronized void syncUpdate(String documentId, String operation, String senderId) {
-        // 1. 현재 문서 가져오기
+        // 현재 문서 가져오기
         Document doc = documentService.getDocument(documentId);
         if (doc == null) {
             System.err.println("[Sync Error] 문서를 찾을 수 없습니다: " + documentId);
             return;
         }
 
-        // 2. OT로 변경 내용 반영
+        // OT로 변경 내용 반영
         String current = doc.getContent();
         String updated = operationalTransformer.transform(current, operation);
 
-        // 3. 문서 내용 업데이트 및 저장
+        // 문서 내용 업데이트 및 저장
         doc.setContent(updated);
         doc.touch(); // 수정 시간 갱신
         documentService.saveDocument(doc);  // 새로 추가된 메서드
 
-        // 4. 브로드캐스트
+        // 브로드캐스트
         broadcastToOthers(documentId, updated, senderId);
     }
 
