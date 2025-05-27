@@ -110,8 +110,20 @@ public class Document{
     }
 
 
+    // DTO 객체 -> 엔티티 객체로 변환하는 함수
+    // 추후 최적화 필요
+    public static Document toEntity(DocumentDto doc) {
+        return new Document(
+                doc.getId(),
+                doc.getTitle(),
+                doc.getContent(),
+                doc.getCreatedDate(),
+                doc.getModifiedDate(),
+                List.copyOf(doc.getAccessUserIds())
+        );
+    }
 
-    // DTO 객체로 변환하는 함수
+    // 엔티티 객체 -> DTO 객체로 변환하는 함수
     // 추후 최적화 필요
     public static DocumentDto toDto(Document doc) {
         return new DocumentDto(
@@ -125,13 +137,11 @@ public class Document{
     }
 
 
-    // 엔티티 객체로 변환하는 함수
-    // 추후 최적화 필요
-    public static Document toEntity(DocumentDto doc) {
-        return new Document(
+    // 엔티티 객체 -> 요약 객체로 변환하는 함수
+    public static DocumentSummary toSummary(Document doc) {
+        return new DocumentSummary(
                 doc.getId(),
                 doc.getTitle(),
-                doc.getContent(),
                 doc.getCreatedDate(),
                 doc.getModifiedDate(),
                 List.copyOf(doc.getAccessUserIds())
