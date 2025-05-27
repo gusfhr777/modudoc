@@ -8,7 +8,7 @@ import com.piltong.modudoc.server.core.OT;
 import java.util.*;
 
 // 다수 클라이언트 간 동기화 관리
-// 충돌 방지 및 동기화를 유지하는 역할
+// OT 알고리즘을 통해 충돌을 해결
 // 변경된 내용을 다른 클라이언트에게 브로드캐스트함
 public class SyncService {
     // 문서의 저장 및 조회 담당 서비스
@@ -30,15 +30,15 @@ public class SyncService {
         Document doc = documentService.getDocument(documentId);
         String current = doc.getContent();
 
-        // Operation을 실제 Operation 객체로 변환
+        // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
         Operation op = Operation.toEntity(dto);
 
-        // 편집 기록이 없다면 새로 생성
+        // 문서별 히스토리가 없다면 새로 생성
         if (!operationHistory.containsKey(documentId)) {
             operationHistory.put(documentId, new ArrayList<>());
         }
 
-        // 이전 모든 연산을 기준으로 현재 연산 위치 조정
+        // 이전 모든 연산을 기준으로 현재 연산 위치 조정(OT 알고리즘 적용)
         Operation transformedOp = ot.transformAgainstAll(op, operationHistory.get(documentId));
         // 조정된 연산을 문자열에 적용
         String updated = ot.apply(current, transformedOp);
