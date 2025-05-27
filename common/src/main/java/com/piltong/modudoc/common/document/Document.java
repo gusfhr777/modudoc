@@ -1,4 +1,4 @@
-package com.piltong.modudoc.common;
+package com.piltong.modudoc.common.document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -107,5 +107,34 @@ public class Document{
             accessUserIds.add(userId);
             touch();
         }
+    }
+
+
+
+    // DTO 객체로 변환하는 함수
+    // 추후 최적화 필요
+    public static DocumentDto toDto(Document doc) {
+        return new DocumentDto(
+                doc.getId(),
+                doc.getTitle(),
+                doc.getContent(),
+                doc.getCreatedDate(),
+                doc.getModifiedDate(),
+                List.copyOf(doc.getAccessUserIds())
+        );
+    }
+
+
+    // 엔티티 객체로 변환하는 함수
+    // 추후 최적화 필요
+    public static Document toEntity(DocumentDto doc) {
+        return new Document(
+                doc.getId(),
+                doc.getTitle(),
+                doc.getContent(),
+                doc.getCreatedDate(),
+                doc.getModifiedDate(),
+                List.copyOf(doc.getAccessUserIds())
+        );
     }
 }
