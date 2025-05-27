@@ -26,7 +26,7 @@ public class OT {
             this(type, position, null);
         }
 
-        public Operation copt() {
+        public Operation copy() {
             return new Operation(type, position, ch);
         }
 
