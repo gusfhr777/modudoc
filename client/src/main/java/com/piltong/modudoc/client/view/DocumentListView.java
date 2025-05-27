@@ -1,4 +1,4 @@
-package com.piltong.modudoc.client.ClientUI;
+package com.piltong.modudoc.client.view;
 
 import com.piltong.modudoc.common.document.Document;
 

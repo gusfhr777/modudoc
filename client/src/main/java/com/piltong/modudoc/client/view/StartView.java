@@ -1,4 +1,4 @@
-package com.piltong.modudoc.client.ClientUI;
+package com.piltong.modudoc.client.view;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
