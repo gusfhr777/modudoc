@@ -1,6 +1,11 @@
 package com.piltong.modudoc.server.network;
 
 
+import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.common.document.DocumentDto;
+import com.piltong.modudoc.common.operation.Operation;
+import com.piltong.modudoc.common.operation.OperationDto;
+
 import java.net.*;
 import java.io.*;
 import java.util.Objects;
@@ -31,10 +36,34 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void HandleRequest() {
+    // Operation 요청 함수
+    public Operation requestOperation() {
+        try {
+            return Operation.toEntity((OperationDto) in.readObject());
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
+
+    // Operation 전송 함수
+    public void sendOperation(Operation operation) {
+        try {
+            out.writeObject(Operation.toDto(operation));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Document 전송 함수
+    public void sendDocument(Document document) {
+        try {
+            out.writeObject(Document.toDto(document));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // 핸들러 종료
     public void shutdown() {

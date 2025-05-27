@@ -1,10 +1,8 @@
-package com.piltong.modudoc.common;
+package com.piltong.modudoc.common.document;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 // 서버, 클라에서 통신을 하기 위한 목적을 가진 문서 DTO(Data Transfer Object) 클래스
 // 문서 DTO : 통신용으로 전달하기 위한 문서 객체
