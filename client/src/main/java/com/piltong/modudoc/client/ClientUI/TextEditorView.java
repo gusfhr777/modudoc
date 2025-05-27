@@ -13,9 +13,9 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.richtext.model.StyledDocument;
 
-import com.piltong.modudoc.common.Document;
+import com.piltong.modudoc.common.document.Document;
 
-
+//텍스트 편집기를 생성
 public class TextEditorView {
     InlineCssTextArea editor = new InlineCssTextArea();
     Button boldButton = new Button("Bold");
@@ -107,6 +107,7 @@ public class TextEditorView {
                 });
     }
 
+    //토글 형식의 스타일 변경용 메소드
     //볼드, 및줄과 같이 버튼식으로 css적용시 사용
     void toggleCssStyle(InlineCssTextArea area, String cssFragment) {
         int start = area.getSelection().getStart();
@@ -143,12 +144,11 @@ public class TextEditorView {
         area.setStyleSpans(start, builder.create());
     }
 
-    //css추가, 이미 적용되어 있을 시 상태 유지
+    //스타일을 새롭게 추가할 때 사용하는 메소드
+    //기존에 스타일이 존재할 시 변경하지 않는다.
     void addCssStyle(InlineCssTextArea area, String cssFragment, String value) {
         int start = area.getSelection().getStart();
         int end = area.getSelection().getEnd();
-
-
 
         StyleSpans<String> spans = area.getStyleSpans(start, end);
 
@@ -165,6 +165,8 @@ public class TextEditorView {
 
         area.setStyleSpans(start, builder.create());
     }
+
+    //
     String toCssColor(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),

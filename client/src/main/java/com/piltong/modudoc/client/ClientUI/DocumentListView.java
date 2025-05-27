@@ -1,8 +1,8 @@
 package com.piltong.modudoc.client.ClientUI;
 
-import com.piltong.modudoc.common.Document;
-import com.piltong.modudoc.client.ClientController;
+import com.piltong.modudoc.common.document.Document;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -13,15 +13,17 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DocumentListView {
     TableView<Document> documentTable = new TableView<>();
     TableColumn<Document, String> titleColumn = new TableColumn<>("파일 이름");
-    TableColumn<Document, LocalDateTime> createdDateColumn = new TableColumn<>("생성 일자");
-    TableColumn<Document, LocalDateTime> modifiedDateColumn = new TableColumn<>("수정 일자");
+    TableColumn<Document, String> createdDateColumn = new TableColumn<>("생성 일자");
+    TableColumn<Document, String> modifiedDateColumn = new TableColumn<>("수정 일자");
     TableColumn<Document, Integer> usercountColumn = new TableColumn<>("접속 인원");
     VBox vBox = new VBox();
     HBox hBox = new HBox();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     Button createButton = new Button("파일 생성");
     Button InButton = new Button("파일 접속");
@@ -34,9 +36,12 @@ public class DocumentListView {
 
     void initComponents() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        createdDateColumn.setCellValueFactory(new PropertyValueFactory<>("createdDate"));
+        createdDateColumn.setCellValueFactory(celldata ->{
+            LocalDateTime time = celldata.getValue().getCreatedDate();
+            return new SimpleStringProperty(time.format(formatter));
+        });
         modifiedDateColumn.setCellValueFactory(new PropertyValueFactory<>("modifiedDate"));
-        usercountColumn.setCellValueFactory(new PropertyValueFactory<>("userCount"));
+
         TableView.TableViewSelectionModel<Document> selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
@@ -103,6 +108,7 @@ class CreateDocumentView {
         nameField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 //엔터를 입력했을 때 이벤트
+
             }
         });
 
