@@ -2,19 +2,20 @@ package com.piltong.modudoc.server.repository;
 
 import java.util.HashMap;
 import java.util.Map;
+import com.piltong.modudoc.common.Document;
 
 // DB나 파일 기반 문서 저장소와 직접 연동
 public class DocumentRepository {
-    private final Map<String, String> documentStorage = new HashMap<>();
+    private final Map<String, Document> documentStorage = new HashMap<>();
 
     // DB 또는 파일 시스템에 저장
-    public synchronized void saveDocument(String documentId, String content) {
-        documentStorage.put(documentId, content);
+    public synchronized void saveDocument(Document document) {
+        documentStorage.put(document.getId(), document);
     }
 
     // 저장소에서 문서 불러오기
-    public synchronized String loadDocument(String documentId) {
-        return documentStorage.getOrDefault(documentId, "");
+    public synchronized Document loadDocument(String documentId) {
+        return documentStorage.get(documentId);
     }
 
     // 문서 삭제
