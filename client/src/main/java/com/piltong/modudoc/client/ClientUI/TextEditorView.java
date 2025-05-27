@@ -21,31 +21,39 @@ public class TextEditorView {
     Button boldButton = new Button("Bold");
     Button underbarButton = new Button("Underbar");
     ColorPicker colorPicker = new ColorPicker();
-
+    ToolBar toolBar = new ToolBar();
+    VBox root = new VBox();
     ComboBox<Integer> fontSizeBox = new ComboBox<>();
-    TextEditorView(Document document) {
+
+
+    public TextEditorView(Document document) {
+        initComponent(document);
         initLayout();
-
-
+        initListeners();
     }
 
-    void initLayout() {
-        editor.setStyle("-fx-font-family: Arial;");
+    void initComponent(Document document) {
+        editor.setStyle("-fx-font-family: Arial; -fx-font-scale: 14;");
         editor.setParagraphGraphicFactory(LineNumberFactory.get(editor));
-
-        colorPicker.getStyleClass().add("split-button");
         for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
             fontSizeBox.getItems().add(size);
         }
         fontSizeBox.setValue(14);
-        ToolBar toolbar1 = new ToolBar();
-        ToolBar toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox);
-        VBox root = new VBox();
+
+    }
+
+    void initLayout() {
+
+        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox);
+        root = new VBox();
         root.getChildren().addAll(toolBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
         Scene scene = new Scene(root,800,600);
     }
+
+
     void initListeners() {
+
         boldButton.setOnAction(e -> {
             toggleCssStyle(editor, "-fx-font-weight: BOLD");
 
@@ -65,6 +73,7 @@ public class TextEditorView {
         });
 
 
+        //추가 혹은 삭제된 텍스트가 있을 시(텍스트 변화 시) 이벤트 발생
         editor.richChanges()
                 .filter(ch -> !ch.getInserted().getText().isEmpty() || !ch.getRemoved().getText().isEmpty())
                 .subscribe(change -> {
@@ -81,37 +90,24 @@ public class TextEditorView {
 
                     if(textChanged){
                         if(!removed.getText().isEmpty()){
-                            System.out.println("remove: " + removedText);
+                            //텍스트 제거시 이벤트
 
                         }
                         if(!inserted.getText().isEmpty()){
+                            //텍스트 추가시 이벤트
 
-                            int styleSpans = inserted.getStyleSpans(0,inserted.length()).getSpanCount();
-                            System.out.println("inserted text: " + insertedText);
-                            System.out.println("styleSpans: "+styleSpans);
-                            for(int i = 0;i<inserted.length(); i+=inserted.getStyleRangeAtPosition(i).getLength()){
-                                System.out.println("i "+i+", style: "+inserted.getStyleAtPosition(i)+", length: "+inserted.getStyleRangeAtPosition(i).getLength());
-                                if(inserted.getStyleRangeAtPosition(i).getLength()==0) i++;
-                            }
                         }
                     }
                     else if(styleChanged){
+                        //스타일만 변화했을 때 이벤트
 
-                        int styleSpans = inserted.getStyleSpans(0,change.getNetLength()).getSpanCount();
-                        to+=inserted.length();
-                        System.out.println("styleSpans: "+styleSpans);
-                        for(int i = 0;i<inserted.length(); i+=change.getInserted().getStyleRangeAtPosition(i).getLength()){
-                            System.out.println("style: "+inserted.getStyleAtPosition(i)+", length: "+inserted.getStyleRangeAtPosition(i).getLength());
-                        }
                     }
 
-                    System.out.println("start: " + from);
-                    System.out.println("end: " + to);
 
-                    //System.out.println("inserted style: " + insertedStyle);
-                    System.out.println("");
                 });
     }
+
+    //볼드, 및줄과 같이 버튼식으로 css적용시 사용
     void toggleCssStyle(InlineCssTextArea area, String cssFragment) {
         int start = area.getSelection().getStart();
         int end = area.getSelection().getEnd();
@@ -119,10 +115,12 @@ public class TextEditorView {
 
         StyleSpans<String> spans = area.getStyleSpans(start, end);
 
+        //이미 해당 스타일을 보유하고 있는지 확인
         boolean allHasStyle = spans.stream()
                 .allMatch(span -> span.getStyle().contains(cssFragment));
 
         StyleSpansBuilder<String> builder = new StyleSpansBuilder<>();
+
         for (StyleSpan<String> span : spans) {
             String oldStyle = span.getStyle();
             String newStyle;
@@ -144,6 +142,8 @@ public class TextEditorView {
 
         area.setStyleSpans(start, builder.create());
     }
+
+    //css추가, 이미 적용되어 있을 시 상태 유지
     void addCssStyle(InlineCssTextArea area, String cssFragment, String value) {
         int start = area.getSelection().getStart();
         int end = area.getSelection().getEnd();
@@ -171,6 +171,7 @@ public class TextEditorView {
                 (int) (color.getGreen() * 255),
                 (int) (color.getBlue() * 255));
     }
+
     String mergeOrReplaceStyle(String original, String key, String value) {
         if (original == null) original = "";
         String[] parts = original.split(";");
@@ -192,5 +193,22 @@ public class TextEditorView {
         }
 
         return result.toString().trim();
+    }
+    void insertText(StyledDocument<String,String,String> styledDocument, int start) {
+        editor.insert(start, styledDocument);
+    }
+
+    StyledDocument<String,String,String> getStyledDocument(int start,int end) {
+        return editor.getDocument().subSequence(start, end);
+    }
+    void deleteText(int start,int end) {
+        editor.deleteText(start, end);
+    }
+    void modifyText(StyledDocument<String,String,String> styledDocument,int start,int end) {
+        deleteText(start,end);
+        insertText(styledDocument,start);
+    }
+    void ggg() {
+
     }
 }

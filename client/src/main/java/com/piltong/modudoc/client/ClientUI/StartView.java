@@ -14,18 +14,9 @@ public class StartView {
     TextField nameField = new TextField();
     Button LoginButton = new Button("접속");
     Label promptLabel = new Label("");
-    StartView() {
+    public StartView() {
         initLayout();
-        LoginButton.setOnAction(e -> {
-            //접속 버튼을 입력했을 때 이벤트
-
-        });
-        nameField.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                //엔터를 입력했을 때 이벤트
-            }
-        });
-
+        initListeners();
     }
 
     void initLayout() {
@@ -42,13 +33,28 @@ public class StartView {
         startStage.show();
     }
 
-    String getText() {
+    //모든 이벤트 처리
+    void initListeners() {
+        LoginButton.setOnAction(e -> {
+            //접속 버튼을 입력했을 때 이벤트
+
+        });
+        nameField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                //엔터를 입력했을 때 이벤트
+
+            }
+        });
+
+    }
+
+    public String getText() {
         return nameField.getText();
     }
-    void setText(String text) {
+    public void setText(String text) {
         nameField.setText(text);
     }
-    void setPromptText(String text) {
+    public void setPromptText(String text) {
         promptLabel.setText(text);
     }
 }
