@@ -31,8 +31,8 @@ class CreateDocumentView {
         Scene scene = new Scene(grid, 300, 60);
         createStage.setScene(scene);
         createStage.setTitle("생성");
-        createStage.show();
     }
+
     //모든 이벤트 처리
     void initListeners() {
         createButton.setOnAction(e -> {
@@ -46,6 +46,10 @@ class CreateDocumentView {
             }
         });
 
+    }
+
+    void showView() {
+        createStage.show();
     }
 
     public String getTitle() {

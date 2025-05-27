@@ -42,6 +42,8 @@ public class DocumentListView {
     Button DeleteButton = new Button("파일 삭제");
     Button ModifyButton = new Button("파일 수정");
 
+    Stage DocumentListStage = new Stage();
+
     //각 구성요소들을 초기화하는 메소드
     void initComponents() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -58,12 +60,17 @@ public class DocumentListView {
         selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
+
     }
     //각 구성요소들을 배치하는 메소드
     void initLayout() {
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, DeleteButton);
         vBox.getChildren().addAll(hBox, documentTable);
         documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn, usercountColumn);
+        Scene scene = new Scene(vBox);
+        DocumentListStage.setScene(scene);
+        DocumentListStage.setTitle("파일 목록");
+
     }
 
     //이벤트들을 감지하는 메소드
@@ -80,6 +87,10 @@ public class DocumentListView {
         DeleteButton.setOnAction(e -> {
             //삭제 버튼 입력시 이벤트
         });
+    }
+
+    void viewShow() {
+        DocumentListStage.show();
     }
 
     //목록에 문서를 추가하는 메소드

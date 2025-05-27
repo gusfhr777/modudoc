@@ -5,6 +5,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -24,16 +25,20 @@ public class TextEditorView {
     ToolBar toolBar = new ToolBar(); //텍스트 편집에 사용될 요소들이 들어갈 창
     VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
-
+    Stage textEditorStage = new Stage();
 
 
     //구성요소들을 초기화하는 메소드
     void initComponent(Document document) {
+        //기본 스타일 설정
         editor.setStyle("-fx-font-family: Arial; -fx-font-scale: 14;");
+        //왼쪽에 텍스트 줄 표시
         editor.setParagraphGraphicFactory(LineNumberFactory.get(editor));
+        //폰트 선택 박스 설정
         for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
             fontSizeBox.getItems().add(size);
         }
+        //기본 폰트 값 설정
         fontSizeBox.setValue(14);
         //editor.insert(0,document.getContent());
 
@@ -47,8 +52,9 @@ public class TextEditorView {
         root.getChildren().addAll(toolBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
         Scene scene = new Scene(root,800,600);
-    }
+        textEditorStage.setScene(scene);
 
+    }
 
     //이벤트를 감지하는 메소드
     void initListeners() {
@@ -111,6 +117,11 @@ public class TextEditorView {
 
 
                 });
+    }
+
+
+    void showView() {
+        textEditorStage.show();
     }
 
     //토글 형식의 스타일 변경용 메소드
@@ -210,15 +221,18 @@ public class TextEditorView {
 
         return result.toString().trim();
     }
-    void insertText(StyledDocument<String,String,String> styledDocument, int start) {
-        editor.insert(start, styledDocument);
-    }
 
 
     //입력받은 영역의 문자 및 스타일 반환
     StyledDocument<String,String,String> getStyledDocument(int start,int end) {
         return editor.getDocument().subSequence(start, end);
     }
+
+    //텍스트를 위치에 추가
+    void insertText(StyledDocument<String,String,String> styledDocument, int start) {
+        editor.insert(start, styledDocument);
+    }
+
     //입력받은 영역의 텍스트 삭제
     void deleteText(int start,int end) {
         editor.deleteText(start, end);
