@@ -1,6 +1,6 @@
 package com.piltong.modudoc.server.service;
 
-import com.piltong.modudoc.common.Document;
+import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.server.repository.DocumentRepository;
 
 // 문서 관련 비즈니스 로직 (수정/저장/가져오기 등)

@@ -1,6 +1,6 @@
 package com.piltong.modudoc.server.service;
 
-import com.piltong.modudoc.common.Document;
+import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.server.core.OT;
 
 // 다수 클라이언트 간 동기화 관리

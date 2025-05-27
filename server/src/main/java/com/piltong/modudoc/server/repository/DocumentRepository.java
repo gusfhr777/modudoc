@@ -2,7 +2,7 @@ package com.piltong.modudoc.server.repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import com.piltong.modudoc.common.Document;
+import com.piltong.modudoc.common.document.Document;
 
 // DB나 파일 기반 문서 저장소와 직접 연동
 public class DocumentRepository {
