@@ -1,7 +1,11 @@
 package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.common.operation.Operation;
+import com.piltong.modudoc.common.operation.OperationDto;
 import com.piltong.modudoc.server.core.OT;
+
+import java.util.*;
 
 // 다수 클라이언트 간 동기화 관리
 // 충돌 방지 및 동기화를 유지하는 역할
@@ -10,31 +14,39 @@ public class SyncService {
     // 문서의 저장 및 조회 담당 서비스
     private final DocumentService documentService;
     // 동시 편집 충돌을 해결하기 위한 OT
-    private final OT operationalTransformer;
+    private final OT ot;
+    // 편집 기록을 저장하는 히스토리 맵
+    private final Map<String, List<Operation>> operationHistory = new HashMap<>();
 
     // 생성자: 문서 서비스와 OT 초기화
     public SyncService() {
         this.documentService = new DocumentService();
-        this.operationalTransformer = new OT();
+        this.ot = new OT();
     }
 
     // 클라이언트 변경사항 반영 및 브로드캐스트
-    public synchronized void syncUpdate(String documentId, String operation, String senderId) {
+    public synchronized void syncUpdate(String documentId, OperationDto dto, String senderId) {
         // 현재 문서 가져오기
         Document doc = documentService.getDocument(documentId);
-        if (doc == null) {
-            System.err.println("[Sync Error] 문서를 찾을 수 없습니다: " + documentId);
-            return;
+        String current = doc.getContent();
+
+        // Operation을 실제 Operation 객체로 변환
+        Operation op = Operation.toEntity(dto);
+
+        // 편집 기록이 없다면 새로 생성
+        if (!operationHistory.containsKey(documentId)) {
+            operationHistory.put(documentId, new ArrayList<>());
         }
 
-        // OT로 변경 내용 반영
-        String current = doc.getContent();
-        String updated = operationalTransformer.transform(current, operation);
+        // 이전 모든 연산을 기준으로 현재 연산 위치 조정
+        Operation transformedOp = ot.transformAgainstAll(op, operationHistory.get(documentId));
+        // 조정된 연산을 문자열에 적용
+        String updated = ot.apply(current, transformedOp);
 
-        // 문서 내용 업데이트 및 저장
+        // 문서 내용 갱신
         doc.setContent(updated);
-        doc.touch(); // 수정 시간 갱신
-        documentService.saveDocument(doc);  // 새로 추가된 메서드
+        documentService.saveDocument(doc);
+        operationHistory.get(documentId).add(transformedOp);
 
         // 브로드캐스트
         broadcastToOthers(documentId, updated, senderId);
