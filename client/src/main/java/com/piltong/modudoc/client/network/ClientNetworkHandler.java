@@ -26,29 +26,40 @@ public class ClientNetworkHandler implements Runnable{
 
     }
 
+
+
+    // 클라이언트 네트워크 핸들러의 메인 로직
+    // 스레드를 통해 실행할 때, 처음 실행되는 지점이다.
+    // 오브젝트 인풋에 대해 다룬다.
     @Override
     public void run() {
         try {
-            // (스트림 초기화 순서 주의) out 다음 in을 해야한다.
+            // 스트림 초기화 순서 주의 : out 다음 in을 해야한다.
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        // 인터럽트 받기 전까지 무한 반복
-        // 서버로부터 데이터 입력을 대기한다.
-//        try {
-//            while (!Thread.currentThread().isInterrupted()) {
-//                // 작성 必
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } finally {
-//            shutdown();
-//        }
 
+        try {
+            // 인터럽트 받기 전까지 무한 반복
+            while (!Thread.currentThread().isInterrupted()) {
+                Object msg = in.readObject(); // 오브젝트 읽기
 
+                if (msg instanceof OperationDto) { // OperationDTO 형식인 경우
+
+                } else if (msg instanceof DocumentDto) { // DocumentDTO 형식인 경우
+
+                }
+
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+
+        } finally { // 핸들러 처리 이후
+            shutdown(); // 종료
+        }
 
     }
 
@@ -67,7 +78,8 @@ public class ClientNetworkHandler implements Runnable{
     // Operation 전송 함수
     public void sendOperation(Operation operation) {
         try {
-            out.writeObject(Operation.toDto(operation));
+            out.writeObject(Operation.toDto(operation)); // 전송 버퍼에 로드
+            out.flush(); // 전송
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
