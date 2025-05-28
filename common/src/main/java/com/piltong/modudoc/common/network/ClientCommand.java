@@ -1,13 +1,53 @@
 package com.piltong.modudoc.common.network;
 
+import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.common.document.DocumentSummary;
+import com.piltong.modudoc.common.operation.Operation;
 
-// 클라이언트에서 서버에게 실행가능한 명령어 모음.
-// 클라 -> 서버 -> 클라로의 요청이 이루어진다.
+
+/**
+ * 클라이언트에서 서버로 전송 가능한 명령어 종류를 정의한 열거형입니다.
+ */
 public enum ClientCommand {
-    CREATE_DOCUMENT, // 문서를 생성한다. DocumentSummary created
-    READ_DOCUMENT, // 문서를 읽는다.
-    UPDATE_DOCUMENT, // 문서를 업데이트한다.
-    DELETE_DOCUMENT, // 문서를 삭제한다.
-    READ_DOCUMENT_SUMMARIES, // 문서 요약 리스트 객체를 읽는다.
-    PROPAGATE_OPERATION, // Operation을 서버와 다른 클라이언트에 전파한다. 클라A -> 서버 -> 클라B(전파), 클라A(성공여부)로 데이터가 전달된다.
+    /**
+     * 문서 생성 명령.
+     * 요청 데이터: null
+     * 응답 데이터: {@link DocumentSummary}
+     */
+    CREATE_DOCUMENT,
+
+    /**
+     * 단일 문서 조회 명령.
+     * 요청 데이터: String (readId)
+     * 응답 데이터: {@link Document}
+     */
+    READ_DOCUMENT,
+
+    /**
+     * 문서 수정 명령.
+     * 요청 데이터: {@link DocumentSummary} (updated)
+     * 응답 데이터: null
+     */
+    UPDATE_DOCUMENT,
+
+    /**
+     * 문서 삭제 명령.
+     * 요청 데이터: String (deleteId)
+     * 응답 데이터: null
+     */
+    DELETE_DOCUMENT,
+
+    /**
+     * 문서 요약 리스트 조회 명령.
+     * 요청 데이터: null
+     * 응답 데이터: {@code List<DocumentSummary>}
+     */
+    READ_DOCUMENT_SUMMARIES,
+
+    /**
+     * Operation 전파 명령.
+     * 요청 데이터: {@link Operation}
+     * 응답 데이터: null
+     */
+    PROPAGATE_OPERATION;
 }

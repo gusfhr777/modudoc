@@ -1,38 +1,40 @@
 package com.piltong.modudoc.common.network;
 
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentSummary;
-import com.piltong.modudoc.common.operation.Operation;
+import com.piltong.modudoc.common.network.CommandException;
+import com.piltong.modudoc.common.network.ClientCommand;
 
-import java.net.Socket;
-import java.util.List;
-
-
-// 서버 네트워크 핸들러 측에서 서비스 로직에 접근하기 위한 인터페이스.
-// 서버에서 서비스 로직 <-> 네트워크 핸들러 접속을 위한 인터페이스를 정의한다.
-// 예를 들어, 서버가 클라로부터 OperationDTO를 전송받으면, 서버의 네트워크 핸들러는 서버의 서비스 로직에서 구현한 onOperationReceived 메소드를 호출한다.
-// 이후 서비스 로직 측에서 Operation 입력을 받았을 때의 로직을 처리한다.
+/**
+ * 서버 네트워크 핸들러와 서비스 로직 간의 연결을 위한 인터페이스입니다.
+ * 네트워크 핸들러는 클라이언트로부터 수신된 Command 요청을 이 인터페이스를 통해 서비스 로직에 전달하고,
+ * 처리 결과를 반환합니다.
+ */
 public interface ServerNetworkListener {
 
+    /**
+     * 클라이언트로부터 명령 요청을 수신했을 때 호출됩니다.
+     *
+     * @param <T>       요청 페이로드의 타입
+     * @param <R>       응답 페이로드의 타입
+     * @param command   수신된 {@link ClientCommand} 명령
+     * @param payload   명령 실행에 필요한 데이터
+     * @return 처리 결과 데이터. {@code command}에 따라 다음과 같은 타입으로 반환됩니다:
+     *         <ul>
+     *           <li>{@link ClientCommand#CREATE_DOCUMENT}         → {@link com.piltong.modudoc.common.document.DocumentSummary}</li>
+     *           <li>{@link ClientCommand#READ_DOCUMENT}           → {@link com.piltong.modudoc.common.document.Document}</li>
+     *           <li>{@link ClientCommand#READ_DOCUMENT_SUMMARIES} → {@code List<com.piltong.modudoc.common.document.DocumentSummary>}</li>
+     *           <li>{@link ClientCommand#UPDATE_DOCUMENT}         → {@link com.piltong.modudoc.common.document.DocumentSummary}</li>
+     *           <li>{@link ClientCommand#DELETE_DOCUMENT}         → {@code String} (삭제된 문서 ID)</li>
+     *           <li>{@link ClientCommand#PROPAGATE_OPERATION}     → {@link com.piltong.modudoc.common.operation.Operation}</li>
+     *         </ul>
+     * @throws CommandException 비즈니스 로직 처리 중 에러가 발생한 경우 던집니다.
+     */
+    <T, R> R onCommandReceived(ClientCommand command, T payload) throws CommandException;
 
-    // 클라이언트 접속/종료. 네트워크 핸들러는 네트워크 레벨을 추상화하므로, 소켓 관련 메소드는 필요하지 않음.
-//    void onClientConnected(Socket client); // 클라이언트 연결 성공 시(필요 시, 소켓 정보 넘김)
-//    void onClientDisConnected(Socket client); // 클라이언트 연결 종료 시(필요 시, 소켓 정보 넘김)
-
-    // 문서 관련 CRUD 메소드. 클라로부터 수신한 CRUD 명령에 대해 처리한다.
-    DocumentSummary handleCreateDocument(); // 문서 생성 메소드. 생성한 문서의 요약 객체를 리턴한다. 실패 시, null을 리턴한다.
-    Document handleReadDocument(String readId); // 문서 읽기 메소드. ID가 일치하는 문서를 리턴한다. 실패 시, null을 리턴한다.
-    DocumentSummary handleUpdateDocument(DocumentSummary updated); // 문서 수정 메소드. 수정한 문서의 요약 객체를 리턴한다. 실패 시, null을 리턴한다.
-    String handleDeleteDocument(String deleteId); // 문서 삭제 메소드. ID가 일치하는 문서를 삭제한다. 삭제한 문서의 ID를 리턴한다. 실패 시, null을 리턴한다.
-
-
-    // Operatino 관련 메소드. 클라로부터 수신한 Operation 리턴 명령에 대해 처리한다.
-    void handleOperation(Operation op); // 클라로부터 Operation을 수신 수신받을 때 실행하는 메소드. 중앙의 문서를 수정한다. 브로드캐스팅은 네트워크 핸들러가 자동으로 수행한다.
-
-
-    // 에러 관련 메소드
-    void onNetworkError(Throwable t); // 네트워크 에러 발생 시, 실행하는 메소드
-
+    /**
+     * 네트워크 연결 또는 I/O 처리 중 예외가 발생했을 때 호출됩니다.
+     *
+     * @param t 발생한 예외 {@link Throwable} 객체로, 스택 트레이스 등을 통해 원인 분석이 가능합니다.
+     */
+    void onNetworkError(Throwable t);
 
 }
-
