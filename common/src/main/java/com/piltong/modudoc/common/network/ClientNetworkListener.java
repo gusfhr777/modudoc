@@ -32,7 +32,6 @@ public interface ClientNetworkListener {
      */
     void onOperationReceived(Operation op);
 
-
     /**
      * 서버 또는 네트워크 처리 중 예외가 발생했을 때 호출됩니다.
      *
