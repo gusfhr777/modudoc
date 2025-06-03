@@ -19,9 +19,7 @@ class CreateDocumentView {
 
     Stage createStage = new Stage();
 
-    public CreateDocumentView() {
 
-    }
     void initLayout() {
         grid.add(nameLabel, 0, 0);
         grid.add(nameField, 1, 0);
@@ -48,21 +46,30 @@ class CreateDocumentView {
 
     }
 
+    //화면 출력
     void showView() {
         createStage.show();
     }
 
-    public String getTitle() {
-        return nameField.getText();
-    }
-    public void setTitle(String title) {
-        nameField.setText(title);
-    }
-    public void setPrompt(String prompt) {
-        promptLabel.setText(prompt);
-    }
+    //화면 종료
     public void closeView() {
         createStage.close();
     }
+
+    //작성한 문서 제목 가져오기
+    public String getTitle() {
+        return nameField.getText();
+    }
+
+    //텍스트 필드의 문자 설정
+    public void setTitle(String title) {
+        nameField.setText(title);
+    }
+
+    //텍스트필드 밑 안내 문구 설정
+    public void setPrompt(String prompt) {
+        promptLabel.setText(prompt);
+    }
+
 }
 

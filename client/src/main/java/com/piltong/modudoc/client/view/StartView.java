@@ -14,16 +14,19 @@ public class StartView {
     TextField nameField = new TextField();
     Button LoginButton = new Button("접속");
     Label promptLabel = new Label("");
+<<<<<<< Updated upstream
 
     Stage startStage = new Stage();
 
+
+    //구성요소들을 배치하는 메소드
+=======
     public StartView() {
         initLayout();
         initListeners();
     }
 
-
-    //구성요소들을 배치하는 메소드
+>>>>>>> Stashed changes
     void initLayout() {
         grid.add(nameLabel, 0, 0);
         grid.add(nameField, 1, 0);
@@ -31,13 +34,14 @@ public class StartView {
         grid.add(promptLabel, 1, 1);
         grid.setHgap(10);
 
+        Stage startStage = new Stage();
         Scene scene = new Scene(grid, 300, 60);
         startStage.setScene(scene);
         startStage.setTitle("접속");
-
+        startStage.show();
     }
 
-    //모든 이벤트를 감지하는 메소드
+    //모든 이벤트 처리
     void initListeners() {
         LoginButton.setOnAction(e -> {
             //접속 버튼을 입력했을 때 이벤트
@@ -51,19 +55,22 @@ public class StartView {
         });
 
     }
+<<<<<<< Updated upstream
     void viewShow() {
         startStage.show();
     }
+    void viewClose() {
+        startStage.close();
+    }
+=======
+>>>>>>> Stashed changes
 
-    //텍스트 입력 칸의 텍스트를 반환한다
     public String getText() {
         return nameField.getText();
     }
-    //텍스트 입력 칸에 텍스트를 설정한다.
     public void setText(String text) {
         nameField.setText(text);
     }
-    //텍스트 칸 밑에 설명 텍스트를 설정한다.
     public void setPromptText(String text) {
         promptLabel.setText(text);
     }

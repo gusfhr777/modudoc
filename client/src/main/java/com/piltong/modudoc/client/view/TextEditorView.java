@@ -5,7 +5,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.LineNumberFactory;
@@ -18,6 +17,8 @@ import com.piltong.modudoc.common.document.Document;
 
 //텍스트 편집기를 생성
 public class TextEditorView {
+<<<<<<< Updated upstream
+
     InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
     Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
     Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
@@ -25,26 +26,41 @@ public class TextEditorView {
     ToolBar toolBar = new ToolBar(); //텍스트 편집에 사용될 요소들이 들어갈 창
     VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
+
+
     Stage textEditorStage = new Stage();
+=======
+    InlineCssTextArea editor = new InlineCssTextArea();
+    Button boldButton = new Button("Bold");
+    Button underbarButton = new Button("Underbar");
+    ColorPicker colorPicker = new ColorPicker();
+    ToolBar toolBar = new ToolBar();
+    VBox root = new VBox();
+    ComboBox<Integer> fontSizeBox = new ComboBox<>();
+>>>>>>> Stashed changes
 
 
-    //구성요소들을 초기화하는 메소드
+    public TextEditorView(Document document) {
+        initComponent(document);
+        initLayout();
+        initListeners();
+    }
+
     void initComponent(Document document) {
-        //기본 스타일 설정
         editor.setStyle("-fx-font-family: Arial; -fx-font-scale: 14;");
-        //왼쪽에 텍스트 줄 표시
         editor.setParagraphGraphicFactory(LineNumberFactory.get(editor));
-        //폰트 선택 박스 설정
         for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
             fontSizeBox.getItems().add(size);
         }
-        //기본 폰트 값 설정
         fontSizeBox.setValue(14);
-        //editor.insert(0,document.getContent());
+<<<<<<< Updated upstream
+        //내부 텍스트 설정
+        //editor.insert(0,document.getContent().length(),document.getContent());
+=======
+>>>>>>> Stashed changes
 
     }
 
-    //구성요소들을 배치하는 메소드
     void initLayout() {
 
         toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox);
@@ -52,29 +68,31 @@ public class TextEditorView {
         root.getChildren().addAll(toolBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
         Scene scene = new Scene(root,800,600);
-        textEditorStage.setScene(scene);
-
     }
 
-    //이벤트를 감지하는 메소드
+
     void initListeners() {
 
-        //볼드 버튼이 눌렸을 때
         boldButton.setOnAction(e -> {
             toggleCssStyle(editor, "-fx-font-weight: BOLD");
 
         });
-        //및줄 버튼이 눌렸을 때
         underbarButton.setOnAction(e -> {
             toggleCssStyle(editor,"-fx-underline: true;");
         });
+<<<<<<< Updated upstream
 
+        //색 선택기에서 색을 선택했을 때
+=======
+>>>>>>> Stashed changes
         colorPicker.setOnAction(e -> {
             Color selectedColor = colorPicker.getValue();
             String colorHex = toCssColor(selectedColor);
             addCssStyle(editor,"-fx-fill",colorHex);
 
         });
+
+        //폰트를 선택했을 떄
         fontSizeBox.setOnAction(e-> {
             int size = fontSizeBox.getValue();
             addCssStyle(editor,"-fx-font-size",size+"px");
@@ -92,22 +110,18 @@ public class TextEditorView {
                     String insertedText = inserted.getText();
                     String removedText = removed.getText();
 
-
-                    boolean textChanged = !insertedText.equals(removedText);
+                    boolean textChanged = !inserted.getText().equals(removed.getText());
                     boolean styleChanged = !inserted.getStyleSpans(0, inserted.length())
                             .equals(removed.getStyleSpans(0, removed.length()));
 
                     if(textChanged){
-                        if(!removedText.isEmpty()&& insertedText.isEmpty()){
-                            //텍스트 제거만 일어났을 때 이벤트
+                        if(!removed.getText().isEmpty()){
+                            //텍스트 제거시 이벤트
 
                         }
-                        else if(!insertedText.isEmpty() && removedText.isEmpty()){
-                            //텍스트 추가만 일어났을 때 이벤트
+                        if(!inserted.getText().isEmpty()){
+                            //텍스트 추가시 이벤트
 
-                        }
-                        else if(!insertedText.isEmpty()&&!removedText.isEmpty()) {
-                            //텍스트 추가와 제거가 동시에 일어났을 때
                         }
                     }
                     else if(styleChanged){
@@ -119,11 +133,17 @@ public class TextEditorView {
                 });
     }
 
+<<<<<<< Updated upstream
 
     void showView() {
         textEditorStage.show();
     }
+    void closeView() {
+        textEditorStage.close();
+    }
 
+=======
+>>>>>>> Stashed changes
     //토글 형식의 스타일 변경용 메소드
     //볼드, 및줄과 같이 버튼식으로 css적용시 사용
     void toggleCssStyle(InlineCssTextArea area, String cssFragment) {
@@ -133,19 +153,18 @@ public class TextEditorView {
 
         StyleSpans<String> spans = area.getStyleSpans(start, end);
 
-        //이미 모든 영역이 해당 스타일을 보유하고 있는지 확인
+        //이미 해당 스타일을 보유하고 있는지 확인
         boolean allHasStyle = spans.stream()
                 .allMatch(span -> span.getStyle().contains(cssFragment));
 
         StyleSpansBuilder<String> builder = new StyleSpansBuilder<>();
 
-        //각 스타일 영역별로 스타일 적용
         for (StyleSpan<String> span : spans) {
             String oldStyle = span.getStyle();
             String newStyle;
 
             if (allHasStyle) {
-                // 모든 영역이 스타일 보유시 삭제
+                // 제거
                 newStyle = oldStyle.replace(cssFragment, "").trim();
             } else {
                 // 추가 (중복 방지)
@@ -168,29 +187,23 @@ public class TextEditorView {
         int start = area.getSelection().getStart();
         int end = area.getSelection().getEnd();
 
-        //선택 구간의 스타일 추출
         StyleSpans<String> spans = area.getStyleSpans(start, end);
 
-        //선택 구간이 모두 추가하길 원하는 스타일을 보유하고 있는지 확인
         boolean allHasStyle = spans.stream()
                 .allMatch(span -> span.getStyle().contains(cssFragment+value));
 
         StyleSpansBuilder<String> builder = new StyleSpansBuilder<>();
-        //모든 영역이 스타일을 보유하고 있지 않을 시 스타일 추가 실행
-        if(!allHasStyle) {
-            for (StyleSpan<String> span : spans) {
-                String oldStyle = span.getStyle();
-                String newStyle= mergeOrReplaceStyle(oldStyle,cssFragment,value);
+        for (StyleSpan<String> span : spans) {
+            String oldStyle = span.getStyle();
+            String newStyle= mergeOrReplaceStyle(oldStyle,cssFragment,value);
 
-                builder.add(new StyleSpan<>(newStyle, span.getLength()));
-            }
+            builder.add(new StyleSpan<>(newStyle, span.getLength()));
         }
-
 
         area.setStyleSpans(start, builder.create());
     }
 
-    //색깔 선택기에서 선택한 색을 css 형식으로 변환하는 메소드
+    //
     String toCssColor(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
@@ -198,7 +211,6 @@ public class TextEditorView {
                 (int) (color.getBlue() * 255));
     }
 
-    //입력한 스타일이 이미 있는지 확인하고 없을 시 적용
     String mergeOrReplaceStyle(String original, String key, String value) {
         if (original == null) original = "";
         String[] parts = original.split(";");
@@ -221,25 +233,21 @@ public class TextEditorView {
 
         return result.toString().trim();
     }
-
-
-    //입력받은 영역의 문자 및 스타일 반환
-    StyledDocument<String,String,String> getStyledDocument(int start,int end) {
-        return editor.getDocument().subSequence(start, end);
-    }
-
-    //텍스트를 위치에 추가
     void insertText(StyledDocument<String,String,String> styledDocument, int start) {
         editor.insert(start, styledDocument);
     }
 
-    //입력받은 영역의 텍스트 삭제
+    StyledDocument<String,String,String> getStyledDocument(int start,int end) {
+        return editor.getDocument().subSequence(start, end);
+    }
     void deleteText(int start,int end) {
         editor.deleteText(start, end);
     }
-    //입력받은 영역의 텍스트 입력받은 텍스트로 바꾸기
     void modifyText(StyledDocument<String,String,String> styledDocument,int start,int end) {
         deleteText(start,end);
         insertText(styledDocument,start);
+    }
+    void ggg() {
+
     }
 }
