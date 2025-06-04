@@ -83,7 +83,7 @@ public class SyncService {
             e.printStackTrace();
         }
     }
-    
+
     // 변경 내용을 모든 다른 사용자에게 전달
     // 실제 전송 로직은 네트워크 계층에서 해야됨
     private void broadcastToOthers(String documentId, String updated, String senderId) {
