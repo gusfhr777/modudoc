@@ -1,5 +1,6 @@
 package com.piltong.modudoc.client.view;
 
+import com.piltong.modudoc.client.controller.DocumentListController;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -9,31 +10,37 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 //문서를 생성할 때 생성창을 만드는 클래스
-class CreateDocumentView {
+public class EditDocumentView {
 
     GridPane grid = new GridPane();
-    Label nameLabel = new Label("파일 이름");
+    Label nameLabel = new Label();
     TextField nameField = new TextField();
-    Label promptLabel = new Label("");
-    Button createButton = new Button("파일 생성");
+    Label promptLabel = new Label();
+    Button editButton = new Button();
 
     Stage createStage = new Stage();
 
-
+    DocumentListController controller;
+    public EditDocumentView(DocumentListController controller) {
+        this.controller = controller;
+    }
+    public void initialize() {
+        initLayout();
+        initListeners();
+    }
     void initLayout() {
         grid.add(nameLabel, 0, 0);
         grid.add(nameField, 1, 0);
-        grid.add(createButton, 0, 1);
+        grid.add(editButton, 0, 1);
         grid.add(promptLabel, 1, 1);
         grid.setHgap(10);
         Scene scene = new Scene(grid, 300, 60);
         createStage.setScene(scene);
-        createStage.setTitle("생성");
     }
 
     //모든 이벤트 처리
     void initListeners() {
-        createButton.setOnAction(e -> {
+        editButton.setOnAction(e -> {
             //생성 버튼을 입력했을 때 이벤트
 
         });
@@ -56,13 +63,22 @@ class CreateDocumentView {
         createStage.close();
     }
 
+    //화면 창 제목 정하기
+    public void setStageTitle(String title) {
+        createStage.setTitle(title);
+    }
+
+    public void setButtonText(String text) {
+        editButton.setText(text);
+    }
+
     //작성한 문서 제목 가져오기
-    public String getTitle() {
+    public String getDocumentTitle() {
         return nameField.getText();
     }
 
     //텍스트 필드의 문자 설정
-    public void setTitle(String title) {
+    public void setDocumentTitle(String title) {
         nameField.setText(title);
     }
 
