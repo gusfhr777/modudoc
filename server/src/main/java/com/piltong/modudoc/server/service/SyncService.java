@@ -30,6 +30,7 @@ public class SyncService {
         String updated = null;
 
         try {
+            // null 값의 파라미터가 들어올 시 오류
             if (documentId == null || dto == null || senderId == null) {
                 System.err.println("[Error] null 값의 파라미터가 입력됨");
                 return;
@@ -37,16 +38,22 @@ public class SyncService {
 
             // 현재 문서 가져오기
             Document doc = documentService.getDocument(documentId);
+
+            // Document가 null 값일 시 오류
             if (doc == null) {
                 System.err.println("[Error] Document를 찾을수 없음: " + documentId);
                 return;
             }
 
             String current = doc.getContent();
+
+            // 수정사항이 null 값일 시 오류
             if (current == null) current = "";
 
             // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
             Operation op = Operation.toEntity(dto);
+
+            // op 객체로 변환 실패 시 오류
             if (op == null) {
                 System.err.println("[Error] OperationDto를 Operation 으로 변환 실패");
                 return;
@@ -59,6 +66,7 @@ public class SyncService {
             // 조정된 연산을 문자열에 적용
             updated = ot.apply(current, transformedOp);
 
+            // 수정 사항이 null 값일 시 오류
             if (updated == null) {
                 System.err.println("[Error] OT.apply가 null 값을 반환");
                 return;
@@ -66,9 +74,10 @@ public class SyncService {
 
             // 문서 내용 갱신
             doc.setContent(updated);
+
             try {
                 documentService.saveDocument(doc);
-            } catch (Exception e) {
+            } catch (Exception e) {     // document 저장 실패
                 System.err.println("[Error] document를 저장하는데 실패: " + e.getMessage());
                 e.printStackTrace();
                 return;

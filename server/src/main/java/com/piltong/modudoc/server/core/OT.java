@@ -5,8 +5,7 @@ import java.util.List;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.common.operation.OperationType;
 
-/** 아직 불완전한 코드
- * 추후 확장 기능
+/** 추후 확장 기능
  * Undo 기능 (history가 필요함)
  * 문자열 전체 변경 기록 저장 (history)
  */
@@ -15,7 +14,7 @@ import com.piltong.modudoc.common.operation.OperationType;
 public class OT {
     // 두 연산 간 충돌 해결
     public Operation[] transform(Operation op1, Operation op2) {
-       // 복사하여 원본은 유지
+       // 복사하여 원    본은 유지
         op1 = copy(op1);
         op2 = copy(op2);
 

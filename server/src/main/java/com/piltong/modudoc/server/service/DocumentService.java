@@ -3,7 +3,9 @@ package com.piltong.modudoc.server.service;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.server.repository.DocumentRepository;
 
-// 문서 관련 비즈니스 로직 (수정/저장/가져오기 등)
+// 문서 관련 비즈니스 로직 처리 클래스
+// 문서의 생성, 저장, 수정, 삭제 등 주요 기능 제공
+// 입력 유효성 검사를 포함한 예외 처리
 public class DocumentService {
     // 실제 문서 데이터 저장소 역할을 하는 객체
     private final DocumentRepository documentRepository;
@@ -13,7 +15,6 @@ public class DocumentService {
         this.documentRepository = new DocumentRepository();
     }
 
-    // 문서를 업데이트/저장
     /**
      * [외부 입력 기반 문서 생성/수정용]
      * - 문서 ID, 제목, 내용만 받아 새 Document 객체를 생성하고 저장
@@ -21,12 +22,14 @@ public class DocumentService {
      * - 주로 사용자가 새로운 문서를 생성하거나, 전부 다시 저장할 때 사용
      */
     public void updateDocument(String documentId, String title, String content) {
+        if (documentId == null || title == null || content == null) {
+            throw new IllegalArgumentException("문서 ID, 제목, 내용의 값을 찾을 수 없음");
+        }
         // 변경 사항이 있을때마다 새로운 객체를 생성 후 저장한다.
         Document document = new Document(documentId, title, content);
         documentRepository.saveDocument(document);
     }
 
-    // 문서를 저장
     /**
      * [수정된 Document 객체 그대로 저장할 때 사용]
      * - 이미 생성된 Document 객체를 받아 저장소에 저장
@@ -34,16 +37,25 @@ public class DocumentService {
      * - OT 적용, 자동 저장 등 내부 처리 로직에서 자주 사용됨
      */
     public void saveDocument(Document document) {
+        if (document == null || document.getId() == null) {
+            throw new IllegalArgumentException("문서 또는 문서 ID를 찾을 수 없음");
+        }
         documentRepository.saveDocument(document);
     }
 
     // 문서를 불러옴
     public Document getDocument(String documentId) {
+        if (documentId == null) {
+            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
+        }
         return documentRepository.loadDocument(documentId);
     }
 
     // 문서를 삭제함
     public void removeDocument(String documentId) {
+        if (documentId == null) {
+            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
+        }
         documentRepository.deleteDocument(documentId);
     }
 }

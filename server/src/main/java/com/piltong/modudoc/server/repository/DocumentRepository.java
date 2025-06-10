@@ -11,16 +11,29 @@ public class DocumentRepository {
 
     // DB 또는 파일 시스템에 저장
     public synchronized void saveDocument(Document document) {
+        if (document == null || document.getId() == null) {
+            throw new IllegalArgumentException("저장할 문서나 문서 ID를 찾을 수 없음");
+        }
         documentStorage.put(document.getId(), document);
     }
 
     // 저장소에서 문서 불러오기
     public synchronized Document loadDocument(String documentId) {
-        return documentStorage.get(documentId);
+        if (documentId == null) {
+            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
+        }
+        Document doc = documentStorage.get(documentId);
+        if (doc == null) {
+            throw new IllegalArgumentException("해당 ID의 문서를 찾을 수 없음");
+        }
+        return doc;
     }
 
     // 문서 삭제
     public synchronized void deleteDocument(String documentId) {
+        if (documentId == null) {
+            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
+        }
         documentStorage.remove(documentId);
     }
 }
