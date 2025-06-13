@@ -55,7 +55,7 @@ public class DocumentListController {
 
 
 
-    //문서 생성
+    //문서 생성 버튼 입력시 호출되는 메소드
     public void createDocument() {
         if (isCreating) {
 
@@ -68,6 +68,7 @@ public class DocumentListController {
 
     }
 
+    //문서 생성 창에서 생성 버튼 입력 시 호출되는 메소드
     public void sendCreateDocument(String title) {
 
     }

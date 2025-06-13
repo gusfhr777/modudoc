@@ -21,12 +21,17 @@ public class StartView {
 
     Stage startStage = new Stage();
 
-    void setController(StartController controller) {
+    public void setController(StartController controller) {
         this.controller = controller;
     }
 
+    public void initialize() {
+        initLayout();
+        initListeners();
+    }
+
     //구성요소들을 배치하는 메소드
-    void initLayout() {
+    public void initLayout() {
         grid.add(nameLabel, 0, 0);
         grid.add(nameField, 1, 0);
         grid.add(connectButton, 0, 1);
@@ -40,7 +45,7 @@ public class StartView {
     }
 
     //모든 이벤트를 감지하는 메소드
-    void initListeners() {
+    public void initListeners() {
         connectButton.setOnAction(e -> {
             //접속 버튼을 입력했을 때 이벤트
             controller.connect(getText());
