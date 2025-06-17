@@ -58,4 +58,9 @@ public class DocumentService {
         }
         documentRepository.deleteDocument(documentId);
     }
+
+    // 문서의 존재 여부 반환
+    public boolean exists(String documentId) {
+        return getDocument(documentId) != null;
+    }
 }
