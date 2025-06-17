@@ -3,6 +3,9 @@ package com.piltong.modudoc.server;
 
 import com.piltong.modudoc.common.Constants;
 import com.piltong.modudoc.server.network.ServerNetworkHandler;
+import com.piltong.modudoc.server.network.ServerNetworkListenerImpl;
+import com.piltong.modudoc.server.service.DocumentService;
+import com.piltong.modudoc.server.service.SyncService;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,8 +23,12 @@ public class ServerApp {
         // 스레드 풀 : 앱에서 사용하는 스레드 개수를 관리하는 기법. https://engineerinsight.tistory.com/197
         ExecutorService executor = Executors.newFixedThreadPool(Constants.POOL_SIZE);
 
+        // 서비스 객체 생성
+        DocumentService documentService = new DocumentService();
+        SyncService syncService = new SyncService();
 
-        
+        // listener 구현체 생성
+        ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(documentService, syncService);
 
         // ServerNetworkHandler 스레드 생성 및 시작
         Runnable networkHandler = new ServerNetworkHandler(Constants.SERVER_PORT, executor, listener);
