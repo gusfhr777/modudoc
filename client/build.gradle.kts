@@ -25,6 +25,7 @@ dependencies {
     // JavaFX 컨트롤, FXML 모듈
     implementation("org.openjfx:javafx-controls:21")
     implementation("org.openjfx:javafx-fxml:21")
+    implementation("org.fxmisc.richtext:richtextfx:0.11.5")
 
     // 테스트용 JUnit
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
