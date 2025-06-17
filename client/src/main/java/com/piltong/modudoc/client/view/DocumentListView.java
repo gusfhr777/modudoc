@@ -3,6 +3,7 @@ package com.piltong.modudoc.client.view;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.client.controller.DocumentListController;
 
+import com.piltong.modudoc.common.document.DocumentSummary;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -20,16 +21,16 @@ public class DocumentListView {
 
     DocumentListController controller;
 
-    TableView<Document> documentTable = new TableView<>(); //문서 목록이 표시될 도표
+    TableView<DocumentSummary> documentTable = new TableView<>(); //문서 목록이 표시될 도표
 
     //도표에 첫번째 행에 각 열의 정보 표시
-    TableColumn<Document, String> titleColumn = new TableColumn<>("파일 이름");
-    TableColumn<Document, String> createdDateColumn = new TableColumn<>("생성 일자");
-    TableColumn<Document, String> modifiedDateColumn = new TableColumn<>("수정 일자");
-    TableColumn<Document, Integer> usercountColumn = new TableColumn<>("접속 인원");
+    TableColumn<DocumentSummary, String> titleColumn = new TableColumn<>("파일 이름");
+    TableColumn<DocumentSummary, String> createdDateColumn = new TableColumn<>("생성 일자");
+    TableColumn<DocumentSummary, String> modifiedDateColumn = new TableColumn<>("수정 일자");
+    TableColumn<DocumentSummary, Integer> usercountColumn = new TableColumn<>("접속 인원");
 
     //도표에서 문서를 선택할 때 필요한 모델
-    TableView.TableViewSelectionModel<Document> selectionModel;
+    TableView.TableViewSelectionModel<DocumentSummary> selectionModel;
 
     //gui 구성요소를 세로로 배치하는 틀. 가장 마지막에 구성요소들 배치
     VBox vBox = new VBox();
@@ -118,23 +119,23 @@ public class DocumentListView {
 
 
     //목록에 문서를 추가하는 메소드
-    public void addDocument(Document document) {
+    public void addDocument(DocumentSummary document) {
         documentTable.getItems().add(document);
     }
     //목록에 문서를 삭제하는 메소드
-    public void removeDocument(Document document) {
+    public void removeDocument(DocumentSummary document) {
         documentTable.getItems().remove(document);
     }
     //목록을 설정하는 메소드
-    public void setDocumentList(List<Document> documentList) {
-        documentTable.setItems((ObservableList<Document>) documentList);
+    public void setDocumentList(List<DocumentSummary> documentList) {
+        documentTable.setItems((ObservableList<DocumentSummary>) documentList);
     }
     //목록의 모든 문서를 제거하는 메소드
     public void clearDocumentList() {
         documentTable.getItems().clear();
     }
     //선택된 문서를 반환하는 메소드
-    public Document getSelectedDocument() {
+    public DocumentSummary getSelectedDocument() {
         return selectionModel.getSelectedItem();
     }
 
