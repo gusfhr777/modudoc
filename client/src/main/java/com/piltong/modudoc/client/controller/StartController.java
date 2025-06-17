@@ -35,13 +35,17 @@ public class StartController {
         else {
             this.host = host;
         }
-        networkHandler = new ClientNetworkHandler();
-        DocumentListController documentListController = new DocumentListController(networkHandler);
-        DocumentListView documentListView = new DocumentListView();
-        documentListView.setController(documentListController);
-        documentListController.setView(documentListView);
-        documentListView.showView();
-        startView.closeView();
+        try {
+            networkHandler = new ClientNetworkHandler();
+            DocumentListController documentListController = new DocumentListController(networkHandler);
+            DocumentListView documentListView = new DocumentListView();
+            documentListView.setController(documentListController);
+            documentListController.setView(documentListView);
+            documentListView.showView();
+            startView.closeView();
+        }catch (RuntimeException e) {
+
+        }
     }
 
 }

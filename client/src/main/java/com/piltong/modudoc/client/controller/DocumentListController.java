@@ -5,8 +5,10 @@ import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.ClientNetworkListener;
+import com.piltong.modudoc.common.operation.EditPosition;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.client.view.EditDocumentView;
+import com.piltong.modudoc.common.operation.OperationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,14 +72,20 @@ public class DocumentListController {
 
     //문서 생성 창에서 생성 버튼 입력 시 호출되는 메소드
     public void sendCreateDocument(String title) {
-
+        Operation op = new Operation(OperationType.INSERT, EditPosition.TITLE,0,title);
+        networkHandler.sendOperation(op);
     }
 
     //목록에 있는 문서 제거
-    public void removeDoucment(Document document) {
+    public void removeDocument(Document document) {
         documentListView.removeDocument(document);
         documentList.remove(document);
     }
+
+    public void connectDocument(Document document) {
+
+    }
+
 
     class DocumentListNetwork implements ClientNetworkListener {
         @Override
@@ -91,6 +99,7 @@ public class DocumentListController {
             if(command == ClientCommand.READ_DOCUMENT_SUMMARIES) {
                 documentListView.setDocumentList((List<Document>) payload);
             }
+            else if(command == ClientCommand.CREATE_DOCUMENT) {}
         }
 
         @Override

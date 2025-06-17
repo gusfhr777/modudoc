@@ -44,6 +44,7 @@ public class DocumentListView {
     Button RemoveButton = new Button("파일 삭제");
     Button ModifyButton = new Button("파일 수정");
 
+    Label concoleLabel = new Label("");
     Stage DocumentListStage = new Stage();
 
     //컨트롤러 설정
@@ -78,7 +79,7 @@ public class DocumentListView {
     //각 구성요소들을 배치하는 메소드
     public void initLayout() {
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton);
-        vBox.getChildren().addAll(hBox, documentTable);
+        vBox.getChildren().addAll(hBox, documentTable, concoleLabel);
         documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn, usercountColumn);
         Scene scene = new Scene(vBox);
         DocumentListStage.setScene(scene);
@@ -90,7 +91,7 @@ public class DocumentListView {
     public void initListeners() {
         createButton.setOnAction(e -> {
             //생성 버튼 입력시 이벤트
-
+            controller.createDocument();
         });
         InButton.setOnAction(e -> {
             //접속 버튼 입력시 이벤트
@@ -102,12 +103,12 @@ public class DocumentListView {
         });
         RemoveButton.setOnAction(e -> {
             //삭제 버튼 입력시 이벤트
-            removeDocument(documentTable.getSelectionModel().getSelectedItem());
+            controller.removeDocument(documentTable.getSelectionModel().getSelectedItem());
         });
     }
 
 
-
+    //뷰를 보이고 닫는 메소드
     public void showView() {
         DocumentListStage.show();
     }

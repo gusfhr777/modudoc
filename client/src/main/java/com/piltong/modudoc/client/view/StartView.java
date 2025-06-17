@@ -52,7 +52,7 @@ public class StartView {
         });
         nameField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                    //엔터를 입력했을 때 이벤트
+                //엔터를 입력했을 때 이벤트
                 controller.connect(getText());
             }
         });
