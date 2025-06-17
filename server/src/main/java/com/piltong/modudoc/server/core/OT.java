@@ -87,6 +87,7 @@ public class OT {
     private Operation copy(Operation op) {
         return new Operation(
                 op.getOperationType(),
+                op.getDocumentId(),
                 op.getPosition(),
                 op.getContent()
         );
