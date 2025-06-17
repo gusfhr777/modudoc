@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 public class ServerApp {
     public static void main(String[] args) {
 
+        // ServerNetworkHandler 초기화
+
         // 스레드 풀 생성
         // 스레드 풀 : 앱에서 사용하는 스레드 개수를 관리하는 기법. https://engineerinsight.tistory.com/197
         ExecutorService executor = Executors.newFixedThreadPool(Constants.POOL_SIZE);

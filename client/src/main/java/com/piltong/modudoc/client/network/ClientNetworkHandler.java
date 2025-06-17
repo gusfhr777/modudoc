@@ -51,63 +51,16 @@ public class ClientNetworkHandler implements Runnable{
         try {
             // 인터럽트 받기 전까지 무한 반복
             while (!Thread.currentThread().isInterrupted()) {
-                Object msg = in.readObject(); // 오브젝트 읽기
+                ResponseCommandDto<?> dto = (ResponseCommandDto<?>) in.readObject(); // 오브젝트 읽기
+                ClientCommand command = dto.getCommand();
+                boolean isSuccess = dto.isSuccess();
 
-                // 메시지가 ResponseCommandDto 형식일 경우
-                if (msg instanceof ResponseCommandDto<?> dto) {
-
-                    ClientCommand command = dto.getCommand();
-
-
-                    // 실패 응답
-                    if (!dto.isSuccess()) {
-                        listener.onCommandFailure(command, dto.getErrorMsg());
-                        continue;
-                    }
-
-                    // 성공 응답
-                    switch (command) {
-
-                        // 문서 생성 명령
-                        case CREATE_DOCUMENT:
-                            listener.onCommandSuccess(command, (DocumentSummary) dto.getPayload());
-                            break;
-
-                        // 단일 문서 조회 명령
-                        case READ_DOCUMENT:
-                            listener.onCommandSuccess(command, (Document) dto.getPayload());
-                            break;
-
-                        // 문서 수정 명령
-                        case UPDATE_DOCUMENT:
-                            listener.onCommandSuccess(command, null);
-                            break;
-
-                        // 문서 삭제 명령
-                        case DELETE_DOCUMENT:
-                            listener.onCommandSuccess(command, null);
-                            break;
-
-                        // 문서 요약 리스트 조회 명령
-                        case READ_DOCUMENT_SUMMARIES:
-                            listener.onCommandSuccess(command, (List<DocumentSummary>) dto.getPayload());
-                            break;
-
-                        // Operation 전파 명령
-                        case PROPAGATE_OPERATION:
-                            listener.onCommandSuccess(command, null);
-                            break;
-
-                        // 이외 명령
-                        default:
-                            System.err.println("Unknown Command Received: " + command);
-                            break;
-                    }
-
+                if (isSuccess) {
+                    listener.onCommandSuccess(command, dto.getPayload());
                 } else {
-                    listener.onNetworkError(new IllegalArgumentException("Unknown DTO Received: "+msg.getClass()));
-
+                    listener.onCommandFailure(command, dto.getErrorMsg());
                 }
+
 
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -134,6 +87,11 @@ public class ClientNetworkHandler implements Runnable{
                 } else if (payload instanceof Operation) {
                         payloadDto = Operation.toDto((Operation) payload);
                 }
+            }
+
+            switch (command) {
+                case CREATE_DOCUMENT:
+
             }
 
             // RequestCommandDto 생성 및 서버 측에 전송

@@ -54,7 +54,7 @@ public class TextEditorController {
 
         @Override
         public <T> void onCommandSuccess(ClientCommand command, T payload) {
-
+            //오퍼레이션만 처리
         }
 
         @Override

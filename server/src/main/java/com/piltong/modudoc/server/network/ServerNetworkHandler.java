@@ -2,9 +2,12 @@ package com.piltong.modudoc.server.network;
 
 
 import com.piltong.modudoc.common.Constants;
+import com.piltong.modudoc.common.network.ClientCommand;
+import com.piltong.modudoc.common.network.ResponseCommandDto;
 import com.piltong.modudoc.common.network.ServerNetworkListener;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.*;
 import java.util.concurrent.ExecutorService;
 
@@ -50,7 +53,7 @@ public class ServerNetworkHandler implements Runnable {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New connection from " + clientSocket.getRemoteSocketAddress());
 
-                Runnable clientHandler = new ClientHandler(clientSocket);
+                Runnable clientHandler = new ClientHandler(clientSocket, listener);
                 executor.submit(clientHandler); // 스레드 풀에 할당한다.
             }
 
@@ -63,6 +66,32 @@ public class ServerNetworkHandler implements Runnable {
     }
 
 
+    // 명령어를 클라 측으로 전송한다. 성공한 경우.
+    public <T extends Serializable> void sendCommandSuccess(ClientHandler target, ClientCommand command, T payload) {
+
+        try {
+            ResponseCommandDto<T> response = new ResponseCommandDto<>(command, payload, true, null);
+            target.out.writeObject(response);
+            target.out.flush();
+        } catch (Exception e) {
+            System.err.println("클라 전송 실패 " + target + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // 명령어를 클라 측으로 전송한다. 실패한 경우.
+    public void sendCommandFailure(ClientHandler target, ClientCommand command, String errorMsg) {
+
+        try {
+            ResponseCommandDto<Object> response = new ResponseCommandDto<>(command, null, false, errorMsg);
+            target.out.writeObject(response);
+            target.out.flush();
+        } catch (Exception e) {
+            System.err.println("클라 전송 실패 " + target + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     // 핸들러 종료 함수
     public void shutdown() {
         try {
@@ -73,4 +102,8 @@ public class ServerNetworkHandler implements Runnable {
 
         } catch (IOException ignored) {}
     }
+
+
+
+
 }
