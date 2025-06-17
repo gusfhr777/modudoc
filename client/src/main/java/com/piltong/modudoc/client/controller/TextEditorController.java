@@ -5,7 +5,6 @@ import com.piltong.modudoc.client.view.TextEditorView;
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.ClientNetworkListener;
-import com.piltong.modudoc.common.operation.EditPosition;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.common.operation.OperationType;
 
@@ -34,10 +33,10 @@ public class TextEditorController {
 
     //문서가 편집되었을 때 편집사항을 서버로 전송
     public void sendDeleteText(int from, int to) {
-        networkHandler.sendOperation(new Operation(OperationType.DELETE, EditPosition.CONTENT,from,""));
+        networkHandler.sendOperation(new Operation(OperationType.DELETE, from,""));
     }
     public void sendInsertText(int from, int to, String text) {
-        networkHandler.sendOperation(new Operation(OperationType.INSERT, EditPosition.CONTENT,from,text));
+        networkHandler.sendOperation(new Operation(OperationType.INSERT, from,text));
     }
 
 

@@ -14,7 +14,7 @@ import com.piltong.modudoc.common.operation.OperationType;
 public class OT {
     // 두 연산 간 충돌 해결
     public Operation[] transform(Operation op1, Operation op2) {
-       // 복사하여 원    본은 유지
+       // 복사하여 원본은 유지
         op1 = copy(op1);
         op2 = copy(op2);
 
@@ -87,7 +87,6 @@ public class OT {
     private Operation copy(Operation op) {
         return new Operation(
                 op.getOperationType(),
-                op.getEditPosition(),
                 op.getPosition(),
                 op.getContent()
         );

@@ -54,7 +54,6 @@ public class Operation {
 
         return new OperationDto(
                 operation.operationType,
-                operation.editPosition,
                 operation.position,
                 operation.content
         );
@@ -66,7 +65,6 @@ public class Operation {
 
         return new Operation(
                 operationDto.getOperationType(),
-                operationDto.getEditPosition(),
                 operationDto.getPosition(),
                 operationDto.getContent()
         );
