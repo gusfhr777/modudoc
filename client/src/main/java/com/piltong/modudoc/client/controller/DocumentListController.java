@@ -65,6 +65,14 @@ public class DocumentListController {
     //생성 버튼 입력 시 문서 생성
     public void CreateDocument(String title) {
 
+        }
+
+    }
+
+    //문서 생성 창에서 생성 버튼 입력 시 호출되는 메소드
+    public void sendCreateDocument(String title) {
+        Operation op = new Operation(OperationType.INSERT,0,title);
+        networkHandler.sendOperation(op);
     }
 
     //목록에 있는 문서 제거
