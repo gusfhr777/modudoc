@@ -5,6 +5,7 @@ import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.ClientNetworkListener;
+import com.piltong.modudoc.common.operation.EditPosition;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.client.view.EditDocumentView;
 import com.piltong.modudoc.common.operation.OperationType;
@@ -71,7 +72,7 @@ public class DocumentListController {
 
     //문서 생성 창에서 생성 버튼 입력 시 호출되는 메소드
     public void sendCreateDocument(String title) {
-        Operation op = new Operation(OperationType.INSERT,0,title);
+        Operation op = new Operation(OperationType.INSERT, EditPosition.TITLE,0,title);
         networkHandler.sendOperation(op);
     }
 
