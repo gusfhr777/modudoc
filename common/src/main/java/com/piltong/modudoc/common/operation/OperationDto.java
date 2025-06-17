@@ -26,7 +26,6 @@ public class OperationDto implements Serializable {
         return operationType;
     }
 
-
     public int getPosition() {
         return position;
     }

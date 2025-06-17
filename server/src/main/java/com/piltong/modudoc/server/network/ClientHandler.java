@@ -3,7 +3,8 @@ package com.piltong.modudoc.server.network;
 
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.document.DocumentDto;
-import com.piltong.modudoc.common.network.RequestCommandDto;
+import com.piltong.modudoc.common.document.DocumentSummary;
+import com.piltong.modudoc.common.network.*;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.common.operation.OperationDto;
 import com.sun.net.httpserver.Request;
@@ -16,12 +17,14 @@ import java.util.Objects;
 // 요청 읽기 -> 비즈니스 로직 수행 -> 출력 스트림으로 응답 전송
 public class ClientHandler implements Runnable {
     private final Socket socket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private final ServerNetworkListener listener;
+    protected ObjectInputStream in;
+    protected ObjectOutputStream out;
 
 
-    public ClientHandler(Socket socket) {
+    public ClientHandler(Socket socket, ServerNetworkListener listener) {
         // 변수 할당
+        this.listener = listener;
         this.socket = socket;
 
     }
@@ -29,20 +32,43 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            InputStream is = socket.getInputStream();
-            OutputStream os = socket.getOutputStream();
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
 
-            out = new ObjectOutputStream(os);
-            in = new ObjectInputStream(is);
 
+
+            // 클라이언트 핸들러 무한 반복
             while (!Thread.currentThread().isInterrupted()) {
-                Object msg = in.readObject();
+                RequestCommandDto<?> dto = (RequestCommandDto<?>) in.readObject(); // 클라이언트 명령 요청 대기
+                ClientCommand command = dto.getCommand(); // 커맨드 가져오기
 
-                if (msg instanceof RequestCommandDto<?>) {
+                Object resultPayload;
+                boolean success = true;
+                String errorMsg = null;
 
+                try {
+                    resultPayload = listener.onCommandReceived(command, dto.getPayload());
+                } catch (CommandException e) {
+                    success = false;
+                    resultPayload = null;
+                    errorMsg = e.getMessage();
                 }
+
+                ResponseCommandDto<Object> response = new ResponseCommandDto<>(
+                        command,
+                        resultPayload,
+                        success,
+                        errorMsg
+                );
+
+                out.writeObject(response);
+                out.flush();
+
+
+
             }
         } catch (IOException | ClassNotFoundException e) {
+            listener.onNetworkError(e);
             throw new RuntimeException(e);
         }
     }
