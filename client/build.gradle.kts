@@ -7,7 +7,7 @@ plugins {
 
 javafx {
     version = "21"
-    modules = listOf("javafx.controls", "javafx.fxml")
+    modules = listOf("javafx.controls", "javafx.fxml","javafx.web")
 }
 
 application {
@@ -25,6 +25,7 @@ dependencies {
     // JavaFX 컨트롤, FXML 모듈
     implementation("org.openjfx:javafx-controls:21")
     implementation("org.openjfx:javafx-fxml:21")
+    implementation("org.openjfx:javafx-web:21")
     implementation("org.fxmisc.richtext:richtextfx:0.11.5")
 
     // 테스트용 JUnit

@@ -7,7 +7,7 @@ import java.io.Serializable;
  *
  * @param <T> 응답 페이로드 타입
  */
-public class ResponseCommandDto<T extends Serializable> implements Serializable {
+public class ResponseCommandDto<T> implements Serializable {
 
     /** 처리된 명령어 */
     private ClientCommand command;

@@ -2,22 +2,28 @@ package com.piltong.modudoc.client.network;
 
 import java.net.*;
 import java.io.*;
+import java.util.List;
 
-import com.piltong.modudoc.common.*;
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentDto;
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationDto;
+import com.piltong.modudoc.common.document.*;
+import com.piltong.modudoc.common.network.*;
+import com.piltong.modudoc.common.operation.*;
 
 // 클라이언트에서 네트워크 로직을 처리하는 클래스
 public class ClientNetworkHandler implements Runnable{
-    Socket socket;
+    private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+    private final ClientNetworkListener listener;
 
-    public ClientNetworkHandler() {
+
+    /**
+     *
+     * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
+     */
+    public ClientNetworkHandler(String host, int port, ClientNetworkListener listener) {
         try {
-            this.socket = new Socket(Constants.SERVER_IP, Constants.SERVER_PORT);
+            this.socket = new Socket(host, port);
+            this.listener = listener;
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -29,8 +35,8 @@ public class ClientNetworkHandler implements Runnable{
 
 
     // 클라이언트 네트워크 핸들러의 메인 로직
+    // 서버로부터 데이터 송신을 대기하고, 송신을 받으면 그에 따른 로직을 처리한다.
     // 스레드를 통해 실행할 때, 처음 실행되는 지점이다.
-    // 오브젝트 인풋에 대해 다룬다.
     @Override
     public void run() {
         try {
@@ -47,9 +53,59 @@ public class ClientNetworkHandler implements Runnable{
             while (!Thread.currentThread().isInterrupted()) {
                 Object msg = in.readObject(); // 오브젝트 읽기
 
-                if (msg instanceof OperationDto) { // OperationDTO 형식인 경우
+                // 메시지가 ResponseCommandDto 형식일 경우
+                if (msg instanceof ResponseCommandDto<?> dto) {
 
-                } else if (msg instanceof DocumentDto) { // DocumentDTO 형식인 경우
+                    ClientCommand command = dto.getCommand();
+
+
+                    // 실패 응답
+                    if (!dto.isSuccess()) {
+                        listener.onCommandFailure(command, dto.getErrorMsg());
+                        continue;
+                    }
+
+                    // 성공 응답
+                    switch (command) {
+
+                        // 문서 생성 명령
+                        case CREATE_DOCUMENT:
+                            listener.onCommandSuccess(command, (DocumentSummary) dto.getPayload());
+                            break;
+
+                        // 단일 문서 조회 명령
+                        case READ_DOCUMENT:
+                            listener.onCommandSuccess(command, (Document) dto.getPayload());
+                            break;
+
+                        // 문서 수정 명령
+                        case UPDATE_DOCUMENT:
+                            listener.onCommandSuccess(command, null);
+                            break;
+
+                        // 문서 삭제 명령
+                        case DELETE_DOCUMENT:
+                            listener.onCommandSuccess(command, null);
+                            break;
+
+                        // 문서 요약 리스트 조회 명령
+                        case READ_DOCUMENT_SUMMARIES:
+                            listener.onCommandSuccess(command, (List<DocumentSummary>) dto.getPayload());
+                            break;
+
+                        // Operation 전파 명령
+                        case PROPAGATE_OPERATION:
+                            listener.onCommandSuccess(command, null);
+                            break;
+
+                        // 이외 명령
+                        default:
+                            System.err.println("Unknown Command Received: " + command);
+                            break;
+                    }
+
+                } else {
+                    listener.onNetworkError(new IllegalArgumentException("Unknown DTO Received: "+msg.getClass()));
 
                 }
 
@@ -63,6 +119,32 @@ public class ClientNetworkHandler implements Runnable{
 
     }
 
+
+    // 명령어를 서버 측으로 전송한다.
+    public <T> void sendCommand(ClientCommand command, T payload) {
+        Serializable payloadDto = null;
+
+        try {
+            // payload가 Serializable을 구현한 객체인지 확인한다.
+            if (payload instanceof Serializable) {
+                payloadDto = (Serializable) payload;
+            } else {
+                if (payload instanceof DocumentSummary) {
+                    payloadDto = DocumentSummary.toDto((DocumentSummary) payload);
+                } else if (payload instanceof Operation) {
+                        payloadDto = Operation.toDto((Operation) payload);
+                }
+            }
+
+            // RequestCommandDto 생성 및 서버 측에 전송
+            RequestCommandDto<Serializable> dto = new RequestCommandDto<>(command, payloadDto);
+            out.writeObject(dto);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
     // Operation 요청 함수

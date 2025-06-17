@@ -9,16 +9,14 @@ import java.io.Serializable;
 public class OperationDto implements Serializable {
 
     private OperationType operationType; // 문서 형태
-    private EditPosition editPosition; // 변경할려는 객체
 
     private int position; // 변경 위치
     private String content; // 변경 내용
 
 
     // 생성자
-    public OperationDto(OperationType operationType, EditPosition editPosition, int position, String content) {
+    public OperationDto(OperationType operationType, int position, String content) {
         this.operationType = operationType;
-        this.editPosition = editPosition;
         this.position = position;
         this.content = content;
     }
@@ -28,9 +26,6 @@ public class OperationDto implements Serializable {
         return operationType;
     }
 
-    public EditPosition getEditPosition() {
-        return editPosition;
-    }
 
     public int getPosition() {
         return position;
