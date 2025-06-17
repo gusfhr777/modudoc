@@ -2,6 +2,7 @@ package com.piltong.modudoc.client.controller;
 
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
 import com.piltong.modudoc.client.view.DocumentListView;
+import com.piltong.modudoc.client.view.TextEditorView;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.ClientNetworkListener;
@@ -73,7 +74,9 @@ public class DocumentListController {
     }
     //문서 접속
     public void connectDocument(Document document) {
-        
+        TextEditorView textEditorView = new TextEditorView();
+        TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler);
+        textEditorView.showView();
     }
 
 

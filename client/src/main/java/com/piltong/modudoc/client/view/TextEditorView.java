@@ -126,7 +126,7 @@ public class TextEditorView {
     }
 
 
-    void showView() {
+    public void showView() {
         textEditorStage.show();
     }
     void closeView() {
