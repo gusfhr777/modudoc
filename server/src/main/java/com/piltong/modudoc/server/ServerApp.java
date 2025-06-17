@@ -20,8 +20,11 @@ public class ServerApp {
         // 스레드 풀 : 앱에서 사용하는 스레드 개수를 관리하는 기법. https://engineerinsight.tistory.com/197
         ExecutorService executor = Executors.newFixedThreadPool(Constants.POOL_SIZE);
 
+
+        
+
         // ServerNetworkHandler 스레드 생성 및 시작
-        Runnable networkHandler = new ServerNetworkHandler(Constants.SERVER_PORT, executor);
+        Runnable networkHandler = new ServerNetworkHandler(Constants.SERVER_PORT, executor, listener);
         new Thread(networkHandler).start();
 
         // 시작

@@ -3,8 +3,10 @@ package com.piltong.modudoc.server.network;
 
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.document.DocumentDto;
+import com.piltong.modudoc.common.network.RequestCommandDto;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.common.operation.OperationDto;
+import com.sun.net.httpserver.Request;
 
 import java.net.*;
 import java.io.*;
@@ -13,9 +15,10 @@ import java.util.Objects;
 // 한 클라이언트와의 소켓 통신을 관리한다.
 // 요청 읽기 -> 비즈니스 로직 수행 -> 출력 스트림으로 응답 전송
 public class ClientHandler implements Runnable {
-    private Socket socket;
+    private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
+
 
     public ClientHandler(Socket socket) {
         // 변수 할당
@@ -31,39 +34,19 @@ public class ClientHandler implements Runnable {
 
             out = new ObjectOutputStream(os);
             in = new ObjectInputStream(is);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    // Operation 요청 함수
-    public Operation requestOperation() {
-        try {
-            return Operation.toEntity((OperationDto) in.readObject());
+            while (!Thread.currentThread().isInterrupted()) {
+                Object msg = in.readObject();
+
+                if (msg instanceof RequestCommandDto<?>) {
+
+                }
+            }
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-
     }
 
-
-    // Operation 전송 함수
-    public void sendOperation(Operation operation) {
-        try {
-            out.writeObject(Operation.toDto(operation));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // Document 전송 함수
-    public void sendDocument(Document document) {
-        try {
-            out.writeObject(Document.toDto(document));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     // 핸들러 종료
     public void shutdown() {

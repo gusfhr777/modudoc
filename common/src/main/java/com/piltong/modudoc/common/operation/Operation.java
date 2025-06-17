@@ -7,7 +7,6 @@ package com.piltong.modudoc.common.operation;
 public class Operation {
 
     private OperationType operationType; // 문서 형태
-    private EditPosition editPosition; // 변경할려는 객체
 
     private int position; // 변경 위치
 
@@ -16,9 +15,8 @@ public class Operation {
 
 
     // 생성자
-    public Operation(OperationType operationType, EditPosition editPosition, int position, String content) {
+    public Operation(OperationType operationType, int position, String content) {
         this.operationType = operationType;
-        this.editPosition = editPosition;
         this.position = position;
         this.content = content;
     }
@@ -28,9 +26,6 @@ public class Operation {
         return operationType;
     }
 
-    public EditPosition getEditPosition() {
-        return editPosition;
-    }
 
     public int getPosition() {
         return position;
@@ -46,10 +41,6 @@ public class Operation {
 
     public void setPosition(int position) {
         this.position = position;
-    }
-
-    public void setEditPosition(EditPosition editPosition) {
-        this.editPosition = editPosition;
     }
 
     public void setOperationType(OperationType operationType) {
