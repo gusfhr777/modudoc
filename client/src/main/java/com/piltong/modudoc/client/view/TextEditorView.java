@@ -1,5 +1,6 @@
 package com.piltong.modudoc.client.view;
 
+import com.piltong.modudoc.client.controller.TextEditorController;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -27,9 +28,15 @@ public class TextEditorView {
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
 
 
+    TextEditorController controller;
     Stage textEditorStage = new Stage();
 
 
+    public void initialize(Document document) {
+        initComponent(document);
+        initLayout();
+        initListeners();
+    }
     //구성요소들을 초기화하는 메소드
     void initComponent(Document document) {
         //기본 스타일 설정
@@ -106,14 +113,16 @@ public class TextEditorView {
                     if(textChanged){
                         if(!removedText.isEmpty()&& insertedText.isEmpty()){
                             //텍스트 제거만 일어났을 때 이벤트
-
+                            controller.sendDeleteText(from,to,removedText);
                         }
                         else if(!insertedText.isEmpty() && removedText.isEmpty()){
                             //텍스트 추가만 일어났을 때 이벤트
-
+                            controller.sendInsertText(from,to,insertedText);
                         }
                         else if(!insertedText.isEmpty()&&!removedText.isEmpty()) {
                             //텍스트 추가와 제거가 동시에 일어났을 때
+                            controller.sendDeleteText(from,to,removedText);
+                            controller.sendInsertText(from,to,insertedText);
                         }
                     }
                     else if(styleChanged){
@@ -125,13 +134,6 @@ public class TextEditorView {
                 });
     }
 
-
-    void showView() {
-        textEditorStage.show();
-    }
-    void closeView() {
-        textEditorStage.close();
-    }
 
     //토글 형식의 스타일 변경용 메소드
     //볼드, 및줄과 같이 버튼식으로 css적용시 사용
@@ -232,18 +234,33 @@ public class TextEditorView {
     }
 
 
+    public void setController(TextEditorController controller) {
+        this.controller = controller;
+    }
+
+    public void showView() {
+        textEditorStage.show();
+    }
+    public void closeView() {
+        textEditorStage.close();
+    }
+
+
     //입력받은 영역의 문자 및 스타일 반환
     StyledDocument<String,String,String> getStyledDocument(int start,int end) {
         return editor.getDocument().subSequence(start, end);
     }
 
     //텍스트를 위치에 추가
-    void insertText(StyledDocument<String,String,String> styledDocument, int start) {
+    public void insertText(StyledDocument<String,String,String> styledDocument, int start) {
         editor.insert(start, styledDocument);
+    }
+    public void insertStringText(String text, int start) {
+        editor.insert(start, text, "");
     }
 
     //입력받은 영역의 텍스트 삭제
-    void deleteText(int start,int end) {
+    public void deleteText(int start,int end) {
         editor.deleteText(start, end);
     }
     //입력받은 영역의 텍스트 입력받은 텍스트로 바꾸기
