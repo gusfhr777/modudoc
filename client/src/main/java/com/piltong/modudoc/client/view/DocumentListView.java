@@ -1,11 +1,9 @@
 package com.piltong.modudoc.client.view;
 
-import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.client.controller.DocumentListController;
 
 import com.piltong.modudoc.common.document.DocumentSummary;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;

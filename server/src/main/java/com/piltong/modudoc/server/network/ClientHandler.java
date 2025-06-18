@@ -1,13 +1,7 @@
 package com.piltong.modudoc.server.network;
 
 
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentDto;
-import com.piltong.modudoc.common.document.DocumentSummary;
 import com.piltong.modudoc.common.network.*;
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationDto;
-import com.sun.net.httpserver.Request;
 
 import java.net.*;
 import java.io.*;

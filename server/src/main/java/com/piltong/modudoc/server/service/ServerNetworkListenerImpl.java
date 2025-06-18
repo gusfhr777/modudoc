@@ -1,6 +1,6 @@
 package com.piltong.modudoc.server.service;
 
-import com.piltong.modudoc.common.document.*;
+import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.common.network.*;
 import com.piltong.modudoc.common.operation.*;
 

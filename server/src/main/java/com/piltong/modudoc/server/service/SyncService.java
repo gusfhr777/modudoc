@@ -1,6 +1,6 @@
 package com.piltong.modudoc.server.service;
 
-import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.common.operation.OperationDto;
 import com.piltong.modudoc.server.core.OT;
@@ -19,8 +19,8 @@ public class SyncService {
     private final Map<String, List<Operation>> operationHistory = new HashMap<>();
 
     // 생성자: 문서 서비스와 OT 초기화
-    public SyncService() {
-        this.documentService = new DocumentService();
+    public SyncService(DocumentService documentService) {
+        this.documentService = documentService;
         this.ot = new OT();
     }
 

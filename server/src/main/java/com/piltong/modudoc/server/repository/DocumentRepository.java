@@ -1,46 +1,21 @@
 package com.piltong.modudoc.server.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.piltong.modudoc.server.model.Document;
+
+
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
-import com.piltong.modudoc.common.document.Document;
+import java.util.Optional;
 
-// DB나 파일 기반 문서 저장소와 직접 연동
-public class DocumentRepository {
-    // Map을 사용. documentId를 키값으로 가진다.
-    private final Map<String, Document> documentStorage = new HashMap<>();
 
-    // DB 또는 파일 시스템에 저장
-    public synchronized void saveDocument(Document document) {
-        if (document == null || document.getId() == null) {
-            throw new IllegalArgumentException("저장할 문서나 문서 ID를 찾을 수 없음");
-        }
-        documentStorage.put(document.getId(), document);
-    }
 
-    // 저장소에서 문서 불러오기
-    public synchronized Document loadDocument(String documentId) {
-        if (documentId == null) {
-            throw new IllegalArgumentException("올바르지 않은 문서 아이디");
-        }
-        Document doc = documentStorage.get(documentId);
-        if (doc == null) {
-            throw new IllegalArgumentException("해당 ID의 문서를 찾을 수 없음");
-        }
-        return doc;
-    }
+// Document 객체에 대한 CRUD 기능을 제공하는 인터페이스.
+// 전형적인 DAO 혹은 리포지토리 패턴에 해당한다.
+public interface DocumentRepository {
 
-    // 문서 삭제
-    public synchronized void deleteDocument(String documentId) {
-        if (documentId == null) {
-            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
-        }
-        documentStorage.remove(documentId);
-    }
+    Document save(Document doc) throws SQLException; // 문서 생성 및 수정(있으면 UPDATE, 없으면 INSERT). 불완전 엔티티 객체 -> 영속화된 엔티티 객체 리턴.
+    Optional<Document> findById(int id); // 문서 단건 조회
+    List<Document> findAll(); // 문서 전체 조회
+    boolean delete(int id); // 삭제, 성공 여부 반환
 
-    // 저장된 모든 문서를 리스트로 반환
-    public synchronized List<Document> findAllDocuments() {
-        return new ArrayList<>(documentStorage.values());
-    }
 }

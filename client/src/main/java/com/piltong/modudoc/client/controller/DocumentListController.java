@@ -6,11 +6,8 @@ import com.piltong.modudoc.client.view.TextEditorView;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.document.DocumentSummary;
 import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.common.network.ClientNetworkListener;
-import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.client.view.EditDocumentView;
 import com.piltong.modudoc.client.network.NetworkListener;
-import com.piltong.modudoc.common.operation.OperationType;
 
 import java.util.ArrayList;
 import java.util.List;

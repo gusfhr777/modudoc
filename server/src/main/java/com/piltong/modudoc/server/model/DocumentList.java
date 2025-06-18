@@ -1,5 +1,7 @@
-package com.piltong.modudoc.common.document;
+package com.piltong.modudoc.server.model;
 
+
+import com.piltong.modudoc.common.document.Document;
 
 import java.util.List;
 
@@ -9,11 +11,11 @@ import java.util.List;
 public class DocumentList {
 
     // 필드 선언
-    private List<Document> items; // 여러 문서를 가질 수 있는 리스트형 객체.
+    private List<com.piltong.modudoc.common.document.Document> items; // 여러 문서를 가질 수 있는 리스트형 객체.
 
 
     // Getter 및 Setter
-    public List<Document> getDocumentList() {
+    public List<com.piltong.modudoc.common.document.Document> getDocumentList() {
         return items;
     }
 

@@ -1,13 +1,8 @@
 package com.piltong.modudoc.server.service;
 
-import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.server.repository.DocumentRepository;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-
-import java.util.ArrayList;
 import java.util.List;
 
 // 문서 관련 비즈니스 로직 처리 클래스
@@ -18,8 +13,8 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
 
     // 생성자: 저장소 객체 초기화
-    public DocumentService() {
-        this.documentRepository = new DocumentRepository();
+    public DocumentService(DocumentRepository documentRepository) {
+        this.documentRepository = documentRepository;
     }
 
     /**
