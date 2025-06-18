@@ -1,6 +1,8 @@
 package com.piltong.modudoc.server.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.piltong.modudoc.common.document.Document;
 
@@ -35,5 +37,10 @@ public class DocumentRepository {
             throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
         }
         documentStorage.remove(documentId);
+    }
+
+    // 저장된 모든 문서를 리스트로 반환
+    public synchronized List<Document> findAllDocuments() {
+        return new ArrayList<>(documentStorage.values());
     }
 }

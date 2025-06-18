@@ -3,6 +3,9 @@ package com.piltong.modudoc.server.service;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.server.repository.DocumentRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // 문서 관련 비즈니스 로직 처리 클래스
 // 문서의 생성, 저장, 수정, 삭제 등 주요 기능 제공
 // 입력 유효성 검사를 포함한 예외 처리
@@ -57,6 +60,11 @@ public class DocumentService {
             throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
         }
         documentRepository.deleteDocument(documentId);
+    }
+
+    // 전체 문서 목록 반환
+    public List<Document> getAllDocuments() {
+        return documentRepository.findAllDocuments();
     }
 
     // 문서의 존재 여부 반환
