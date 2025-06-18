@@ -11,13 +11,15 @@ repositories {
 }
 
 dependencies {
+    // JDBC
     implementation("com.mysql:mysql-connector-j:8.0.33")
 
     // log4j
     implementation("org.apache.logging.log4j:log4j-api:2.20.0")
     implementation("org.apache.logging.log4j:log4j-core:2.20.0")
 
-
+    // richTextFX
+    implementation("org.fxmisc.richtext:richtextfx:0.11.5")
 
     // 프로젝트 공통 부분
     implementation(project(":common"))
