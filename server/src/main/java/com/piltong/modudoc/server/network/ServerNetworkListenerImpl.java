@@ -30,7 +30,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 생성 요청 처리
             case CREATE_DOCUMENT: {
-                if (!(payload instanceof DocumentDto dto))
+                if (!(payload instanceof DocumentSummaryDto dto))
                     throw new CommandException("CREATE_DOCUMENT: 잘못된 payload 타입입니다.");
 
                 // Id와 content는 서버에서 생성
