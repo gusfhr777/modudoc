@@ -2,7 +2,7 @@ package com.piltong.modudoc.server;
 
 
 import com.piltong.modudoc.common.Constants;
-import com.piltong.modudoc.server.network.ServerNetworkHandler;
+import com.piltong.modudoc.server.network.NetworkHandler;
 import com.piltong.modudoc.server.service.ServerNetworkListenerImpl;
 import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
@@ -22,7 +22,7 @@ public class ServerApp {
 
     public static void main(String[] args) {
 
-        log.info("ServerApp Starting.");
+        log.info("ServerApp Initializing.");
 
 
         try {
@@ -35,12 +35,12 @@ public class ServerApp {
             DocumentService documentService = new DocumentService();
             SyncService syncService = new SyncService();
             ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(documentService, syncService);
-            log.info("Service Started.");
+            log.info("Service started.");
 
             // ServerNetworkHandler 스레드 생성 및 시작
-            Runnable networkHandler = new ServerNetworkHandler(Constants.SERVER_PORT, executor, listener);
+            Runnable networkHandler = new NetworkHandler(Constants.SERVER_PORT, executor, listener);
             new Thread(networkHandler).start();
-            log.info("Network handler thread started.");
+            log.info("Network handler started.");
 
 
         } catch (Exception e) {
@@ -50,7 +50,7 @@ public class ServerApp {
 
 
 
-        log.info("ServerApp initialized successfully on port {}", Constants.SERVER_PORT);
+        log.info("ServerApp successfully initialized on port {}", Constants.SERVER_PORT);
 
     }
 }
