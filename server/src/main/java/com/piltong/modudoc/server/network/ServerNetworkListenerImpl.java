@@ -39,7 +39,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
                 documentService.updateDocument(generatedId, title, content);
 
-                return (R) new DocumentSummary(
+                return (R) new DocumentSummaryDto(
                         generatedId,
                         title,
                         LocalDateTime.now(),
@@ -58,8 +58,8 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             case READ_DOCUMENT_SUMMARIES: {
                 List<Document> allDocs = documentService.getAllDocuments();
 
-                List<DocumentSummary> summaries = allDocs.stream()
-                        .map(doc -> new DocumentSummary(
+                List<DocumentSummaryDto> summaries = allDocs.stream()
+                        .map(doc -> new DocumentSummaryDto(
                         doc.getId(),
                         doc.getTitle(),
                         doc.getCreatedDate(),
@@ -77,7 +77,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                 if (!documentService.exists(dto.getId()))
                     throw new CommandException("존재하지 않는 문서입니다.");
                 documentService.updateDocument(dto.getId(), dto.getTitle(), dto.getContent());
-                return (R) new DocumentSummary(
+                return (R) new DocumentSummaryDto(
                         dto.getId(),
                         dto.getTitle(),
                         LocalDateTime.now(),
