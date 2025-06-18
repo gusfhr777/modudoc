@@ -58,6 +58,7 @@ public class StartController {
             NetworkListener networkListener = new NetworkListener();
             networkHandler = new ClientNetworkHandler(this.host,port,networkListener);
             DocumentListController documentListController = new DocumentListController(networkHandler);
+            networkListener.setDocumentListController(documentListController);
             DocumentListView documentListView = new DocumentListView();
             documentListView.setController(documentListController);
             documentListController.setView(documentListView);
@@ -66,6 +67,7 @@ public class StartController {
             startView.closeView();
         }catch (RuntimeException e) {
             System.out.println("Error: "+e.getMessage());
+            startView.setPromptText("Error: "+e.getMessage());
         }
     }
 
