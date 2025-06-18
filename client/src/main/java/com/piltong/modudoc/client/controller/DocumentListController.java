@@ -74,6 +74,7 @@ public class DocumentListController {
 
     public void addDocument(DocumentSummary document) {
         documentList.add(document);
+        documentListView.addDocument(document);
     }
 
 
@@ -99,7 +100,7 @@ public class DocumentListController {
 
     //목록에 있는 문서 제거
     public void removeDocument(DocumentSummary document) {
-        networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document);
+        networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document.getId());
         documentListView.removeDocument(document);
         documentList.remove(document);
     }
@@ -113,6 +114,7 @@ public class DocumentListController {
                 isEditing = true;
                 editDocumentView = new EditDocumentView(this);
                 editDocumentView.initialize();
+                editDocumentView.setDocument(document);
                 editDocumentView.setButtonText("문서 제목 수정");
                 editDocumentView.showView();
             }
@@ -123,7 +125,7 @@ public class DocumentListController {
     public void sendEditDocument(DocumentSummary olddocument, DocumentSummary newdocument) {
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,newdocument);
         documentListView.removeDocument(olddocument);
-        documentList.add(newdocument);
+        addDocument(newdocument);
 
     }
     public void requestConnect(DocumentSummary document) {
@@ -133,6 +135,7 @@ public class DocumentListController {
     public void connectDocument(Document document) {
         TextEditorView textEditorView = new TextEditorView();
         TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, networkHandler.requestDocument());
+        NetworkListener.setTextEditorController(textEditorController);
         textEditorView.showView();
     }
 
