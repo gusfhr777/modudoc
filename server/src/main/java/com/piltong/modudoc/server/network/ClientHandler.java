@@ -52,6 +52,7 @@ public class ClientHandler implements Runnable {
                     success = false;
                     resultPayload = null;
                     errorMsg = e.getMessage();
+                    System.out.println(errorMsg);
                 }
 
                 ResponseCommandDto<Object> response = new ResponseCommandDto<>(

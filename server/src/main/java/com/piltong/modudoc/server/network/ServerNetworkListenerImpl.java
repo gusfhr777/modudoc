@@ -7,6 +7,7 @@ import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
@@ -29,18 +30,18 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 생성 요청 처리
             case CREATE_DOCUMENT: {
-                if (!(payload instanceof DocumentDto dto))
+                if (!(payload instanceof String title))
                     throw new CommandException("CREATE_DOCUMENT: 잘못된 payload 타입입니다.");
 
                 // Id와 content는 서버에서 생성
                 String generatedId = java.util.UUID.randomUUID().toString();
                 String content = "";    // 빈 문자열로 생성
 
-                documentService.updateDocument(generatedId, dto.getTitle(), content);
+                documentService.updateDocument(generatedId, title, content);
 
-                return (R) new DocumentSummary(
+                return (R) new DocumentSummaryDto(
                         generatedId,
-                        dto.getTitle(),
+                        title,
                         LocalDateTime.now(),
                         LocalDateTime.now(),
                         List.of()
@@ -55,17 +56,18 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 조회 요청 처리 - 본문(content) 없이
             case READ_DOCUMENT_SUMMARIES: {
-                if (!(payload instanceof String docId))
-                    throw new CommandException("READ_DOCUMENT_SUMMARIES: 잘못된 payload 타입입니다.");
+                List<Document> allDocs = documentService.getAllDocuments();
 
-                Document doc = documentService.getDocument(docId);
-                return (R) new DocumentSummary(
+                List<DocumentSummaryDto> summaries = allDocs.stream()
+                        .map(doc -> new DocumentSummaryDto(
                         doc.getId(),
                         doc.getTitle(),
                         doc.getCreatedDate(),
                         doc.getModifiedDate(),
                         doc.getAccessUserIds()
-                );
+                )).toList();
+
+                return (R) summaries;
             }
 
             // 문서 수정 요청 처리
@@ -75,7 +77,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                 if (!documentService.exists(dto.getId()))
                     throw new CommandException("존재하지 않는 문서입니다.");
                 documentService.updateDocument(dto.getId(), dto.getTitle(), dto.getContent());
-                return (R) new DocumentSummary(
+                return (R) new DocumentSummaryDto(
                         dto.getId(),
                         dto.getTitle(),
                         LocalDateTime.now(),
