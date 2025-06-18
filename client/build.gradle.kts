@@ -1,9 +1,10 @@
 plugins {
     // Java 애플리케이션 번들링 & 실행
-    application
+    id("application")
     // JavaFX 지원 플러그인
     id("org.openjfx.javafxplugin") version "0.1.0"
 }
+
 
 javafx {
     version = "21"
@@ -12,14 +13,9 @@ javafx {
 
 application {
     // Main 클래스 패키지 경로에 맞춰 수정하세요
-    mainClass.set("com.piltong.modudoc.client.ClientApp")
+    mainClass = "com.piltong.modudoc.client.ClientApp"
 }
 
-java {
-    // 호환 JDK 버전
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
 
 dependencies {
     // JavaFX 컨트롤, FXML 모듈
@@ -28,21 +24,7 @@ dependencies {
     implementation("org.openjfx:javafx-web:21")
     implementation("org.fxmisc.richtext:richtextfx:0.11.5")
 
-    // 테스트용 JUnit
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-
-
-    // Jackson
-//    implementation("com.fasterxml.jackson.core:jackson-databind:2.15.2")
-
     // 프로젝트 공통 부분
     implementation(project(":common"))
 }
 
-
-
-
-tasks.test {
-    useJUnitPlatform()
-}

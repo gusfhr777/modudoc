@@ -31,6 +31,7 @@ public class ServerApp {
 
         // listener 구현체 생성
         ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(documentService, syncService);
+        System.out.println("Service started.");
 
         // ServerNetworkHandler 스레드 생성 및 시작
         Runnable networkHandler = new ServerNetworkHandler(Constants.SERVER_PORT, executor, listener);
