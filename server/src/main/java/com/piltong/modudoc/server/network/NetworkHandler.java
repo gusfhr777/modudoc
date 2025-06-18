@@ -103,7 +103,4 @@ public class NetworkHandler implements Runnable {
         } catch (IOException ignored) {}
     }
 
-
-
-
 }
