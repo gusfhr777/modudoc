@@ -70,8 +70,9 @@ public class EditDocumentView {
                 controller.setIsEditing(false);
                 closeView();
             }else {
+                DocumentSummary oldSummary = summary;
                 summary.setTitle(nameField.getText());
-                controller.sendEditDocument(summary);
+                controller.sendEditDocument(oldSummary,summary);
                 controller.setIsEditing(false);
                 closeView();
             }

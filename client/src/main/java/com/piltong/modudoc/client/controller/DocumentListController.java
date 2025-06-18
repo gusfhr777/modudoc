@@ -94,7 +94,7 @@ public class DocumentListController {
     }
     public void sendCreateDocument(String title) {
 
-        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT,new DocumentSummary(null,title,null,null,null));
+        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT, title);
     }
 
     //목록에 있는 문서 제거
@@ -120,8 +120,11 @@ public class DocumentListController {
         else throw new RuntimeException("Document is not selected");
     }
 
-    public void sendEditDocument(DocumentSummary document) {
-        networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,document);
+    public void sendEditDocument(DocumentSummary olddocument, DocumentSummary newdocument) {
+        networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,newdocument);
+        documentListView.removeDocument(olddocument);
+        documentList.add(newdocument);
+
     }
     public void requestConnect(DocumentSummary document) {
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT,document.getId());
