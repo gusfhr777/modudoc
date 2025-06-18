@@ -13,23 +13,22 @@ import com.piltong.modudoc.common.operation.OperationType;
 // 동시 편집 충돌 해결 알고리즘
 public class OT {
     // 두 연산 간 충돌 해결
-    public Operation[] transform(Operation op1, Operation op2) {
+    public Operation[] transform(Operation prior, Operation current) {
         // 복사하여 원본은 유지
-        op1 = copy(op1);
-        op2 = copy(op2);
+        Operation op1 = copy(prior);
+        Operation op2 = copy(current);
 
         int len1 = op1.getContent() != null ? op1.getContent().length() : 0;
         int len2 = op2.getContent() != null ? op2.getContent().length() : 0;
 
         // 1. 둘 다 insert인 경우
         if (op1.getOperationType() == OperationType.INSERT && op2.getOperationType() == OperationType.INSERT) {
-            // op1이 먼저 왔거나 같은 위치면, op2의 위치를 len1만큼 밀어줌
+            // op1이 먼저 왔거나 같으면, op2의 위치를 len1만큼 밀어줌
             if (op1.getPosition() <= op2.getPosition())
                 op2.setPosition(op2.getPosition() + len1);
-                // 반대면 op1을 len2만큼 밀어줌
+                // 아니면 op1의 위치를 밀어줌
             else
                 op1.setPosition(op1.getPosition() + len2);
-
         }
         // 2. insert, delete인 경우
         else if (op1.getOperationType() == OperationType.INSERT && op2.getOperationType() == OperationType.DELETE) {
@@ -70,14 +69,25 @@ public class OT {
 
     // 문자열에 연산 적용
     public String apply(String original, Operation op) {
-        if (op.getOperationType() == OperationType.INSERT) {
-            return original.substring(0, op.getPosition()) + op.getContent() + original.substring(op.getPosition());
-        } else if (op.getOperationType() == OperationType.DELETE) {
-            int len = op.getContent() != null ? op.getContent().length() : 1;
-            return original.substring(0, op.getPosition()) + original.substring(op.getPosition() + len);
-        } else {
-            throw new IllegalArgumentException("Unsupported operation type");
-        }
+        int pos = op.getPosition();
+        if (pos < 0 || pos > original.length())  // ← 여기서 `>=`이 아니라 `>` 이어야 함
+            throw new IllegalArgumentException("잘못된 위치: " + pos + " / 길이: " + original.length());
+
+        return switch (op.getOperationType()) {
+            case INSERT -> {
+                String before = original.substring(0, pos);
+                String after = (pos == original.length()) ? "" : original.substring(pos); // ← 핵심 수정
+                yield before + op.getContent() + after;
+            }
+            case DELETE -> {
+                int len = op.getContent() != null ? op.getContent().length() : 1;
+                String before = original.substring(0, pos);
+                String after = original.substring(pos + len);
+                yield before + after;
+            }
+            default -> throw new UnsupportedOperationException(
+                    "지원하지 않는 연산 타입: " + op.getOperationType());
+        };
     }
 
     // Operation 복사

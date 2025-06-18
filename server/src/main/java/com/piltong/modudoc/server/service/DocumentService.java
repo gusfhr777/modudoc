@@ -53,6 +53,14 @@ public class DocumentService {
         return documentRepository.loadDocument(documentId);
     }
 
+    // 문서 존재여부 판단
+    public Document findDocument(String documentId) {
+        if (documentId == null) {
+            return null;
+        }
+        return documentRepository.findDocument(documentId);
+    }
+
     // 문서를 삭제함
     public void removeDocument(String documentId) {
         if (documentId == null) {
@@ -68,6 +76,6 @@ public class DocumentService {
 
     // 문서의 존재 여부 반환
     public boolean exists(String documentId) {
-        return getDocument(documentId) != null;
+        return findDocument(documentId) != null;
     }
 }
