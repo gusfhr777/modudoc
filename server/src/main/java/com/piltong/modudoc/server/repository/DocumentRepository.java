@@ -22,7 +22,7 @@ public class DocumentRepository {
     // 저장소에서 문서 불러오기
     public synchronized Document loadDocument(String documentId) {
         if (documentId == null) {
-            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
+            throw new IllegalArgumentException("올바르지 않은 문서 아이디");
         }
         Document doc = documentStorage.get(documentId);
         if (doc == null) {
