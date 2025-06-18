@@ -72,11 +72,12 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 수정 요청 처리
             case UPDATE_DOCUMENT: {
-                if (!(payload instanceof DocumentDto dto))
+                if (!(payload instanceof DocumentSummaryDto dto))
                     throw new CommandException("UPDATE_DOCUMENT: 잫못된 payload 타입입니다.");
                 if (!documentService.exists(dto.getId()))
                     throw new CommandException("존재하지 않는 문서입니다.");
-                documentService.updateDocument(dto.getId(), dto.getTitle(), dto.getContent());
+                String currentContent = documentService.getDocument(dto.getId()).getContent();
+                documentService.updateDocument(dto.getId(), dto.getTitle(), currentContent);
                 return (R) new DocumentSummaryDto(
                         dto.getId(),
                         dto.getTitle(),
