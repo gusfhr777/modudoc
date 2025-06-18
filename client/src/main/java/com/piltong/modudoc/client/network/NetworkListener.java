@@ -3,7 +3,9 @@ package com.piltong.modudoc.client.network;
 import com.piltong.modudoc.client.controller.DocumentListController;
 import com.piltong.modudoc.client.controller.TextEditorController;
 import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.common.document.DocumentDto;
 import com.piltong.modudoc.common.document.DocumentSummary;
+import com.piltong.modudoc.common.document.DocumentSummaryDto;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.ClientNetworkListener;
 import com.piltong.modudoc.common.operation.Operation;
@@ -24,12 +26,13 @@ public class NetworkListener implements ClientNetworkListener {
 
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
-                    documentListController.addDocument((DocumentSummary) payload);
+                    System.out.println("Create Document");
+                    documentListController.addDocument(DocumentSummary.toEntity((DocumentSummaryDto) payload));
                     break;
 
                 // 단일 문서 조회 명령
                 case READ_DOCUMENT:
-                    documentListController.connectDocument((Document) payload);
+                    documentListController.connectDocument(Document.toEntity((DocumentDto) payload));
                     break;
 
                 // 문서 수정 명령
@@ -57,6 +60,8 @@ public class NetworkListener implements ClientNetworkListener {
                     break;
             }
         }
+        else
+            System.err.println("NetworkListener not called");
     }
 
     @Override

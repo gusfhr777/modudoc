@@ -70,12 +70,12 @@ public class ClientNetworkHandler implements Runnable{
 
                         // 문서 생성 명령
                         case CREATE_DOCUMENT:
-                            listener.onCommandSuccess(command, (DocumentSummary) dto.getPayload());
+                            listener.onCommandSuccess(command, (DocumentSummaryDto) dto.getPayload());
                             break;
 
                         // 단일 문서 조회 명령
                         case READ_DOCUMENT:
-                            listener.onCommandSuccess(command, (Document) dto.getPayload());
+                            listener.onCommandSuccess(command, (DocumentDto) dto.getPayload());
                             break;
 
                         // 문서 수정 명령

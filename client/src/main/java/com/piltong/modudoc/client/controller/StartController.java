@@ -58,6 +58,7 @@ public class StartController {
             NetworkListener networkListener = new NetworkListener();
             networkHandler = new ClientNetworkHandler(this.host,port,networkListener);
             DocumentListController documentListController = new DocumentListController(networkHandler);
+            networkListener.setDocumentListController(documentListController);
             DocumentListView documentListView = new DocumentListView();
             documentListView.setController(documentListController);
             documentListController.setView(documentListView);
