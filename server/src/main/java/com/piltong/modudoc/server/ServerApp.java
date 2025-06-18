@@ -3,13 +3,10 @@ package com.piltong.modudoc.server;
 
 import com.piltong.modudoc.common.Constants;
 import com.piltong.modudoc.server.network.ServerNetworkHandler;
-import com.piltong.modudoc.server.network.ServerNetworkListenerImpl;
+import com.piltong.modudoc.server.service.ServerNetworkListenerImpl;
 import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

@@ -11,7 +11,7 @@ import com.piltong.modudoc.common.operation.Operation;
 public enum ClientCommand {
     /**
      * 문서 생성 명령.
-     * 요청 데이터: null
+     * 요청 데이터: String (docTitle)
      * 응답 데이터: {@link DocumentSummary}
      */
     CREATE_DOCUMENT,
