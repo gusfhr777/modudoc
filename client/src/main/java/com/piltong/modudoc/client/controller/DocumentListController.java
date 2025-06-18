@@ -93,7 +93,8 @@ public class DocumentListController {
         }
     }
     public void sendCreateDocument(String title) {
-        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT,title);
+
+        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT,new DocumentSummary(null,title,null,null,null));
     }
 
     //목록에 있는 문서 제거
