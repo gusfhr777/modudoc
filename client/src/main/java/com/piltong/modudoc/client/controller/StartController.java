@@ -1,5 +1,6 @@
 package com.piltong.modudoc.client.controller;
 
+import com.piltong.modudoc.client.network.NetworkListener;
 import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.client.view.StartView;
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
@@ -28,15 +29,34 @@ public class StartController {
 
 
     //연결 버튼을 눌렀을 때 호출되는 메소드
-    public void connect(String host) {
+    public void connect(String host, String Stringport) {
         if(host == null || host.isEmpty()) {
             host = "localhost";
         }
         else {
             this.host = host;
         }
+
+
         try {
-            networkHandler = new ClientNetworkHandler();
+            port = Integer.parseInt(Stringport);
+        }
+        catch (NumberFormatException e) {
+            port = 8080;
+            e.printStackTrace();
+        }
+
+
+        if(port <= 0|| port > 65535) {
+            port = 8080;
+        }
+        else {
+            this.port = port;
+        }
+
+        try {
+            NetworkListener networkListener = new NetworkListener();
+            networkHandler = new ClientNetworkHandler(this.host,port,networkListener);
             DocumentListController documentListController = new DocumentListController(networkHandler);
             DocumentListView documentListView = new DocumentListView();
             documentListView.setController(documentListController);

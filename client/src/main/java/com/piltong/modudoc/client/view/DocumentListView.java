@@ -96,7 +96,7 @@ public class DocumentListView {
         });
         InButton.setOnAction(e -> {
             //접속 버튼 입력시 이벤트
-
+            controller.requestConnect(documentTable.getSelectionModel().getSelectedItem());
         });
         ModifyButton.setOnAction(e->{
             //수정 버튼 입력시 이벤트
