@@ -31,11 +31,15 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             case CREATE_DOCUMENT: {
                 if (!(payload instanceof DocumentDto dto))
                     throw new CommandException("CREATE_DOCUMENT: 잘못된 payload 타입입니다.");
-                if (documentService.exists(dto.getId()))
-                    throw new CommandException("이미 존재하는 문서입니다.");
-                documentService.updateDocument(dto.getId(), dto.getTitle(), dto.getContent());
+
+                // Id와 content는 서버에서 생성
+                String generatedId = java.util.UUID.randomUUID().toString();
+                String content = "";    // 빈 문자열로 생성
+
+                documentService.updateDocument(generatedId, dto.getTitle(), content);
+
                 return (R) new DocumentSummary(
-                        dto.getId(),
+                        generatedId,
                         dto.getTitle(),
                         LocalDateTime.now(),
                         LocalDateTime.now(),
