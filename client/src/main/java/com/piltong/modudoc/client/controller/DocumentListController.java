@@ -82,7 +82,18 @@ public class DocumentListController {
 
     //생성 버튼 입력 시 문서 생성
     public void createDocument() {
-        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT,null);
+        if (isEditing) {
+            throw new RuntimeException("Document is already editing");
+        } else {
+            isEditing = true;
+            editDocumentView = new EditDocumentView(this);
+            editDocumentView.initialize();
+            editDocumentView.setButtonText("문서 생성");
+            editDocumentView.showView();
+        }
+    }
+    public void sendCreateDocument(String title) {
+        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT,title);
     }
 
     //목록에 있는 문서 제거
@@ -92,16 +103,25 @@ public class DocumentListController {
         documentList.remove(document);
     }
 
-    //문서 수정
+    //문서 수정 화면
     public void editDocument(DocumentSummary document) {
-        if(isEditing){
-
+        if(!documentListView.isSelectedEmpty()) {
+            if (isEditing) {
+                throw new RuntimeException("Document is already editing");
+            } else {
+                isEditing = true;
+                editDocumentView = new EditDocumentView(this);
+                editDocumentView.initialize();
+                editDocumentView.setButtonText("문서 제목 수정");
+                editDocumentView.showView();
+            }
         }
-        else{
-
-        }
+        else throw new RuntimeException("Document is not selected");
     }
 
+    public void sendEditDocument(DocumentSummary document) {
+        networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,document);
+    }
     public void requestConnect(DocumentSummary document) {
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT,document.getId());
     }
@@ -110,6 +130,13 @@ public class DocumentListController {
         TextEditorView textEditorView = new TextEditorView();
         TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, networkHandler.requestDocument());
         textEditorView.showView();
+    }
+
+    public boolean getIsEditing() {
+        return isEditing;
+    }
+    public void setIsEditing(boolean isEditing) {
+        this.isEditing = isEditing;
     }
 
 }

@@ -76,6 +76,7 @@ public class DocumentListView {
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
 
+
     }
     //각 구성요소들을 배치하는 메소드
     public void initLayout() {
@@ -100,7 +101,7 @@ public class DocumentListView {
         });
         ModifyButton.setOnAction(e->{
             //수정 버튼 입력시 이벤트
-
+            controller.editDocument(documentTable.getSelectionModel().getSelectedItem());
         });
         RemoveButton.setOnAction(e -> {
             //삭제 버튼 입력시 이벤트
@@ -139,6 +140,9 @@ public class DocumentListView {
     //선택된 문서를 반환하는 메소드
     public DocumentSummary getSelectedDocument() {
         return selectionModel.getSelectedItem();
+    }
+    public boolean isSelectedEmpty() {
+        return selectionModel.getSelectedItem() == null;
     }
 
 }
