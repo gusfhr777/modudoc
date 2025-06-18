@@ -52,7 +52,8 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             case READ_DOCUMENT:
                 if (!(payload instanceof String docId))
                     throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
-                return (R) documentService.getDocument(docId);
+                Document Doc = documentService.getDocument(docId);
+                return (R) Document.toDto(Doc);
 
             // 문서 조회 요청 처리 - 본문(content) 없이
             case READ_DOCUMENT_SUMMARIES: {
