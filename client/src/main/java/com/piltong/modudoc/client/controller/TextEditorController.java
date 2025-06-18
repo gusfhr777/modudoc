@@ -6,7 +6,6 @@ import com.piltong.modudoc.client.network.ClientNetworkHandler;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.ClientNetworkListener;
-import com.piltong.modudoc.common.operation.EditPosition;
 import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.common.operation.OperationType;
 

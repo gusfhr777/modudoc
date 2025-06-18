@@ -43,9 +43,11 @@ public class DocumentListController {
     }
 
     public void start() {
+        new Thread(networkHandler).start();
         documentListView.initialize();
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_SUMMARIES,null);
         documentListView.setDocumentList(documentList);
+
 
     }
 

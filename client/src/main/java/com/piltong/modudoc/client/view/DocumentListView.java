@@ -128,7 +128,9 @@ public class DocumentListView {
     }
     //목록을 설정하는 메소드
     public void setDocumentList(List<DocumentSummary> documentList) {
-        documentTable.setItems((ObservableList<DocumentSummary>) documentList);
+        for (DocumentSummary document : documentList) {
+            addDocument(document); // 목록 뷰 클래스 불러오기
+        }
     }
     //목록의 모든 문서를 제거하는 메소드
     public void clearDocumentList() {

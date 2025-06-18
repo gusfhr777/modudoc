@@ -62,9 +62,10 @@ public class StartController {
             documentListView.setController(documentListController);
             documentListController.setView(documentListView);
             documentListView.showView();
+            documentListController.start();
             startView.closeView();
         }catch (RuntimeException e) {
-
+            System.out.println("Error: "+e.getMessage());
         }
     }
 

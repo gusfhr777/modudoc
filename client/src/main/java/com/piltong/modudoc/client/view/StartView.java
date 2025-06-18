@@ -69,6 +69,7 @@ public class StartView {
 
     public void closeView() {
         startStage.close();
+        System.out.println("창 닫기");
     }
 
     //텍스트 입력 칸의 텍스트를 반환한다
