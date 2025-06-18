@@ -134,7 +134,8 @@ public class DocumentListController {
     //문서 접속
     public void connectDocument(Document document) {
         TextEditorView textEditorView = new TextEditorView();
-        TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, networkHandler.requestDocument());
+        TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, document);
+        textEditorView.insertStringText(document.getContent(),0);
         NetworkListener.setTextEditorController(textEditorController);
         textEditorView.showView();
     }

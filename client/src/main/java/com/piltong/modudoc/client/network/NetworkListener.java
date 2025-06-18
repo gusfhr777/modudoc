@@ -66,11 +66,12 @@ public class NetworkListener implements ClientNetworkListener {
 
     @Override
     public void onOperationReceived(Operation op) {
-        if(op.getOperationType() == OperationType.INSERT) {
-            textEditorController.insertText(op.getContent(), op.getPosition());
-        }
-        else if(op.getOperationType() == OperationType.DELETE) {
-            textEditorController.deleteText(op.getPosition(), op.getContent().length());
+        if(textEditorController != null&& textEditorController.getDocument().getId() == op.getDocumentId()) {
+            if (op.getOperationType() == OperationType.INSERT) {
+                textEditorController.insertText(op.getContent(), op.getPosition());
+            } else if (op.getOperationType() == OperationType.DELETE) {
+                textEditorController.deleteText(op.getPosition(), op.getContent().length());
+            }
         }
     }
 

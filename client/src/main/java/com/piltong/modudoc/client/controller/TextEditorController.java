@@ -36,6 +36,9 @@ public class TextEditorController {
     public void setDocument(Document document) {
         this.document = document;
     }
+    public Document getDocument() {
+        return document;
+    }
 
     public void insertText(String text, int position) {
         textEditorView.insertStringText(text,position);

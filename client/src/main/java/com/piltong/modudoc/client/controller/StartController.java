@@ -67,6 +67,7 @@ public class StartController {
             startView.closeView();
         }catch (RuntimeException e) {
             System.out.println("Error: "+e.getMessage());
+            startView.setPromptText("Error: "+e.getMessage());
         }
     }
 

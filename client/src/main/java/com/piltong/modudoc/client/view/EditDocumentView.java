@@ -55,6 +55,9 @@ public class EditDocumentView {
                 returnEdit();
             }
         });
+        editStage.setOnCloseRequest(e->{
+            controller.setIsEditing(false);
+        });
 
     }
 
