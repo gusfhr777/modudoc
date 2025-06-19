@@ -50,7 +50,7 @@ public class SyncServiceTest {
         syncService.updateDocument("doc3", "title3", "cat");
 
         syncService.syncUpdate("doc3", new OperationDto(OperationType.INSERT, "doc3", 3, "s"), "u1");
-        syncService.syncUpdate("doc3", new OperationDto(OperationType.INSERT, "doc3", 4, "!"), "u1");
+        syncService.syncUpdate("doc3", new OperationDto(OperationType.INSERT, "doc3", 3, "!"), "u1");
 
         Document result = syncService.getDocument("doc3");
         assertEquals("cats!", result.getContent());

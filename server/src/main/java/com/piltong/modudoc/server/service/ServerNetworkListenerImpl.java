@@ -96,6 +96,8 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             case PROPAGATE_OPERATION:
                 if (!(payload instanceof OperationDto opDto))
                     throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
+                if (!documentService.exists(opDto.getDocumentId()))
+                    throw new CommandException("해당 문서가 존재하지 않습니다.");
                 syncService.syncUpdate(opDto.getDocumentId(), opDto, "null");
                 return null;
 

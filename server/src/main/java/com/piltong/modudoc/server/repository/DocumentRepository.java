@@ -19,14 +19,16 @@ public class DocumentRepository {
         documentStorage.put(document.getId(), document);
     }
 
+    // Id에 해당하는 문서 존재여부
+    public synchronized Document findDocument(String documentId) {
+        return documentStorage.get(documentId);
+    }
+
     // 저장소에서 문서 불러오기
     public synchronized Document loadDocument(String documentId) {
-        if (documentId == null) {
-            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
-        }
         Document doc = documentStorage.get(documentId);
         if (doc == null) {
-            throw new IllegalArgumentException("해당 ID의 문서를 찾을 수 없음");
+            throw new IllegalArgumentException("ID에 해당하는 문서를 찾을 수 없음");
         }
         return doc;
     }

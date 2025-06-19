@@ -29,6 +29,8 @@ public class DocumentServiceTest {
 
     @Test
     void testDocumentExists() {
+        // 해당 Id에 해당하는 문서가 없어서 예외를 던짐. 그래서 오류나감
+        // 예외를 던지는 대신 null 값을 반환하는 코드를 추가함.
         assertFalse(documentService.exists("x"));
         documentService.updateDocument("y", "Y", "Y");
         assertTrue(documentService.exists("y"));
