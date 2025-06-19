@@ -1,13 +1,10 @@
-package com.piltong.modudoc.server.network;
+package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.common.document.*;
 import com.piltong.modudoc.common.network.*;
 import com.piltong.modudoc.common.operation.*;
-import com.piltong.modudoc.server.service.DocumentService;
-import com.piltong.modudoc.server.service.SyncService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
