@@ -104,4 +104,13 @@ public class SyncService {
             System.out.println("[Broadcast] broadcast 실패 : " + e.getMessage());
         }
     }
+    
+    // Test용 문서 생성 메소드
+    public void updateDocument(String documentId, String title, String content) {
+        documentService.updateDocument(documentId, title, content);
+    }
+
+    public Document getDocument(String documentId) {
+        return documentService.getDocument(documentId);
+    }
 }
