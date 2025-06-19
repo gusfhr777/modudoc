@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutorService;
 // 서버측에서 외부와의 통신을 처리하는 클래스
 // 서버에서 소켓, 통신 내용은 모두 이 클래스에서 처리한다.
 // 클라와의 데이터 송수신, 내부 로직에 데이터 전달, 수정 사항 반영 등
-public class ServerNetworkHandler implements Runnable {
+public class NetworkHandler implements Runnable {
 
     private final int port; // 네트워크 핸들러가 시작되는 포트
     private final ExecutorService executor; // 스레드 풀
@@ -24,7 +24,7 @@ public class ServerNetworkHandler implements Runnable {
 
 
     // 핸들러 초기화 함수
-    public ServerNetworkHandler(int port, ExecutorService executor, ServerNetworkListener listener) {
+    public NetworkHandler(int port, ExecutorService executor, ServerNetworkListener listener) {
         // 변수 할당
         this.port = port;
         this.executor = executor;
@@ -102,8 +102,5 @@ public class ServerNetworkHandler implements Runnable {
 
         } catch (IOException ignored) {}
     }
-
-
-
 
 }

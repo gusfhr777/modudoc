@@ -24,6 +24,13 @@ dependencies {
     implementation("org.openjfx:javafx-web:21")
     implementation("org.fxmisc.richtext:richtextfx:0.11.5")
 
+
+    // log4j
+    implementation("org.apache.logging.log4j:log4j-api:2.20.0")
+    implementation("org.apache.logging.log4j:log4j-core:2.20.0")
+
+
+
     // 프로젝트 공통 부분
     implementation(project(":common"))
 }
