@@ -48,16 +48,16 @@ public class OTTest {
         assertEquals(6, transformed[1].getPosition());
     }
 
-//    @Test
-//    void testDeleteInsert() {
-//        Operation delete = new Operation(OperationType.DELETE, "doc1", 1, "A");
-//        Operation insert = new Operation(OperationType.INSERT, "doc1", 3, "BC");
-//
-//        Operation[] transformed = ot.transform(delete, insert);
-//
-//        assertEquals(1, transformed[0].getPosition());
-//        assertEquals(1, transformed[1].getPosition());
-//    }
+    @Test
+    void testDeleteInsert() {
+        Operation delete = new Operation(OperationType.DELETE, "doc1", 1, "A");
+        Operation insert = new Operation(OperationType.INSERT, "doc1", 3, "BC");
+
+        Operation[] transformed = ot.transform(delete, insert);
+
+        assertEquals(1, transformed[0].getPosition());
+        assertEquals(2, transformed[1].getPosition());
+    }
 
     @Test
     void testDeleteDeleteSamePosition() {
