@@ -1,6 +1,5 @@
 package com.piltong.modudoc.server.repository;
 
-import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.server.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,100 +27,93 @@ public class JDBCUserRepository implements UserRepository {
         try {
             this.conn = DBManager.getConnection();
         } catch (SQLException e) {
-            String msg = "JDBCUserRepository initialize failed. : DBManager getConnection() failed.";
-            log.error(msg, e);
-            throw new RuntimeException(msg, e);
+            log.fatal("UserRepository 초기화 실패", e);
+            throw new RuntimeException("DB 연결 실패", e);
         }
     }
 
     @Override
-    public void save(User user) {
-        if (Objects.isNull(user.getId())) { // ID가 없는 경우 -> 생성
-            try (PreparedStatement pstmt = conn.prepareStatement(INSERT_SQL)) {
-                pstmt.setString(1, user.getId());
-                pstmt.setString(2, user.getUsername());
-                pstmt.setString(3, user.getPassword());
-
+    public User save(User user) {
+        if (user.getId() == null) { // 생성
+            try (PreparedStatement pstmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
+                pstmt.setString(1, user.getUsername());
+                pstmt.setString(2, user.getPassword());
                 pstmt.executeUpdate();
 
+                try (ResultSet rs = pstmt.getGeneratedKeys()) {
+                    if (rs.next())
+                        user.setId(rs.getString(1)); // 보통 AUTO_INCREMENT인 경우
+                }
+
+                return findById(user.getId()).orElse(user); // created_date 채워서 리턴
             } catch (SQLException e) {
-                String msg = "Document Create Failed.";
-                log.error(msg, e);
-                throw new RuntimeException(msg, e);
+                log.error("User 생성 실패", e);
+                throw new RuntimeException("User 생성 실패", e);
             }
-
-
-        } else { // ID가 있는 경우 -> 업데이트
-            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_SQL)){
-                pstmt.setString(1, user.getId());
-                pstmt.setString(2, user.getUsername());
-                pstmt.setString(3, user.getPassword());
-
+        } else { // 업데이트
+            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_SQL)) {
+                pstmt.setString(1, user.getUsername());
+                pstmt.setString(2, user.getPassword());
+                pstmt.setString(3, user.getId());
                 pstmt.executeUpdate();
-
+                return findById(user.getId()).orElse(user);
             } catch (SQLException e) {
-                String msg = "Document Update Failed.";
-                log.error(msg, e);
-                throw new RuntimeException(msg, e);
+                log.error("User 업데이트 실패", e);
+                throw new RuntimeException("User 업데이트 실패", e);
             }
         }
-
     }
-
 
     @Override
     public Optional<User> findById(String id) {
-
-        try (PreparedStatement pstmt = conn.prepareStatement(SELECT_SQL)){
+        try (PreparedStatement pstmt = conn.prepareStatement(SELECT_SQL)) {
             pstmt.setString(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return Optional.of(new User(rs.getString(1), rs.getString(2), rs.getString(3)));
-
+                    return Optional.of(new User(
+                            rs.getString("id"),
+                            rs.getString("username"),
+                            rs.getString("password"),
+                            rs.getTimestamp("created_date").toLocalDateTime(),
+                            rs.getTimestamp("modified_date").toLocalDateTime()
+                    ));
                 }
-            } catch (SQLException e) {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            String msg = "Document Select Failed.";
-            log.error(msg, e);
-            throw new RuntimeException(msg, e);
+            log.error("User 조회 실패", e);
+            return Optional.empty();
         }
-        return null;
     }
 
     @Override
     public List<User> findAll() {
-        List<User> list = new ArrayList<User>();
-
-        try (PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SQL)){
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    list.add(new User(
-                            rs.getString(1),
-                            rs.getString(2),
-                            rs.getString(3)));
-                }
+        List<User> list = new ArrayList<>();
+        try (PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SQL);
+             ResultSet rs = pstmt.executeQuery()) {
+            while (rs.next()) {
+                list.add(new User(
+                        rs.getString("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getTimestamp("created_date").toLocalDateTime(),
+                        rs.getTimestamp("modified_date").toLocalDateTime()
+                ));
             }
-            return list;
         } catch (SQLException e) {
-            String msg = "Document Select Failed.";
-            log.error(msg, e);
-            throw new RuntimeException(msg, e);
+            log.error("User 전체 조회 실패", e);
         }
+        return list;
     }
 
     @Override
     public boolean delete(String id) {
-        try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SQL)){
+        try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SQL)) {
             pstmt.setString(1, id);
-            pstmt.executeUpdate();
-            return true;
+            return pstmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            String msg = "Document Select Failed.";
-            log.error(msg, e);
+            log.error("User 삭제 실패", e);
             return false;
         }
     }
-
 }
