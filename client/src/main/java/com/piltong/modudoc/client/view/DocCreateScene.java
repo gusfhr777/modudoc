@@ -3,7 +3,7 @@ package com.piltong.modudoc.client.view;
 
 import com.piltong.modudoc.client.model.*;
 
-import com.piltong.modudoc.client.controller.DocumentListController;
+import com.piltong.modudoc.client.controller.DashboardController;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 //문서를 생성할 때 생성창을 만드는 클래스
-public class EditDocumentView {
+public class DocCreateScene {
 
     GridPane grid = new GridPane();
     Label nameLabel = new Label();
@@ -23,14 +23,14 @@ public class EditDocumentView {
 
     Stage editStage = new Stage();
 
-    DocumentListController controller;
+    DashboardController controller;
 
     Document summary;
 
-    public EditDocumentView(DocumentListController controller) {
+    public DocCreateScene(DashboardController controller) {
         this.controller = controller;
     }
-    public EditDocumentView(DocumentListController controller, Document summary) {this.controller = controller;
+    public DocCreateScene(DashboardController controller, Document summary) {this.controller = controller;
     this.summary = summary;}
     public void initialize() {
         initLayout();

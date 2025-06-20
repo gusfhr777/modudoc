@@ -1,7 +1,7 @@
 package com.piltong.modudoc.client.view;
 
 
-import com.piltong.modudoc.client.controller.StartController;
+import com.piltong.modudoc.client.controller.LoginController;
 
 
 import javafx.application.Platform;
@@ -13,8 +13,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class StartView {
-    StartController controller;
+public class LoginScene {
+    LoginController controller;
 
     GridPane serverGrid = new GridPane();
     GridPane userGrid = new GridPane();
@@ -37,7 +37,7 @@ public class StartView {
 
     Stage startStage = new Stage();
 
-    public void setController(StartController controller) {
+    public void setController(LoginController controller) {
         this.controller = controller;
     }
 

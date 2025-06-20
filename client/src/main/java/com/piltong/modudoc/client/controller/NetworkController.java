@@ -10,23 +10,23 @@ import java.util.List;
 
 public class NetworkController implements ClientNetworkListener {
 
-    DocumentListController documentListController;
-    TextEditorController textEditorController;
+    DashboardController dashboardController;
+    EditorController editorController;
 
     @Override
     public <T> void onCommandSuccess(ClientCommand command, T payload) {
-        if(documentListController != null) {
+        if(dashboardController != null) {
             // 성공 응답
             switch (command) {
 
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
-                    documentListController.addDocument((Document) payload);
+                    dashboardController.addDocument((Document) payload);
                     break;
 
                 // 단일 문서 조회 명령
                 case READ_DOCUMENT:
-                    documentListController.connectDocument((Document) payload);
+                    dashboardController.connectDocument((Document) payload);
                     break;
 
                 // 문서 수정 명령
@@ -40,7 +40,7 @@ public class NetworkController implements ClientNetworkListener {
 
                 // 문서 리스트 조회 명령
                 case READ_DOCUMENT_LIST:
-                    documentListController.loadDocumentList((List<Document>) payload);
+                    dashboardController.loadDocumentList((List<Document>) payload);
                     break;
 
                 // Operation 전파 명령
@@ -60,11 +60,11 @@ public class NetworkController implements ClientNetworkListener {
 
     @Override
     public void onOperationReceived(Operation op) {
-        if(textEditorController != null&& textEditorController.getDocument().getId() == op.getDocId()) {
+        if(editorController != null&& editorController.getDocument().getId() == op.getDocId()) {
             if (op.getOperationType() == OperationType.INSERT) {
-                textEditorController.insertText(op.getContent(), op.getPosition());
+                editorController.insertText(op.getContent(), op.getPosition());
             } else if (op.getOperationType() == OperationType.DELETE) {
-                textEditorController.deleteText(op.getPosition(), op.getContent().length());
+                editorController.deleteText(op.getPosition(), op.getContent().length());
             }
         }
     }
@@ -79,16 +79,16 @@ public class NetworkController implements ClientNetworkListener {
 
     }
 
-    public void setDocumentListController(DocumentListController documentListController) {
-        this.documentListController = documentListController;
+    public void setDocumentListController(DashboardController dashboardController) {
+        this.dashboardController = dashboardController;
     }
     public void deleteDocumentListController() {
-        this.documentListController = null;
+        this.dashboardController = null;
     }
-    public void setTextEditorController(TextEditorController textEditorController) {
-        this.textEditorController = textEditorController;
+    public void setTextEditorController(EditorController editorController) {
+        this.editorController = editorController;
     }
     public void deleteTextEditorController() {
-        this.textEditorController = null;
+        this.editorController = null;
     }
 }
