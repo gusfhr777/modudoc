@@ -21,7 +21,7 @@ public class JDBCDocumentRepository implements DocumentRepository {
     // 필드
     private final Connection conn;
     private static final Logger log = LogManager.getLogger(JDBCDocumentRepository.class);
-    private static final String INSERT_SQL = "INSERT INTO (title, content, CREATED_DATE, MODIFIED_DATE) VALUES (?, ?, NOW(), NOW())";
+    private static final String INSERT_SQL = "INSERT INTO documents (title, content, CREATED_DATE, MODIFIED_DATE) VALUES (?, ?, NOW(), NOW())";
     private static final String SELECT_SQL = "SELECT * FROM documents WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM documents WHERE id = ?";
     private static final String UPDATE_SQL = "UPDATE documents SET title = ?, content = ? WHERE id = ?";
