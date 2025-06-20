@@ -1,6 +1,6 @@
 package com.piltong.modudoc.client.view;
 
-import com.piltong.modudoc.client.controller.DocumentListController;
+import com.piltong.modudoc.client.controller.DashboardController;
 
 import com.piltong.modudoc.client.model.Document;
 
@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class DocumentListView {
+public class DashboardScene {
 
-    DocumentListController controller;
+    DashboardController controller;
 
     TableView<Document> documentTable = new TableView<>(); //문서 목록이 표시될 도표
 
@@ -49,7 +49,7 @@ public class DocumentListView {
     Stage DocumentListStage = new Stage();
 
     //컨트롤러 설정
-    public void setController(DocumentListController controller) {
+    public void setController(DashboardController controller) {
         this.controller = controller;
     }
 

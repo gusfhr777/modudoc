@@ -9,4 +9,6 @@ public class Constants {
     public static final String SERVER_IP = "localhost"; // 서버 아이피
     public static final int POOL_SIZE = 10; // 서버가 동시 처리하는 클라이언트 수
 
+    public static final boolean DEBUG = true;
+
 }

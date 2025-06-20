@@ -2,9 +2,6 @@ package com.piltong.modudoc.client;
 
 import com.piltong.modudoc.client.controller.MainController;
 import com.piltong.modudoc.client.view.MainView;
-import com.piltong.modudoc.common.Constants;
-import com.piltong.modudoc.client.view.StartView;
-import com.piltong.modudoc.client.controller.StartController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -26,8 +23,13 @@ public class ClientApp extends Application {
         MainController controller = new MainController();
         MainView view = new MainView();
 
+
+        controller.setView(view);
         view.setController(controller);
-        controller.startApp();
+
+
+        // 애플리케이션 시작
+        view.show();
 
 
 //        StartView startView = new StartView();

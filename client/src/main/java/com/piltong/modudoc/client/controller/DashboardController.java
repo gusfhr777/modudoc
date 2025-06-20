@@ -6,16 +6,16 @@ import com.piltong.modudoc.client.model.*;
 
 
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
-import com.piltong.modudoc.client.view.DocumentListView;
-import com.piltong.modudoc.client.view.TextEditorView;
+import com.piltong.modudoc.client.view.DashboardScene;
+import com.piltong.modudoc.client.view.EditorScene;
 import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.client.view.EditDocumentView;
+import com.piltong.modudoc.client.view.DocCreateScene;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class DocumentListController {
+public class DashboardController {
     // 서버에서 보낸 Document 객체를 받을 리스트 생성
     private List<Document> documentList = new ArrayList<>();
 
@@ -23,35 +23,35 @@ public class DocumentListController {
     private NetworkController NetworkController;
 
     // 목록화면 뷰
-    private DocumentListView documentListView;
+    private DashboardScene dashboardScene;
 
-    private EditDocumentView editDocumentView;
+    private DocCreateScene editDocumentView;
 
     private boolean isEditing = false;
 
 
     // 생성자에게 뷰를 받아서 필드에 저장
-    public DocumentListController(ClientNetworkHandler networkHandler,DocumentListView documentListView) {
+    public DashboardController(ClientNetworkHandler networkHandler, DashboardScene dashboardScene) {
         this.networkHandler = networkHandler;
-        this.documentListView = documentListView;
+        this.dashboardScene = dashboardScene;
     }
     //뷰를 입력받지 않는 생성자
-    public DocumentListController(ClientNetworkHandler networkHandler) {
+    public DashboardController(ClientNetworkHandler networkHandler) {
         this.networkHandler = networkHandler;
     }
 
     public void start() {
         new Thread(networkHandler).start();
-        documentListView.initialize();
+        dashboardScene.initialize();
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST,null);
-        documentListView.setDocumentList(documentList);
+        dashboardScene.setDocumentList(documentList);
 
 
     }
 
     //뷰 입력 받기
-    public void setView(DocumentListView documentListView) {
-        this.documentListView = documentListView;
+    public void setView(DashboardScene dashboardScene) {
+        this.dashboardScene = dashboardScene;
     }
     public void setListener(NetworkController NetworkController) {
         this.NetworkController = NetworkController;
@@ -62,7 +62,7 @@ public class DocumentListController {
     public void loadDocumentList(List<Document> serverDocuments) {
         documentList.clear();
         documentList.addAll(serverDocuments);
-        documentListView.setDocumentList(documentList);
+        dashboardScene.setDocumentList(documentList);
     }
 
     // 현재 저장된 문서 리스트 반환
@@ -72,7 +72,7 @@ public class DocumentListController {
 
     public void addDocument(Document document) {
         documentList.add(document);
-        documentListView.addDocument(document);
+        dashboardScene.addDocument(document);
     }
 
 
@@ -85,7 +85,7 @@ public class DocumentListController {
             throw new RuntimeException("Document is already editing");
         } else {
             isEditing = true;
-            editDocumentView = new EditDocumentView(this);
+            editDocumentView = new DocCreateScene(this);
             editDocumentView.initialize();
             editDocumentView.setButtonText("문서 생성");
             editDocumentView.showView();
@@ -106,12 +106,12 @@ public class DocumentListController {
 
     //문서 수정 화면 생성
     public void editDocument(Document document) {
-        if(!documentListView.isSelectedEmpty()) {
+        if(!dashboardScene.isSelectedEmpty()) {
             if (isEditing) {
                 throw new RuntimeException("Document is already editing");
             } else {
                 isEditing = true;
-                editDocumentView = new EditDocumentView(this);
+                editDocumentView = new DocCreateScene(this);
                 editDocumentView.initialize();
                 editDocumentView.setDocument(document);
                 editDocumentView.setButtonText("문서 제목 수정");
@@ -125,7 +125,7 @@ public class DocumentListController {
     public void sendEditDocument(Document olddocument, Document newdocument) {
         try {
             networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, newdocument);
-            documentListView.removeDocument(olddocument);
+            dashboardScene.removeDocument(olddocument);
             addDocument(newdocument);
         }catch (Exception e) {
             e.printStackTrace();
@@ -137,11 +137,11 @@ public class DocumentListController {
     }
     //문서 접속
     public void connectDocument(Document document) {
-        TextEditorView textEditorView = new TextEditorView();
-        TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, document);
-        textEditorView.insertStringText(document.getContent(),0);
-        NetworkController.setTextEditorController(textEditorController);
-        textEditorView.showView();
+        EditorScene editorScene = new EditorScene();
+        EditorController editorController = new EditorController(editorScene, networkHandler, document);
+        editorScene.insertStringText(document.getContent(),0);
+        NetworkController.setTextEditorController(editorController);
+        editorScene.showView();
     }
 
     public boolean getIsEditing() {

@@ -1,6 +1,6 @@
 package com.piltong.modudoc.client.view;
 
-import com.piltong.modudoc.client.controller.TextEditorController;
+import com.piltong.modudoc.client.controller.EditorController;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 
 import javafx.stage.Stage;
 import org.fxmisc.richtext.InlineCssTextArea;
-import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpan;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -19,7 +18,7 @@ import org.fxmisc.richtext.model.StyledDocument;
 import com.piltong.modudoc.client.model.Document;
 
 //텍스트 편집기를 생성
-public class TextEditorView {
+public class EditorScene {
     InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
     Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
     Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
@@ -29,7 +28,7 @@ public class TextEditorView {
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
     ComboBox<String> fontFamilyBox = new ComboBox<>();
 
-    TextEditorController controller;
+    EditorController controller;
     Stage textEditorStage = new Stage();
 
 
@@ -239,7 +238,7 @@ public class TextEditorView {
     }
 
 
-    public void setController(TextEditorController controller) {
+    public void setController(EditorController controller) {
         this.controller = controller;
     }
 
