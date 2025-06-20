@@ -3,6 +3,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
+
 server/logs/
 client/logs/
 logs/
@@ -43,3 +45,5 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+/server/logs
+/server/logs

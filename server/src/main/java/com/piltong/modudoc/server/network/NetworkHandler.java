@@ -65,31 +65,31 @@ public class NetworkHandler implements Runnable {
     }
 
 
-    // 명령어를 클라 측으로 전송한다. 성공한 경우.
-    public <T extends Serializable> void sendCommandSuccess(ClientHandler target, ClientCommand command, T payload) {
-
-        try {
-            ResponseCommandDto<T> response = new ResponseCommandDto<>(command, payload, true, null);
-            target.out.writeObject(response);
-            target.out.flush();
-        } catch (Exception e) {
-            System.err.println("클라 전송 실패 " + target + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    // 명령어를 클라 측으로 전송한다. 실패한 경우.
-    public void sendCommandFailure(ClientHandler target, ClientCommand command, String errorMsg) {
-
-        try {
-            ResponseCommandDto<Object> response = new ResponseCommandDto<>(command, null, false, errorMsg);
-            target.out.writeObject(response);
-            target.out.flush();
-        } catch (Exception e) {
-            System.err.println("클라 전송 실패 " + target + e.getMessage());
-            e.printStackTrace();
-        }
-    }
+//    // 명령어를 클라 측으로 전송한다. 성공한 경우.
+//    public <T extends Serializable> void sendCommandSuccess(ClientHandler target, ClientCommand command, T payload) {
+//
+//        try {
+//            ResponseCommandDto<T> response = new ResponseCommandDto<>(command, payload, true, null);
+//            target.out.writeObject(response);
+//            target.out.flush();
+//        } catch (Exception e) {
+//            System.err.println("클라 전송 실패 " + target + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    // 명령어를 클라 측으로 전송한다. 실패한 경우.
+//    public void sendCommandFailure(ClientHandler target, ClientCommand command, String errorMsg) {
+//
+//        try {
+//            ResponseCommandDto<Object> response = new ResponseCommandDto<>(command, null, false, errorMsg);
+//            target.out.writeObject(response);
+//            target.out.flush();
+//        } catch (Exception e) {
+//            System.err.println("클라 전송 실패 " + target + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
 
     // 핸들러 종료 함수
     public void shutdown() {

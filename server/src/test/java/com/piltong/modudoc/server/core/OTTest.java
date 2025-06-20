@@ -1,6 +1,7 @@
 package com.piltong.modudoc.server.core;
 
 import com.piltong.modudoc.common.model.OperationType;
+import com.piltong.modudoc.server.model.Operation;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ public class OTTest {
 
     @Test
     void testInsertInsertDifferentPosition() {
-        Operation a = new Operation(OperationType.INSERT, "doc1", 2, "A");
-        Operation b = new Operation(OperationType.INSERT, "doc1", 5, "B");
+        Operation a = new Operation(OperationType.INSERT, 1, 2, "A");
+        Operation b = new Operation(OperationType.INSERT, 1, 5, "B");
 
         Operation[] transformed = ot.transform(a, b);
 
@@ -27,8 +28,8 @@ public class OTTest {
 
     @Test
     void testInsertInsertSamePosition() {
-        Operation a = new Operation(OperationType.INSERT, "doc1", 3, "A");
-        Operation b = new Operation(OperationType.INSERT, "doc1", 3, "B");
+        Operation a = new Operation(OperationType.INSERT, 1, 3, "A");
+        Operation b = new Operation(OperationType.INSERT, 1, 3, "B");
 
         Operation[] transformed = ot.transform(a, b);
 
@@ -38,8 +39,8 @@ public class OTTest {
 
     @Test
     void testInsertDelete() {
-        Operation insert = new Operation(OperationType.INSERT, "doc1", 2, "XY");
-        Operation delete = new Operation(OperationType.DELETE, "doc1", 4, "Z");
+        Operation insert = new Operation(OperationType.INSERT, 1, 2, "XY");
+        Operation delete = new Operation(OperationType.DELETE, 1, 4, "Z");
 
         Operation[] transformed = ot.transform(insert, delete);
 
@@ -49,8 +50,8 @@ public class OTTest {
 
     @Test
     void testDeleteInsert() {
-        Operation delete = new Operation(OperationType.DELETE, "doc1", 1, "A");
-        Operation insert = new Operation(OperationType.INSERT, "doc1", 3, "BC");
+        Operation delete = new Operation(OperationType.DELETE, 1, 1, "A");
+        Operation insert = new Operation(OperationType.INSERT, 1, 3, "BC");
 
         Operation[] transformed = ot.transform(delete, insert);
 
@@ -60,8 +61,8 @@ public class OTTest {
 
     @Test
     void testDeleteDeleteSamePosition() {
-        Operation a = new Operation(OperationType.DELETE, "doc1", 2, "X");
-        Operation b = new Operation(OperationType.DELETE, "doc1", 2, "Y");
+        Operation a = new Operation(OperationType.DELETE, 1, 2, "X");
+        Operation b = new Operation(OperationType.DELETE, 1, 2, "Y");
 
         Operation[] transformed = ot.transform(a, b);
 
@@ -72,10 +73,10 @@ public class OTTest {
     @Test
     void testTransformAgainstAll() {
         List<Operation> history = new ArrayList<>();
-        history.add(new Operation(OperationType.INSERT, "doc1", 0, "A"));
-        history.add(new Operation(OperationType.INSERT, "doc1", 1, "B"));
+        history.add(new Operation(OperationType.INSERT, 1, 0, "A"));
+        history.add(new Operation(OperationType.INSERT, 1, 1, "B"));
 
-        Operation current = new Operation(OperationType.INSERT, "doc1", 2, "C");
+        Operation current = new Operation(OperationType.INSERT, 1, 2, "C");
 
         Operation transformed = ot.transformAgainstAll(current, history);
 
@@ -84,14 +85,14 @@ public class OTTest {
 
     @Test
     void testApplyInsert() {
-        Operation op = new Operation(OperationType.INSERT, "doc1", 2, "XY");
+        Operation op = new Operation(OperationType.INSERT, 1, 2, "XY");
         String result = ot.apply("hello", op);
         assertEquals("heXYllo", result);
     }
 
     @Test
     void testApplyDelete() {
-        Operation op = new Operation(OperationType.DELETE, "doc1", 1, "el");
+        Operation op = new Operation(OperationType.DELETE, 1, 1, "el");
         String result = ot.apply("hello", op);
         assertEquals("hlo", result);
     }

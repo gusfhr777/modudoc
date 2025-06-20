@@ -39,7 +39,7 @@ public class DocumentService {
 
 
     // 문서를 획득하는 메서드
-    public Document find(Integer docId) {
+    public Document findById(Integer docId) {
         if (docId == null) {
             String msg = "Invalid docId Parameter.";
             log.error(msg);

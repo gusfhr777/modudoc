@@ -62,6 +62,7 @@ public class ClientNetworkHandler implements Runnable{
         try {
             // 인터럽트 받기 전까지 무한 반복
             while (!Thread.currentThread().isInterrupted()) {
+
                 Object msg = in.readObject(); // 오브젝트 읽기
 
                 // 메시지가 ResponseCommandDto 형식일 경우

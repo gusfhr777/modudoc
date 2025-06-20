@@ -116,3 +116,19 @@ Caused by: java.net.UnknownHostException: 알려진 호스트가 없습니다 (m
 2025-06-20 15:53:18,291 INFO com.piltong.modudoc.server.ServerApp [main] Service started.
 2025-06-20 15:53:18,296 INFO com.piltong.modudoc.server.ServerApp [main] Network handler started.
 2025-06-20 15:53:18,303 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp successfully initialized on port 4433
+2025-06-20 16:45:46,397 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp Initializing.
+2025-06-20 16:45:46,406 INFO com.piltong.modudoc.server.ServerApp [main] Service started.
+2025-06-20 16:45:46,412 INFO com.piltong.modudoc.server.ServerApp [main] Network handler started.
+2025-06-20 16:45:46,421 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp successfully initialized on port 4433
+2025-06-20 16:47:33,942 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp Initializing.
+2025-06-20 16:47:33,954 INFO com.piltong.modudoc.server.ServerApp [main] Service started.
+2025-06-20 16:47:33,965 INFO com.piltong.modudoc.server.ServerApp [main] Network handler started.
+2025-06-20 16:47:33,986 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp successfully initialized on port 4433
+2025-06-20 16:48:38,894 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp Initializing.
+2025-06-20 16:48:38,900 INFO com.piltong.modudoc.server.ServerApp [main] Service started.
+2025-06-20 16:48:38,907 INFO com.piltong.modudoc.server.ServerApp [main] Network handler started.
+2025-06-20 16:48:38,921 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp successfully initialized on port 4433
+2025-06-20 16:50:46,580 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp Initializing.
+2025-06-20 16:50:46,589 INFO com.piltong.modudoc.server.ServerApp [main] Service started.
+2025-06-20 16:50:46,596 INFO com.piltong.modudoc.server.ServerApp [main] Network handler started.
+2025-06-20 16:50:46,608 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp successfully initialized on port 4433

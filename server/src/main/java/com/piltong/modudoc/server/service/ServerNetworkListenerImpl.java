@@ -50,7 +50,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                 if (!(payload instanceof Integer docId)) {
                     throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
                 }
-                Document document = documentService.find((Integer) payload);
+                Document document = documentService.findById((Integer) payload);
                 log.info("문서 조회 성공: id={}", document.getId());
                 return (R) document;
 
