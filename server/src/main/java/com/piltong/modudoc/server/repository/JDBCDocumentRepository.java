@@ -31,8 +31,9 @@ public class JDBCDocumentRepository implements DocumentRepository {
         try {
             this.conn = DBManager.getConnection();
         } catch (SQLException e) {
-            String msg = "DBManager.GetConnection() fail.";
-            throw new DocumentRepoInitException(msg, e);
+            String msg = "DocumentRepository 초기화 실패: DBManager.GetConnection() 실패";
+            log.fatal(msg, e);
+            throw new RuntimeException(msg, e);
         }
     }
 
