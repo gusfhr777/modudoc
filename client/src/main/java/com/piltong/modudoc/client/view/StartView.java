@@ -2,6 +2,8 @@ package com.piltong.modudoc.client.view;
 
 
 import com.piltong.modudoc.client.controller.StartController;
+
+
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +16,8 @@ public class StartView {
     StartController controller;
 
     GridPane grid = new GridPane();
+
+
     Label nameLabel = new Label("서버 주소");
     TextField nameField = new TextField();
     Label portLabel = new Label("서버 포트");
@@ -52,12 +56,17 @@ public class StartView {
     public void initListeners() {
         connectButton.setOnAction(e -> {
             //접속 버튼을 입력했을 때 이벤트
-            controller.connect(getIPText(),portField.getText());
+            controller.connect(getIPText(),getPortText());
         });
         nameField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 //엔터를 입력했을 때 이벤트
-                controller.connect(getIPText(),portField.getText());
+                controller.connect(getIPText(),getPortText());
+            }
+        });
+        portField.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                controller.connect(getIPText(), getPortText());
             }
         });
 

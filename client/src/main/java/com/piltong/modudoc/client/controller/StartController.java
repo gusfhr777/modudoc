@@ -42,16 +42,13 @@ public class StartController {
             port = Integer.parseInt(Stringport);
         }
         catch (NumberFormatException e) {
-            port = 8080;
+            port = 4433;
             e.printStackTrace();
         }
 
 
         if(port <= 0|| port > 65535) {
-            port = 8080;
-        }
-        else {
-            this.port = port;
+            port = 4433;
         }
 
         try {

@@ -41,17 +41,12 @@ public class TextEditorView {
     void initComponent(Document document) {
         //기본 스타일 설정
         editor.setStyle("-fx-font-family: Arial; -fx-font-scale: 14;");
-        //왼쪽에 텍스트 줄 표시
-        editor.setParagraphGraphicFactory(LineNumberFactory.get(editor));
         //폰트 선택 박스 설정
         for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
             fontSizeBox.getItems().add(size);
         }
         //기본 폰트 값 설정
         fontSizeBox.setValue(14);
-        //내부 텍스트 설정
-        //editor.insert(0,document.getContent().length(),document.getContent());
-
     }
 
     //구성요소들을 배치하는 메소드
