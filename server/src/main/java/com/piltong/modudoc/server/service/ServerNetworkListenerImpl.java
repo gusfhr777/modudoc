@@ -1,5 +1,6 @@
 package com.piltong.modudoc.server.service;
 
+import com.piltong.modudoc.common.model.DocumentDto;
 import com.piltong.modudoc.common.model.OperationDto;
 import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.common.network.*;
@@ -42,7 +43,13 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
                 Document doc = documentService.create(title, content);
 
-                return (R) doc;
+                return (R) new DocumentDto(
+                        doc.getId(),
+                        doc.getTitle(),
+                        doc.getContent(),
+                        doc.getCreatedDate(),
+                        doc.getModifiedDate()
+                );
             }
 
             // 문서 조회 요청 처리
@@ -54,29 +61,25 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                 log.info("문서 조회 성공: id={}", document.getId());
                 return (R) document;
 
-            // 문서 조회 요청 처리 - 본문(content) 없이
-            case READ_DOCUMENT_LIST: {
-                List<Document> allDocs = documentService.findAll();
-
-                List<Document> summaries = allDocs.stream()
-                        .map(Doc -> {
-                            Doc.setContent(null);
-                            return Doc;
-                        }).toList();
-
-                return (R) summaries;
-            }
-
             // 문서 수정 요청 처리
             case UPDATE_DOCUMENT: {
-                if (!(payload instanceof Document doc)) {
+                if (!(payload instanceof DocumentDto dto)) {
                     log.error("UPDATE_DOCUMENT: payload 타입 오류");
                     throw new CommandException("UPDATE_DOCUMENT: 잘못된 payload 타입입니다.");
                 }
-                if (!documentService.exists(doc.getId())) {
-                    log.error("UPDATE_DOCUMENT: 존재하지 않는 문서: id={}", doc.getId());
+                if (!documentService.exists(dto.getId())) {
+                    log.error("UPDATE_DOCUMENT: 존재하지 않는 문서: id={}", dto.getId());
                     throw new CommandException("존재하지 않는 문서입니다.");
                 }
+
+                // DocumentDto -> Document 변환
+                Document doc = new Document(
+                        dto.getId(),
+                        dto.getTitle(),
+                        dto.getContent(),
+                        dto.getCreatedDate(),
+                        dto.getModifiedDate()
+                );
 
                 documentService.update(doc);
                 log.info("문서 수정: id={}", doc.getId());
@@ -85,15 +88,31 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 삭제 요청 처리
             case DELETE_DOCUMENT:
-                if (!(payload instanceof String docId)) {
+                if (!(payload instanceof Integer docId)) {
                     log.error("DELETE_DOCUMENT: payload 타입 오류");
                     throw new CommandException("DELETE_DOCUMENT: 잘못된 payload 타입입니다.");
                 }
 
-                int idToDelete = Integer.parseInt(docId);
-                documentService.delete(idToDelete);
-                log.info("문서 삭제: id={}", idToDelete);
-                return (R) docId;
+                documentService.delete(docId);
+                log.info("문서 삭제: id={}", docId);
+                return null;
+
+            // 문서 조회 요청 처리 - 본문(content) 없이
+            case READ_DOCUMENT_LIST: {
+                List<Document> allDocs = documentService.findAll();
+
+                List<DocumentDto> dtoList = allDocs.stream()
+                        .map(doc -> new DocumentDto(
+                                doc.getId(),
+                                doc.getTitle(),
+                                null,
+                                doc.getCreatedDate(),
+                                doc.getModifiedDate()
+                        )).toList();
+
+                log.info("문서 요약 리스트 조회 완료({}개)", dtoList.size());
+                return (R) dtoList;
+            }
 
             // 클라이언트 편집 연산 동기화 요청 처리
             case PROPAGATE_OPERATION:
@@ -102,20 +121,14 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                     throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
                 }
 
-                Integer docId;
-                try {
-                    docId = opDto.getDocId();
-                } catch (NumberFormatException e) {
-                    log.error("PROPAGATE_OPERATION:문서 ID 형식이 잘못됨: {}", opDto.getDocId());
-                    throw new CommandException("문서 ID 형식이 잘못되었습니다: " + opDto.getDocId());
-                }
+                Integer docId = opDto.getDocId();
 
                 if (!documentService.exists(docId)) {
                     log.error("PROPAGATE_OPERATION: 문서 존재하지 않음: id={}", docId);
                     throw new CommandException("해당 문서가 존재하지 않습니다.");
                 }
 
-                log.info("동기화 시작: docID={}, fromClinet=null", docId);
+                log.info("동기화 시작: docID={}, fromClient=null", docId);
                 syncService.syncUpdate(docId, opDto, null);
                 log.info("동기화 완료: docId={}", docId);
                 return null;
@@ -128,11 +141,9 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
     }
 
     // 네트워크 오류 발생 시 호출됨
-    // 현재 콘솔에만 출력. (추후 로깅 시스템으로 대체?)
     @Override
     public void onNetworkError(Throwable t) {
-        System.err.println("네트워크 오류 발생: " + t.getMessage());
-        t.printStackTrace();
+        log.error("네트워크 오류 발생", t);
     }
 
 
