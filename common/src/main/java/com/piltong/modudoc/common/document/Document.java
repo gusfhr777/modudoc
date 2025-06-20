@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Document{
 
     // 필드 정의
-    private String id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
+    private Integer id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
     private String title; // 문서 제목
     private String content; // 문서 내용
     private LocalDateTime createdDate; // 문서의 생성일자.
@@ -19,11 +19,11 @@ public class Document{
 
 
     // 필드 getter 및 setter
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -65,7 +65,7 @@ public class Document{
 
 
     // 문서 생성자
-    public Document(String id, String title, String content) {
+    public Document(Integer id, String title, String content) {
 
         // 모든 데이터는 Null이 아닌 형태로 저장한다.
         this.id = Objects.requireNonNull(id);
@@ -78,7 +78,7 @@ public class Document{
 
 
     // 문서 생성자 2
-    public Document(String id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, List<String> accessUserIds) {
+    public Document(Integer id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, List<String> accessUserIds) {
         this.id = id;
         this.title = title;
         this.content = content;

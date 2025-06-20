@@ -26,7 +26,7 @@ public class TextEditorView {
     ToolBar toolBar = new ToolBar(); //텍스트 편집에 사용될 요소들이 들어갈 창
     VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
-
+    ComboBox<String> fontFamilyBox = new ComboBox<>();
 
     TextEditorController controller;
     Stage textEditorStage = new Stage();
@@ -45,8 +45,14 @@ public class TextEditorView {
         for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
             fontSizeBox.getItems().add(size);
         }
+        for(String font : new String[]{"Arial", "Helvetica"}) {
+            fontFamilyBox.getItems().add(font);
+        }
         //기본 폰트 값 설정
         fontSizeBox.setValue(14);
+        //기본 폰트 설정
+        fontFamilyBox.setValue("Arial");
+
     }
 
     //구성요소들을 배치하는 메소드
