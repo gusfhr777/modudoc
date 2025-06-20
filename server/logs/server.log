@@ -116,3 +116,4 @@ Caused by: java.net.UnknownHostException: 알려진 호스트가 없습니다 (m
 2025-06-20 15:53:18,291 INFO com.piltong.modudoc.server.ServerApp [main] Service started.
 2025-06-20 15:53:18,296 INFO com.piltong.modudoc.server.ServerApp [main] Network handler started.
 2025-06-20 15:53:18,303 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp successfully initialized on port 4433
+2025-06-20 16:43:04,376 ERROR com.piltong.modudoc.server.service.DocumentService [Test worker] Invalid docId, title or content.
