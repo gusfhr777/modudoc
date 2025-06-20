@@ -1,12 +1,9 @@
-package com.piltong.modudoc.client.network;
+package com.piltong.modudoc.client.controller;
 
-import com.piltong.modudoc.common.model.*;
+import com.piltong.modudoc.client.network.ClientNetworkListener;
+import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.client.model.*;
 
-import com.piltong.modudoc.client.controller.DocumentListController;
-import com.piltong.modudoc.client.controller.TextEditorController;
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentDto;
 import com.piltong.modudoc.common.network.ClientCommand;
 
 import java.util.List;
@@ -24,12 +21,12 @@ public class NetworkListener implements ClientNetworkListener {
 
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
-                    documentListController.addDocument(Document.toEntity((DocumentDto) payload));
+                    documentListController.addDocument((Document) payload);
                     break;
 
                 // 단일 문서 조회 명령
                 case READ_DOCUMENT:
-                    documentListController.connectDocument(DocMapper.toEntity((DocumentDto) payload));
+                    documentListController.connectDocument((Document) payload);
                     break;
 
                 // 문서 수정 명령
@@ -43,7 +40,7 @@ public class NetworkListener implements ClientNetworkListener {
 
                 // 문서 리스트 조회 명령
                 case READ_DOCUMENT_LIST:
-                    documentListController.loadDocumentList((List<DocumentDto>) payload);
+                    documentListController.loadDocumentList((List<Document>) payload);
                     break;
 
                 // Operation 전파 명령
@@ -62,7 +59,7 @@ public class NetworkListener implements ClientNetworkListener {
     }
 
     @Override
-    public void onOperationReceived(OperationDto op) {
+    public void onOperationReceived(Operation op) {
         if(textEditorController != null&& textEditorController.getDocument().getId() == op.getDocId()) {
             if (op.getOperationType() == OperationType.INSERT) {
                 textEditorController.insertText(op.getContent(), op.getPosition());

@@ -3,16 +3,13 @@ package com.piltong.modudoc.client.controller;
 
 
 import com.piltong.modudoc.client.model.*;
-import com.piltong.modudoc.common.model.*;
 
 
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
 import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.client.view.TextEditorView;
-import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.client.view.EditDocumentView;
-import com.piltong.modudoc.client.network.NetworkListener;
 
 import java.util.ArrayList;
 import java.util.List;

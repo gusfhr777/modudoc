@@ -113,11 +113,13 @@ public class ClientNetworkHandler implements Runnable{
                         default:
                             String errMsg = "Unkown Command Detected.";
                             log.error(errMsg);
-                            throw new RuntimeException();
+                            listener.onNetworkError(new IllegalArgumentException(errMsg));
                     }
 
                 } else {
-                    listener.onNetworkError(new IllegalArgumentException("Unknown DTO Received: "+msg.getClass()));
+                    String errMsg = "Unknown DTO Received.";
+                    log.error(errMsg);
+                    listener.onNetworkError(new IllegalArgumentException(errMsg));
 
                 }
 
@@ -144,7 +146,7 @@ public class ClientNetworkHandler implements Runnable{
                 payloadDto = (Serializable) payload;
             } else {
                 if (payload instanceof Document) {
-                    payloadDto = Document.toDto((Document) payload);
+                    payloadDto = DocMapper.toDto((Document) payload);
                 } else if (payload instanceof Operation) {
                     payloadDto = OperationMapper.toDto((Operation) payload);
                 }

@@ -1,11 +1,8 @@
 package com.piltong.modudoc.client.controller;
 
-import com.piltong.modudoc.client.network.NetworkListener;
 import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.client.view.StartView;
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 public class StartController {
     private StartView startView;

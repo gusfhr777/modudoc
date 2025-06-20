@@ -2,9 +2,11 @@ package com.piltong.modudoc.server;
 
 
 import com.piltong.modudoc.common.Constants;
+import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.server.network.NetworkHandler;
 import com.piltong.modudoc.server.repository.DocumentRepository;
 import com.piltong.modudoc.server.repository.JDBCDocumentRepository;
+import com.piltong.modudoc.server.repository.MapDocumentRepository;
 import com.piltong.modudoc.server.service.ServerNetworkListenerImpl;
 import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
@@ -34,7 +36,8 @@ public class ServerApp {
             ExecutorService executor = Executors.newFixedThreadPool(Constants.POOL_SIZE);
 
             // 서비스 객체 생성
-            DocumentRepository docRepo = new JDBCDocumentRepository();
+//            DocumentRepository docRepo = new JDBCDocumentRepository();
+            DocumentRepository docRepo = new MapDocumentRepository();
             DocumentService docService = new DocumentService(docRepo);
             SyncService syncService = new SyncService(docService);
             ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(docService, syncService);

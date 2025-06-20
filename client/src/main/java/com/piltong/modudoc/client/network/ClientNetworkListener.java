@@ -1,12 +1,13 @@
 package com.piltong.modudoc.client.network;
 
 
-import com.piltong.modudoc.common.model.OperationDto;
+import com.piltong.modudoc.client.model.Operation;
 import com.piltong.modudoc.common.network.ClientCommand;
 
 /**
  * 클라이언트 네트워크 핸들러와 서비스 로직 간의 연결을 위한 인터페이스입니다.
  * 서버로부터 수신된 명령 성공/실패, Operation 브로드캐스트, 네트워크 오류를 처리합니다.
+ * 네트워크 계층이 아닌, 비즈니스 계층에서 처리하는 인터페이스이므로, DTO를 다루지 않는다.
  */
 public interface ClientNetworkListener {
 
@@ -15,7 +16,13 @@ public interface ClientNetworkListener {
      *
      * @param <T>       페이로드의 타입
      * @param command   처리된 {@link ClientCommand}
-     * @param payload   성공 시 반환된 데이터. 명령의 응답 데이터가 담긴다. ClientCommand 참조.
+     * @param payload   성공 시 반환된 데이터. 서버에서 받은 응답 객체(DTO)를 엔티티 객체로 변환하여 전달한다.
+     *                  CREATE_DOCUMENT -> Document
+     *                  READ_DOCUMENT -> Document
+     *                  UPDATE_DOCUMENT -> null
+     *                  DELETE_DOCUMENT -> null
+     *                  READ_DOCUMENT_LIST -> List<Document>
+     *                  PROPAGATE_OPERATION -> null
      */
     <T> void onCommandSuccess(ClientCommand command, T payload);
 
@@ -30,9 +37,9 @@ public interface ClientNetworkListener {
     /**
      * 서버 또는 다른 클라이언트로부터 브로드캐스트된 Operation을 수신했을 때 호출됩니다.
      *
-     * @param op 수신된 {@link OperationDto} 객체
+     * @param op 수신된 {@link Operation} 객체
      */
-    void onOperationReceived(OperationDto op);
+    void onOperationReceived(Operation op);
 
     /**
      * 서버 또는 네트워크 처리 중 예외가 발생했을 때 호출됩니다.

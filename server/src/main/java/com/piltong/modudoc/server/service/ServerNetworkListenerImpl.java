@@ -10,16 +10,12 @@ import org.apache.logging.log4j.Logger;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
 // 각 커맨드에 따라 알맞은 문서 서비스나 동기화 서비스를 호출하여 처리
 public class ServerNetworkListenerImpl implements ServerNetworkListener {
     private static final Logger log = LogManager.getLogger(ServerNetworkListenerImpl.class);
     private final DocumentService documentService;  // 문서 저장/조회/수정/삭제 처리
     private final SyncService syncService;          // 실시간 편집 동기화 처리
-    private static final Logger log = LogManager.getLogger(ServerNetworkListenerImpl.class);
 
     public ServerNetworkListenerImpl(DocumentService documentService, SyncService syncService) {
         this.documentService = documentService;
@@ -51,16 +47,15 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 조회 요청 처리
             case READ_DOCUMENT:
-                if (!(payload instanceof Integer docId))
+                if (!(payload instanceof Integer docId)) {
                     throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
                 }
-                int id = Integer.parseInt(docId);
-                Document document = documentService.find(id);
-                log.info("문서 조회 성공: id={}", id);
+                Document document = documentService.find((Integer) payload);
+                log.info("문서 조회 성공: id={}", document.getId());
                 return (R) document;
 
             // 문서 조회 요청 처리 - 본문(content) 없이
-            case READ_DOCUMENT_SUMMARIES: {
+            case READ_DOCUMENT_LIST: {
                 List<Document> allDocs = documentService.findAll();
 
                 List<Document> summaries = allDocs.stream()
@@ -109,10 +104,10 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
                 Integer docId;
                 try {
-                    docId = Integer.parseInt(opDto.getDocumentId());
+                    docId = opDto.getDocId();
                 } catch (NumberFormatException e) {
-                    log.error("PROPAGATE_OPERATION:문서 ID 형식이 잘못됨: {}", opDto.getDocumentId());
-                    throw new CommandException("문서 ID 형식이 잘못되었습니다: " + opDto.getDocumentId());
+                    log.error("PROPAGATE_OPERATION:문서 ID 형식이 잘못됨: {}", opDto.getDocId());
+                    throw new CommandException("문서 ID 형식이 잘못되었습니다: " + opDto.getDocId());
                 }
 
                 if (!documentService.exists(docId)) {
@@ -139,4 +134,6 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
         System.err.println("네트워크 오류 발생: " + t.getMessage());
         t.printStackTrace();
     }
+
+
 }
