@@ -1,5 +1,6 @@
 package com.piltong.modudoc.server.service;
 
+import com.piltong.modudoc.common.document.DocumentDto;
 import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.common.network.*;
 import com.piltong.modudoc.common.operation.*;
@@ -31,74 +32,67 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                     throw new CommandException("CREATE_DOCUMENT: 잘못된 payload 타입입니다.");
 
                 // Id와 content는 서버에서 생성
-                String generatedId = java.util.UUID.randomUUID().toString();
-                String content = "";    // 빈 문자열로 생성
-
-                documentService.update(generatedId, title, content);
-
-                return (R) new DocumentSummaryDto(
-                        generatedId,
-                        title,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        List.of()
-                );
+                Document doc = documentService.create(title, "");
+                return (R) doc;
             }
 
             // 문서 조회 요청 처리
             case READ_DOCUMENT:
                 if (!(payload instanceof String docId))
                     throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
-                Document Doc = documentService.find(docId);
-                return (R) Document.toDto(Doc);
+
+                int id = Integer.parseInt(docId);
+                Document document = documentService.find(id);
+                return (R) document;
 
             // 문서 조회 요청 처리 - 본문(content) 없이
             case READ_DOCUMENT_SUMMARIES: {
                 List<Document> allDocs = documentService.findAll();
 
-                List<DocumentSummaryDto> summaries = allDocs.stream()
-                        .map(doc -> new DocumentSummaryDto(
-                        doc.getId(),
-                        doc.getTitle(),
-                        doc.getCreatedDate(),
-                        doc.getModifiedDate(),
-                        doc.getAccessUserIds()
-                )).toList();
+                List<Document> summaries = allDocs.stream()
+                        .map(Doc -> {
+                            Doc.setContent(null);
+                            return Doc;
+                        }).toList();
 
                 return (R) summaries;
             }
 
             // 문서 수정 요청 처리
             case UPDATE_DOCUMENT: {
-                if (!(payload instanceof DocumentSummaryDto dto))
+                if (!(payload instanceof Document doc))
                     throw new CommandException("UPDATE_DOCUMENT: 잫못된 payload 타입입니다.");
-                if (!documentService.exists(dto.getId()))
+                if (!documentService.exists(doc.getId()))
                     throw new CommandException("존재하지 않는 문서입니다.");
-                String currentContent = documentService.find(dto.getId()).getContent();
-                documentService.update(dto.getId(), dto.getTitle(), currentContent);
-                return (R) new DocumentSummaryDto(
-                        dto.getId(),
-                        dto.getTitle(),
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        List.of()
-                );
+
+                documentService.update(doc);
+                return (R) doc;
             }
 
             // 문서 삭제 요청 처리
             case DELETE_DOCUMENT:
                 if (!(payload instanceof String docId))
                     throw new CommandException("DELETE_DOCUMENT: 잘못된 payload 타입입니다.");
-                documentService.removeDocument(docId);
+
+                int Id = Integer.parseInt(docId);
+                documentService.delete(Id);
                 return (R) docId;
 
             // 클라이언트 편집 연산 동기화 요청 처리
             case PROPAGATE_OPERATION:
                 if (!(payload instanceof OperationDto opDto))
                     throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
-                if (!documentService.exists(opDto.findId()))
+                Integer docId;
+                try {
+                    docId = Integer.parseInt(opDto.getDocumentId());
+                } catch (NumberFormatException e) {
+                    throw new CommandException("문서 ID 형식이 잘못되었습니다: " + opDto.getDocumentId());
+                }
+
+                if (!documentService.exists(docId))
                     throw new CommandException("해당 문서가 존재하지 않습니다.");
-                syncService.syncUpdate(opDto.findId(), opDto, "null");
+
+                syncService.syncUpdate(docId, opDto, "null");
                 return null;
 
             // 정의되지 않은 커맨드 처리

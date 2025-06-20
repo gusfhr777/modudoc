@@ -19,7 +19,7 @@ public class SyncService {
     // 동시 편집 충돌을 해결하기 위한 OT
     private final OT ot;
     // 편집 기록을 저장하는 히스토리 맵
-    private final Map<String, List<Operation>> operationHistory = new HashMap<>();
+    private final Map<Integer, List<Operation>> operationHistory = new HashMap<>();
 
     // 생성자: 문서 서비스와 OT 초기화
     public SyncService(DocumentService docService) {

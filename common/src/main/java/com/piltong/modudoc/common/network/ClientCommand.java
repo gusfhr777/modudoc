@@ -1,7 +1,6 @@
 package com.piltong.modudoc.common.network;
 
 import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentSummary;
 import com.piltong.modudoc.common.operation.Operation;
 
 
