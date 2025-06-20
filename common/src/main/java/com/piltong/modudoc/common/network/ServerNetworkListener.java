@@ -1,8 +1,5 @@
 package com.piltong.modudoc.common.network;
 
-import com.piltong.modudoc.common.network.CommandException;
-import com.piltong.modudoc.common.network.ClientCommand;
-
 /**
  * 서버 네트워크 핸들러와 서비스 로직 간의 연결을 위한 인터페이스입니다.
  * 네트워크 핸들러는 클라이언트로부터 수신된 Command 요청을 이 인터페이스를 통해 서비스 로직에 전달하고,
@@ -21,7 +18,7 @@ public interface ServerNetworkListener {
      *         <ul>
      *           <li>{@link ClientCommand#CREATE_DOCUMENT}         → {@link com.piltong.modudoc.common.document.DocumentSummary}</li>
      *           <li>{@link ClientCommand#READ_DOCUMENT}           → {@link com.piltong.modudoc.common.document.Document}</li>
-     *           <li>{@link ClientCommand#READ_DOCUMENT_SUMMARIES} → {@code List<com.piltong.modudoc.common.document.DocumentSummary>}</li>
+     *           <li>{@link ClientCommand#READ_DOCUMENT_SUMMARIES} → {@code List<com.piltong.modudoc.server.model.DocumentSummary>}</li>
      *           <li>{@link ClientCommand#UPDATE_DOCUMENT}         → {@link com.piltong.modudoc.common.document.DocumentSummary}</li>
      *           <li>{@link ClientCommand#DELETE_DOCUMENT}         → {@code String} (삭제된 문서 ID)</li>
      *           <li>{@link ClientCommand#PROPAGATE_OPERATION}     → {@link com.piltong.modudoc.common.operation.Operation}</li>

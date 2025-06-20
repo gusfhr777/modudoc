@@ -6,11 +6,8 @@ import com.piltong.modudoc.client.view.TextEditorView;
 import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.common.document.DocumentSummary;
 import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.common.network.ClientNetworkListener;
-import com.piltong.modudoc.common.operation.Operation;
 import com.piltong.modudoc.client.view.EditDocumentView;
 import com.piltong.modudoc.client.network.NetworkListener;
-import com.piltong.modudoc.common.operation.OperationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +40,11 @@ public class DocumentListController {
     }
 
     public void start() {
+        new Thread(networkHandler).start();
         documentListView.initialize();
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_SUMMARIES,null);
         documentListView.setDocumentList(documentList);
+
 
     }
 
@@ -72,6 +71,7 @@ public class DocumentListController {
 
     public void addDocument(DocumentSummary document) {
         documentList.add(document);
+        documentListView.addDocument(document);
     }
 
 
@@ -80,34 +80,68 @@ public class DocumentListController {
 
     //생성 버튼 입력 시 문서 생성
     public void createDocument() {
-        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT,null);
+        if (isEditing) {
+            throw new RuntimeException("Document is already editing");
+        } else {
+            isEditing = true;
+            editDocumentView = new EditDocumentView(this);
+            editDocumentView.initialize();
+            editDocumentView.setButtonText("문서 생성");
+            editDocumentView.showView();
+        }
+    }
+    public void sendCreateDocument(String title) {
+
+        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT, title);
     }
 
     //목록에 있는 문서 제거
     public void removeDocument(DocumentSummary document) {
-        networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document);
+        networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document.getId());
         documentListView.removeDocument(document);
         documentList.remove(document);
     }
 
-    //문서 수정
+    //문서 수정 화면
     public void editDocument(DocumentSummary document) {
-        if(isEditing){
-
+        if(!documentListView.isSelectedEmpty()) {
+            if (isEditing) {
+                throw new RuntimeException("Document is already editing");
+            } else {
+                isEditing = true;
+                editDocumentView = new EditDocumentView(this);
+                editDocumentView.initialize();
+                editDocumentView.setDocument(document);
+                editDocumentView.setButtonText("문서 제목 수정");
+                editDocumentView.showView();
+            }
         }
-        else{
-
-        }
+        else throw new RuntimeException("Document is not selected");
     }
 
+    public void sendEditDocument(DocumentSummary olddocument, DocumentSummary newdocument) {
+        networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,newdocument);
+        documentListView.removeDocument(olddocument);
+        addDocument(newdocument);
+
+    }
     public void requestConnect(DocumentSummary document) {
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT,document.getId());
     }
     //문서 접속
     public void connectDocument(Document document) {
         TextEditorView textEditorView = new TextEditorView();
-        TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, networkHandler.requestDocument());
+        TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, document);
+        textEditorView.insertStringText(document.getContent(),0);
+        NetworkListener.setTextEditorController(textEditorController);
         textEditorView.showView();
+    }
+
+    public boolean getIsEditing() {
+        return isEditing;
+    }
+    public void setIsEditing(boolean isEditing) {
+        this.isEditing = isEditing;
     }
 
 }

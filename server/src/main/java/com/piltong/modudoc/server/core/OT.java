@@ -13,74 +13,81 @@ import com.piltong.modudoc.common.operation.OperationType;
 // 동시 편집 충돌 해결 알고리즘
 public class OT {
     // 두 연산 간 충돌 해결
-    public Operation[] transform(Operation op1, Operation op2) {
-       // 복사하여 원본은 유지
-        op1 = copy(op1);
-        op2 = copy(op2);
+    public Operation[] transform(Operation prior, Operation current) {
+        // 복사하여 원본은 유지
+        Operation op1 = copy(prior);
+        Operation op2 = copy(current);
+
+        int len1 = op1.getContent() != null ? op1.getContent().length() : 0;
+        int len2 = op2.getContent() != null ? op2.getContent().length() : 0;
 
         // 1. 둘 다 insert인 경우
         if (op1.getOperationType() == OperationType.INSERT && op2.getOperationType() == OperationType.INSERT) {
-            // op1이 먼저 왔거나 같은 위치면, op2의 위치를 한 칸 밀어줌
-            if (op1.getPosition() <= op2.getPosition()) op2.setPosition(op2.getPosition() + 1);
-            else op1.setPosition(op1.getPosition() + 1);    // 반대면 op1을 한칸 밀어줌
-
+            // op1이 먼저 왔거나 같으면, op2의 위치를 len1만큼 밀어줌
+            if (op1.getPosition() <= op2.getPosition())
+                op2.setPosition(op2.getPosition() + len1);
+                // 아니면 op1의 위치를 밀어줌
+            else
+                op1.setPosition(op1.getPosition() + len2);
         }
         // 2. insert, delete인 경우
         else if (op1.getOperationType() == OperationType.INSERT && op2.getOperationType() == OperationType.DELETE) {
             // insert가 delete 보다 앞이면 delete 위치 뒤로 조정
-            if (op1.getPosition() <= op2.getPosition()) op2.setPosition(op2.getPosition() + 1);
-            else op1.setPosition(op1.getPosition() - 1);    // 반대면 insert 위치를 한 칸 당겨줌
+            if (op1.getPosition() <= op2.getPosition()) op2.setPosition(op2.getPosition() + len1);
+            else op1.setPosition(op1.getPosition() - len2);    // 반대면 insert 위치를 len2만큼 당겨줌
 
         }
         // 3. delete, insert인 경우
         else if (op1.getOperationType() == OperationType.DELETE && op2.getOperationType() == OperationType.INSERT) {
             // delete가 insert 보다 앞이면 insert 위치 당겨줌
-            if (op1.getPosition() < op2.getPosition()) op2.setPosition(op2.getPosition() - 1);
-            else op1.setPosition(op1.getPosition() + 1);    // 반대면 delete 위치를 뒤로 조정
+            if (op1.getPosition() < op2.getPosition()) op2.setPosition(op2.getPosition() - len1);
+            else op1.setPosition(op1.getPosition() + len2);    // 반대면 delete 위치를 뒤로 조정
 
         }
         // 4. 둘 다 delete인 경우
         else if (op1.getOperationType() == OperationType.DELETE && op2.getOperationType() == OperationType.DELETE) {
-            // op1이 앞이면 op2의 위치를 한 칸 당겨줌
-            if (op1.getPosition() < op2.getPosition()) op2.setPosition(op2.getPosition() - 1);
-            // op2가 앞이면 op1의 위치를 한 칸 당여줌
-            else if (op1.getPosition() > op2.getPosition()) op1.setPosition(op1.getPosition() - 1);
-            // 같은 위치 삭제 시 둘 중 하나 무시
+            // op1이 앞이면 op2의 위치를 len1만큼 당겨줌
+            if (op1.getPosition() < op2.getPosition()) op2.setPosition(op2.getPosition() - len1);
+                // op2가 앞이면 op1의 위치를 len2만큼 당겨줌
+            else if (op1.getPosition() > op2.getPosition()) op1.setPosition(op1.getPosition() - len2);
+                // 같은 위치 삭제 시 둘 중 하나 무시 (op2 무시)
             else op2.setPosition(-1);
         }
 
-        // 조정된 두 연산을 배열로 변환
+        // 조정된 두 연산을 배열로 반환
         return new Operation[]{op1, op2};
     }
 
     // 여러 선행 연산에 대해 순차적으로 조정
-    // op: 내가 실행하려는 연산
-    // priorOps: 이미 실행된 연산
     public Operation transformAgainstAll(Operation op, List<Operation> priorOps) {
-        // op를 복사하여 원본 유지
         Operation result = copy(op);
-
-        // 각 우선 순위에 대해 해결
         for (Operation prior : priorOps) {
-            // prior 연산과 result 사이의 충돌 해결 후,
-            // result 업데이트
             result = transform(prior, result)[1];
         }
-        // 모든 prior이 반영된 result 반환
         return result;
     }
 
     // 문자열에 연산 적용
     public String apply(String original, Operation op) {
-        if (op.getOperationType() == OperationType.INSERT) {
-            // insert: 지정 위치에 문자열(content) 삽입
-            return original.substring(0, op.getPosition()) + op.getContent() + original.substring(op.getPosition());
-        } else if (op.getOperationType() == OperationType.DELETE) {
-            // delete: 지정 위치의 문자 하나 제거
-            return original.substring(0, op.getPosition()) + original.substring(op.getPosition() + 1);
-        }
-        // insert/delete 외에는 무시
-        return original;
+        int pos = op.getPosition();
+        if (pos < 0 || pos > original.length())  // ← 여기서 `>=`이 아니라 `>` 이어야 함
+            throw new IllegalArgumentException("잘못된 위치: " + pos + " / 길이: " + original.length());
+
+        return switch (op.getOperationType()) {
+            case INSERT -> {
+                String before = original.substring(0, pos);
+                String after = (pos == original.length()) ? "" : original.substring(pos); // ← 핵심 수정
+                yield before + op.getContent() + after;
+            }
+            case DELETE -> {
+                int len = op.getContent() != null ? op.getContent().length() : 1;
+                String before = original.substring(0, pos);
+                String after = original.substring(pos + len);
+                yield before + after;
+            }
+            default -> throw new UnsupportedOperationException(
+                    "지원하지 않는 연산 타입: " + op.getOperationType());
+        };
     }
 
     // Operation 복사

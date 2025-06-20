@@ -1,13 +1,15 @@
-package com.piltong.modudoc.common.document;
+package com.piltong.modudoc.client.model;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-// 서버, 클라에서 모두 사용하는 문서 엔티티
-// 문서 엔티티 : 프로그램 내부에서 사용하는 객체
-public class Document{
+// 클라이언트 상태 관리를 위한 문서 객체이다.
+// 서버에서 받은 데이터를 표시하거나, 로컬 편집 상태를 추적한다.
+// 뷰 연동을 위한 UI 관련 필드를 포함한다.
+public class Document {
 
     // 필드 정의
     private String id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
@@ -108,43 +110,4 @@ public class Document{
             touch();
         }
     }
-
-
-    // DTO 객체 -> 엔티티 객체로 변환하는 함수
-    // 추후 최적화 필요
-//    public static Document toEntity(DocumentDto doc) {
-//        return new Document(
-//                doc.getId(),
-//                doc.getTitle(),
-//                doc.getContent(),
-//                doc.getCreatedDate(),
-//                doc.getModifiedDate(),
-//                List.copyOf(doc.getAccessUserIds())
-//        );
-//    }
-
-    // 엔티티 객체 -> DTO 객체로 변환하는 함수
-    // 추후 최적화 필요
-//    public static DocumentDto toDto(Document doc) {
-//        return new DocumentDto(
-//                doc.getId(),
-//                doc.getTitle(),
-//                doc.getContent(),
-//                doc.getCreatedDate(),
-//                doc.getModifiedDate(),
-//                List.copyOf(doc.getAccessUserIds())
-//        );
-//    }
-
-
-    // 엔티티 객체 -> 요약 객체로 변환하는 함수
-//    public static DocumentSummary toSummary(Document doc) {
-//        return new DocumentSummary(
-//                doc.getId(),
-//                doc.getTitle(),
-//                doc.getCreatedDate(),
-//                doc.getModifiedDate(),
-//                List.copyOf(doc.getAccessUserIds())
-//        );
-//    }
 }

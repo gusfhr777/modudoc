@@ -22,23 +22,32 @@ public class ResponseCommandDto<T> implements Serializable {
     private boolean isSuccess;
 
 
-    /**
-     * 성공 응답 생성자
-     */
-    public ResponseCommandDto(ClientCommand command, T payload) {
+    // 생성자
+    public ResponseCommandDto(ClientCommand command, T payload, boolean isSuccess, String errorMsg) {
         this.command = command;
         this.payload = payload;
-        this.isSuccess = true;
+        this.isSuccess = isSuccess;
+        this.errorMsg = errorMsg;
     }
 
-    /**
-     * 실패 응답 생성자
-     */
-    public ResponseCommandDto(ClientCommand command, String errorMsg) {
-        this.command = command;
-        this.errorMsg = errorMsg;
-        this.isSuccess = false;
-    }
+
+//    /**
+//     * 성공 응답 생성자
+//     */
+////    public ResponseCommandDto(ClientCommand command, T payload) {
+////        this.command = command;
+////        this.payload = payload;
+////        this.isSuccess = true;
+////    }
+//
+//    /**
+//     * 실패 응답 생성자
+//     */
+////    public ResponseCommandDto(ClientCommand command, String errorMsg) {
+////        this.command = command;
+////        this.errorMsg = errorMsg;
+////        this.isSuccess = false;
+////    }
 
     // Getter 및 Setter
     public ClientCommand getCommand() {

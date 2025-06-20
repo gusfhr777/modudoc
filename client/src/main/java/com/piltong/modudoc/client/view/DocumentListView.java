@@ -1,11 +1,9 @@
 package com.piltong.modudoc.client.view;
 
-import com.piltong.modudoc.common.document.Document;
 import com.piltong.modudoc.client.controller.DocumentListController;
 
 import com.piltong.modudoc.common.document.DocumentSummary;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -76,6 +74,7 @@ public class DocumentListView {
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
 
+
     }
     //각 구성요소들을 배치하는 메소드
     public void initLayout() {
@@ -100,7 +99,7 @@ public class DocumentListView {
         });
         ModifyButton.setOnAction(e->{
             //수정 버튼 입력시 이벤트
-
+            controller.editDocument(documentTable.getSelectionModel().getSelectedItem());
         });
         RemoveButton.setOnAction(e -> {
             //삭제 버튼 입력시 이벤트
@@ -128,7 +127,9 @@ public class DocumentListView {
     }
     //목록을 설정하는 메소드
     public void setDocumentList(List<DocumentSummary> documentList) {
-        documentTable.setItems((ObservableList<DocumentSummary>) documentList);
+        for (DocumentSummary document : documentList) {
+            addDocument(document); // 목록 뷰 클래스 불러오기
+        }
     }
     //목록의 모든 문서를 제거하는 메소드
     public void clearDocumentList() {
@@ -137,6 +138,9 @@ public class DocumentListView {
     //선택된 문서를 반환하는 메소드
     public DocumentSummary getSelectedDocument() {
         return selectionModel.getSelectedItem();
+    }
+    public boolean isSelectedEmpty() {
+        return selectionModel.getSelectedItem() == null;
     }
 
 }

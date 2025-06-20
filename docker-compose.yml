@@ -1,0 +1,21 @@
+version: '3.8'
+
+# MySQL 서버
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-local
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root872@ # MYSQL 루트 비밀번호. (테스트 용도로 사용하며, 외부 포트에서 접근 불가하도록 하고 절대로 유출하지 말 것)
+      MYSQL_DATABASE: modudoc_db # 데이터베이스 명
+      MYSQL_USER: userTest # 테스트 유저명
+      MYSQL_PASSWORD: tp81w23 # 테스트 유저 비밀번호
+    ports:
+      - "3306:3306" # 초기화 포트
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
