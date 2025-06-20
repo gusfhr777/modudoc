@@ -67,7 +67,7 @@ public class DocumentServiceTest {
         Document doc = docService.create("Title A", "Content A");
         docService.update(doc.getId(), "Z", "Z");
         docService.delete(doc.getId());
-        assertThrows(IllegalArgumentException.class, () -> docService.find(32838));
+        assertThrows(IllegalArgumentException.class, () -> docService.findById(32838));
     }
 
     @Test

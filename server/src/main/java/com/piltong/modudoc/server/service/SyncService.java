@@ -41,7 +41,7 @@ public class SyncService {
         Document doc;
         // Document가 null 값일 시 오류
         try {
-            doc = docService.find(docId);
+            doc = docService.findById(docId);
             if (doc == null) {
                 String msg = "Invalid doc";
                 log.error(msg);
@@ -145,6 +145,6 @@ public class SyncService {
     }
 
     public Document getDocument(Integer docId) {
-        return docService.find(docId);
+        return docService.findById(docId);
     }
 }
