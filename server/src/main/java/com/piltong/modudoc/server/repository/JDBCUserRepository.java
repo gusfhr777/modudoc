@@ -8,17 +8,19 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-/* UserRepository 인터페이스를 구현한 클래스
-* JDBC를 통해 MySQL과 직접 연결하여 user 데이터를 조회, 생성, 수정, 삭제
-* 내부적으로 DB 연결을 유지하고 SQL 문을 통해 통신
-*
-* 사용자 생성 (INSERT)
-* 사용자 조회 (SELECT)
-* 사용자 수정 (UPDATE)
-* 사용자 삭제 (DELETE)
-*
+/**
+ * [JDBCUserRepository]
+ *
+ * UserRepository 인터페이스를 구현한 클래스
+ * JDBC를 통해 MySQL과 직접 연결하여 user 데이터를 조회, 생성, 수정, 삭제
+ * 내부적으로 DB 연결을 유지하고 SQL 문을 통해 영속 계층과 통신
+ *
+ * - 사용자 생성 (INSERT)
+ * - 사용자 조회 (SELECT)
+ * - 사용자 수정 (UPDATE)
+ * - 사용자 삭제 (DELETE)
+ *
  */
-
 public class JDBCUserRepository implements UserRepository {
 
     private final Connection conn;  // JDBC 연결 객체
