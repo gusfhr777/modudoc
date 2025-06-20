@@ -8,7 +8,7 @@ import com.piltong.modudoc.common.network.ClientCommand;
 
 import java.util.List;
 
-public class NetworkListener implements ClientNetworkListener {
+public class NetworkController implements ClientNetworkListener {
 
     DocumentListController documentListController;
     TextEditorController textEditorController;

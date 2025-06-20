@@ -24,18 +24,18 @@ public class ClientNetworkHandler implements Runnable{
      *
      * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
      */
-    public ClientNetworkHandler(String host, int port, ClientNetworkListener listener) {
+    public ClientNetworkHandler(String host, int port, ClientNetworkListener listener) throws IOException {
         try {
             this.socket = new Socket(host, port);
             this.listener = listener;
         } catch (UnknownHostException e) {
             String msg = "Unknown Hostname Detected.";
             log.error(msg, e);
-            throw new RuntimeException(e);
+            throw e;
         } catch (IOException e) {
             String msg = "IOException occured.";
             log.error(msg, e);
-            throw new RuntimeException(e);
+            throw e;
         }
 
         log.info("Network Handler Initialized.");
@@ -64,6 +64,7 @@ public class ClientNetworkHandler implements Runnable{
             while (!Thread.currentThread().isInterrupted()) {
 
                 Object msg = in.readObject(); // 오브젝트 읽기
+                log.debug("Received message: " + msg);  // Debugging the received object
 
                 // 메시지가 ResponseCommandDto 형식일 경우
                 if (msg instanceof ResponseCommandDto<?> dto) {
@@ -127,8 +128,8 @@ public class ClientNetworkHandler implements Runnable{
             }
         } catch (IOException | ClassNotFoundException e) {
             String errMsg = "Client Thread Receive Failed.";
-            log.error(errMsg, e);
-            throw new RuntimeException(e);
+            log.error(errMsg);
+            listener.onNetworkError(e);
 
         } finally { // 핸들러 처리 이후
             shutdown(); // 종료

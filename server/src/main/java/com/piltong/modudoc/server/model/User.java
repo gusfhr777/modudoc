@@ -3,9 +3,9 @@ package com.piltong.modudoc.server.model;
 
 public class User {
 
-    private String id;
-    private String username;
-    private String password;
+    private String id; // 유저 아이디.
+    private String username; // 유저 이름
+    private String password; // 유저 비밀번호
 
 
 

@@ -20,7 +20,7 @@ public class DocumentListController {
     private List<Document> documentList = new ArrayList<>();
 
     private ClientNetworkHandler networkHandler;
-    private NetworkListener NetworkListener;
+    private NetworkController NetworkController;
 
     // 목록화면 뷰
     private DocumentListView documentListView;
@@ -53,8 +53,8 @@ public class DocumentListController {
     public void setView(DocumentListView documentListView) {
         this.documentListView = documentListView;
     }
-    public void setListener(NetworkListener NetworkListener) {
-        this.NetworkListener = NetworkListener;
+    public void setListener(NetworkController NetworkController) {
+        this.NetworkController = NetworkController;
     }
 
 
@@ -140,7 +140,7 @@ public class DocumentListController {
         TextEditorView textEditorView = new TextEditorView();
         TextEditorController textEditorController = new TextEditorController(textEditorView, networkHandler, document);
         textEditorView.insertStringText(document.getContent(),0);
-        NetworkListener.setTextEditorController(textEditorController);
+        NetworkController.setTextEditorController(textEditorController);
         textEditorView.showView();
     }
 

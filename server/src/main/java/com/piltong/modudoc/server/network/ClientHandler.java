@@ -2,6 +2,8 @@ package com.piltong.modudoc.server.network;
 
 
 import com.piltong.modudoc.common.network.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.net.*;
 import java.io.*;
@@ -10,6 +12,7 @@ import java.util.Objects;
 // 한 클라이언트와의 소켓 통신을 관리한다.
 // 요청 읽기 -> 비즈니스 로직 수행 -> 출력 스트림으로 응답 전송
 public class ClientHandler implements Runnable {
+    private static final Logger log = LogManager.getLogger(ClientHandler.class);
     private final Socket socket;                    // 연결된 클라이언트 소켓
     private final ServerNetworkListener listener;   // 서버 로직 처리 핸들러
     protected ObjectInputStream in;                 // 클라이언트 입력 스트림
@@ -65,10 +68,12 @@ public class ClientHandler implements Runnable {
 
                 } catch (EOFException e) {
                     // 클라이언트가 연결을 끊은 경우
-                    System.out.println("클라이언트가 연결을 종료했습니다.");
+                    log.warn("클라이언트가 연결을 종료했습니다.");
                     break;
                 }
             }
+
+            log.info("Client Thread Interrupted.");
         } catch (IOException | ClassNotFoundException e) {
             // 네트워크 또는 역직렬화 오류 발생 처리
             listener.onNetworkError(e);
@@ -87,7 +92,7 @@ public class ClientHandler implements Runnable {
             if (in != null) in.close();
             if (out != null) out.close();
             if (socket != null && !socket.isClosed()) socket.close();
-            System.out.println("Connection closed: " + Objects.requireNonNull(socket).getRemoteSocketAddress());
+            log.info("Connection closed: " + Objects.requireNonNull(socket).getRemoteSocketAddress());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -131,7 +131,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
     // 현재 콘솔에만 출력. (추후 로깅 시스템으로 대체?)
     @Override
     public void onNetworkError(Throwable t) {
-        System.err.println("네트워크 오류 발생: " + t.getMessage());
+        log.error("네트워크 오류 발생: " + t.getMessage());
         t.printStackTrace();
     }
 

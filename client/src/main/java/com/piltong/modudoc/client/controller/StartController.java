@@ -4,6 +4,8 @@ import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.client.view.StartView;
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
 
+import java.io.IOException;
+
 public class StartController {
     private StartView startView;
     ClientNetworkHandler networkHandler;
@@ -49,10 +51,10 @@ public class StartController {
         }
 
         try {
-            NetworkListener networkListener = new NetworkListener();
-            networkHandler = new ClientNetworkHandler(this.host,port,networkListener);
+            NetworkController networkController = new NetworkController();
+            networkHandler = new ClientNetworkHandler(this.host,port, networkController);
             DocumentListController documentListController = new DocumentListController(networkHandler);
-            networkListener.setDocumentListController(documentListController);
+            networkController.setDocumentListController(documentListController);
             DocumentListView documentListView = new DocumentListView();
             documentListView.setController(documentListController);
             documentListController.setView(documentListView);
@@ -62,6 +64,8 @@ public class StartController {
         }catch (RuntimeException e) {
             System.out.println("Error: "+e.getMessage());
             startView.setPromptText("Error: "+e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
