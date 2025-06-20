@@ -1,10 +1,14 @@
 package com.piltong.modudoc.client.controller;
 
+
+
+import com.piltong.modudoc.client.model.*;
+import com.piltong.modudoc.common.model.*;
+
+
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
 import com.piltong.modudoc.client.view.DocumentListView;
 import com.piltong.modudoc.client.view.TextEditorView;
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentSummary;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.client.view.EditDocumentView;
 import com.piltong.modudoc.client.network.NetworkListener;
@@ -15,7 +19,7 @@ import java.util.List;
 
 public class DocumentListController {
     // 서버에서 보낸 Document 객체를 받을 리스트 생성
-    List<DocumentSummary> documentList = new ArrayList<>();
+    List<Document> documentList = new ArrayList<>();
 
     ClientNetworkHandler networkHandler;
 
@@ -42,7 +46,7 @@ public class DocumentListController {
     public void start() {
         new Thread(networkHandler).start();
         documentListView.initialize();
-        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_SUMMARIES,null);
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST,null);
         documentListView.setDocumentList(documentList);
 
 
@@ -58,18 +62,18 @@ public class DocumentListController {
 
 
     // 서버에서 문서 목록을 받아서 리스트에 저장 후 화면 목록에 문서 하나씩 추가
-    public void loadDocumentList(List<DocumentSummary> serverDocuments) {
+    public void loadDocumentList(List<Document> serverDocuments) {
         documentList.clear();
         documentList.addAll(serverDocuments);
         documentListView.setDocumentList(documentList);
     }
 
     // 현재 저장된 문서 리스트 반환
-    public List<DocumentSummary> getDocumentList(){
+    public List<Document> getDocumentList(){
         return documentList;
     }
 
-    public void addDocument(DocumentSummary document) {
+    public void addDocument(Document document) {
         documentList.add(document);
         documentListView.addDocument(document);
     }
@@ -96,14 +100,14 @@ public class DocumentListController {
     }
 
     //목록에 있는 문서 제거
-    public void removeDocument(DocumentSummary document) {
+    public void removeDocument(Document document) {
         networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document.getId());
         documentListView.removeDocument(document);
         documentList.remove(document);
     }
 
     //문서 수정 화면
-    public void editDocument(DocumentSummary document) {
+    public void editDocument(Document document) {
         if(!documentListView.isSelectedEmpty()) {
             if (isEditing) {
                 throw new RuntimeException("Document is already editing");
@@ -119,13 +123,13 @@ public class DocumentListController {
         else throw new RuntimeException("Document is not selected");
     }
 
-    public void sendEditDocument(DocumentSummary olddocument, DocumentSummary newdocument) {
+    public void sendEditDocument(Document olddocument, Document newdocument) {
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,newdocument);
         documentListView.removeDocument(olddocument);
         addDocument(newdocument);
 
     }
-    public void requestConnect(DocumentSummary document) {
+    public void requestConnect(Document document) {
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT,document.getId());
     }
     //문서 접속

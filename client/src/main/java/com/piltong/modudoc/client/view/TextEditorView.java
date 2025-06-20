@@ -15,7 +15,7 @@ import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.richtext.model.StyledDocument;
 
-import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.client.model.Document;
 
 //텍스트 편집기를 생성
 public class TextEditorView {

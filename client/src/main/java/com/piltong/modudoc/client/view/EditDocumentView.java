@@ -1,7 +1,7 @@
 package com.piltong.modudoc.client.view;
 
 import com.piltong.modudoc.client.controller.DocumentListController;
-import com.piltong.modudoc.common.document.DocumentSummary;
+import com.piltong.modudoc.common.model.DocumentSummary;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

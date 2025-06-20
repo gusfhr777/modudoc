@@ -1,15 +1,11 @@
 package com.piltong.modudoc.client.network;
 
+import com.piltong.modudoc.common.model.*;
+import com.piltong.modudoc.client.model.*;
+
 import com.piltong.modudoc.client.controller.DocumentListController;
 import com.piltong.modudoc.client.controller.TextEditorController;
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentDto;
-import com.piltong.modudoc.common.document.DocumentSummary;
-import com.piltong.modudoc.common.document.DocumentSummaryDto;
 import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.common.network.ClientNetworkListener;
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationType;
 
 import java.util.List;
 
@@ -27,12 +23,12 @@ public class NetworkListener implements ClientNetworkListener {
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
                     System.out.println("Create Document");
-                    documentListController.addDocument(DocumentSummary.toEntity((DocumentSummaryDto) payload));
+                    documentListController.addDocument(DocMapper.toEntity((DocumentDto) payload));
                     break;
 
                 // 단일 문서 조회 명령
                 case READ_DOCUMENT:
-                    documentListController.connectDocument(Document.toEntity((DocumentDto) payload));
+                    documentListController.connectDocument(DocMapper.toEntity((DocumentDto) payload));
                     break;
 
                 // 문서 수정 명령
@@ -44,9 +40,9 @@ public class NetworkListener implements ClientNetworkListener {
                 case DELETE_DOCUMENT:
                     break;
 
-                // 문서 요약 리스트 조회 명령
-                case READ_DOCUMENT_SUMMARIES:
-                    documentListController.loadDocumentList((List<DocumentSummary>) payload);
+                // 문서 리스트 조회 명령
+                case READ_DOCUMENT_LIST:
+                    documentListController.loadDocumentList((List<DocumentDto>) payload);
                     break;
 
                 // Operation 전파 명령
@@ -65,8 +61,8 @@ public class NetworkListener implements ClientNetworkListener {
     }
 
     @Override
-    public void onOperationReceived(Operation op) {
-        if(textEditorController != null&& textEditorController.getDocument().getId() == op.getDocumentId()) {
+    public void onOperationReceived(OperationDto op) {
+        if(textEditorController != null&& textEditorController.getDocument().getId() == op.getDocId()) {
             if (op.getOperationType() == OperationType.INSERT) {
                 textEditorController.insertText(op.getContent(), op.getPosition());
             } else if (op.getOperationType() == OperationType.DELETE) {

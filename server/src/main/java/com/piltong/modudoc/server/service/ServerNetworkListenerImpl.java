@@ -1,8 +1,11 @@
 package com.piltong.modudoc.server.service;
 
+import com.piltong.modudoc.common.model.OperationDto;
 import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.common.network.*;
-import com.piltong.modudoc.common.operation.*;
+import com.piltong.modudoc.server.network.ServerNetworkListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.List;
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
 // 각 커맨드에 따라 알맞은 문서 서비스나 동기화 서비스를 호출하여 처리
 public class ServerNetworkListenerImpl implements ServerNetworkListener {
+    private static final Logger log = LogManager.getLogger(ServerNetworkListenerImpl.class);
     private final DocumentService documentService;  // 문서 저장/조회/수정/삭제 처리
     private final SyncService syncService;          // 실시간 편집 동기화 처리
 
@@ -27,27 +31,23 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
 
             // 문서 생성 요청 처리
             case CREATE_DOCUMENT: {
-                if (!(payload instanceof String title))
-                    throw new CommandException("CREATE_DOCUMENT: 잘못된 payload 타입입니다.");
+                if (!(payload instanceof String title)) {
+                    String errMsg = "CREATE_DOCUMENT: 잘못된 payload 타입입니다.";
+                    log.error(errMsg);
+                    throw new CommandException(errMsg);
+                }
 
-                // Id와 content는 서버에서 생성
-                String generatedId = java.util.UUID.randomUUID().toString();
+                // content 지정
                 String content = "";    // 빈 문자열로 생성
 
-                documentService.update(generatedId, title, content);
+                Document doc = documentService.create(title, content);
 
-                return (R) new DocumentSummaryDto(
-                        generatedId,
-                        title,
-                        LocalDateTime.now(),
-                        LocalDateTime.now(),
-                        List.of()
-                );
+                return (R) doc;
             }
 
             // 문서 조회 요청 처리
             case READ_DOCUMENT:
-                if (!(payload instanceof String docId))
+                if (!(payload instanceof Integer docId))
                     throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
                 Document Doc = documentService.find(docId);
                 return (R) Document.toDto(Doc);

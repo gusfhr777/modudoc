@@ -3,11 +3,8 @@ package com.piltong.modudoc.client.controller;
 
 import com.piltong.modudoc.client.view.TextEditorView;
 import com.piltong.modudoc.client.network.ClientNetworkHandler;
-import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.common.network.ClientNetworkListener;
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationType;
+import com.piltong.modudoc.common.model.*;
+import com.piltong.modudoc.client.model.*;
 
 public class TextEditorController {
     private TextEditorView textEditorView;

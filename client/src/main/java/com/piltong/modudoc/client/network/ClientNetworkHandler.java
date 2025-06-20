@@ -4,12 +4,16 @@ import java.net.*;
 import java.io.*;
 import java.util.List;
 
-import com.piltong.modudoc.common.document.*;
+import com.piltong.modudoc.client.model.*;
+import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.common.network.*;
-import com.piltong.modudoc.common.operation.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // 클라이언트에서 네트워크 로직을 처리하는 클래스
 public class ClientNetworkHandler implements Runnable{
+    private static final Logger log = LogManager.getLogger(ClientNetworkHandler.class);
     private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -25,11 +29,16 @@ public class ClientNetworkHandler implements Runnable{
             this.socket = new Socket(host, port);
             this.listener = listener;
         } catch (UnknownHostException e) {
+            String msg = "Unknown Hostname Detected.";
+            log.error(msg, e);
             throw new RuntimeException(e);
         } catch (IOException e) {
+            String msg = "IOException occured.";
+            log.error(msg, e);
             throw new RuntimeException(e);
         }
 
+        log.info("Network Handler Initialized.");
     }
 
 
@@ -44,6 +53,8 @@ public class ClientNetworkHandler implements Runnable{
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
+            String msg = "Client Handler Thread Error occured.";
+            log.error(msg, e);
             throw new RuntimeException(e);
         }
 
@@ -70,12 +81,12 @@ public class ClientNetworkHandler implements Runnable{
 
                         // 문서 생성 명령
                         case CREATE_DOCUMENT:
-                            listener.onCommandSuccess(command, (DocumentSummaryDto) dto.getPayload());
+                            listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
                             break;
 
                         // 단일 문서 조회 명령
                         case READ_DOCUMENT:
-                            listener.onCommandSuccess(command, (DocumentDto) dto.getPayload());
+                            listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
                             break;
 
                         // 문서 수정 명령
@@ -89,8 +100,8 @@ public class ClientNetworkHandler implements Runnable{
                             break;
 
                         // 문서 요약 리스트 조회 명령
-                        case READ_DOCUMENT_SUMMARIES:
-                            listener.onCommandSuccess(command, (List<DocumentSummary>) dto.getPayload());
+                        case READ_DOCUMENT_LIST:
+                            listener.onCommandSuccess(command, DocMapper.toEntity((List<DocumentDto>) dto.getPayload()));
                             break;
 
                         // Operation 전파 명령
@@ -100,8 +111,9 @@ public class ClientNetworkHandler implements Runnable{
 
                         // 이외 명령
                         default:
-                            System.err.println("Unknown Command Received: " + command);
-                            break;
+                            String errMsg = "Unkown Command Detected.";
+                            log.error(errMsg);
+                            throw new RuntimeException();
                     }
 
                 } else {
@@ -111,6 +123,8 @@ public class ClientNetworkHandler implements Runnable{
 
             }
         } catch (IOException | ClassNotFoundException e) {
+            String errMsg = "Client Thread Receive Failed.";
+            log.error(errMsg, e);
             throw new RuntimeException(e);
 
         } finally { // 핸들러 처리 이후
@@ -129,10 +143,10 @@ public class ClientNetworkHandler implements Runnable{
             if (payload instanceof Serializable) {
                 payloadDto = (Serializable) payload;
             } else {
-                if (payload instanceof DocumentSummary) {
-                    payloadDto = DocumentSummary.toDto((DocumentSummary) payload);
+                if (payload instanceof Document) {
+                    payloadDto = DocMapper.toDto((com.piltong.modudoc.client.model.Document) payload);
                 } else if (payload instanceof Operation) {
-                    payloadDto = Operation.toDto((Operation) payload);
+                    payloadDto = OperationMapper.toDto((Operation) payload);
                 }
             }
 
@@ -151,7 +165,7 @@ public class ClientNetworkHandler implements Runnable{
     // Operation 요청 함수
     public Operation requestOperation() {
         try {
-            return Operation.toEntity((OperationDto) in.readObject());
+            return OperationMapper.toEntity((OperationDto) in.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -161,7 +175,7 @@ public class ClientNetworkHandler implements Runnable{
     // Operation 전송 함수
     public void sendOperation(Operation operation) {
         try {
-            out.writeObject(Operation.toDto(operation)); // 전송 버퍼에 로드
+            out.writeObject(OperationMapper.toDto(operation)); // 전송 버퍼에 로드
             out.flush(); // 전송
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -172,7 +186,7 @@ public class ClientNetworkHandler implements Runnable{
     // Document 요청 함수
     public Document requestDocument() {
         try {
-            return Document.toEntity((DocumentDto) in.readObject());
+            return DocMapper.toEntity((DocumentDto) in.readObject());
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

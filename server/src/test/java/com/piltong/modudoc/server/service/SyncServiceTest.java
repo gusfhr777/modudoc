@@ -1,9 +1,9 @@
 //package com.piltong.modudoc.server.service;
 //
 //import com.piltong.modudoc.common.document.Document;
-//import com.piltong.modudoc.common.operation.Operation;
-//import com.piltong.modudoc.common.operation.OperationDto;
-//import com.piltong.modudoc.common.operation.OperationType;
+//import com.piltong.modudoc.common.model.Operation;
+//import com.piltong.modudoc.common.model.OperationDto;
+//import com.piltong.modudoc.common.model.OperationType;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //

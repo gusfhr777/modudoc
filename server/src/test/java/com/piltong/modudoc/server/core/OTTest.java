@@ -1,7 +1,6 @@
 package com.piltong.modudoc.server.core;
 
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationType;
+import com.piltong.modudoc.common.model.OperationType;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

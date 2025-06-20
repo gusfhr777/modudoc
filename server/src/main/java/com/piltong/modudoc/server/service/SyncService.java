@@ -1,9 +1,10 @@
 package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.server.model.Document;
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationDto;
+import com.piltong.modudoc.common.model.OperationDto;
 import com.piltong.modudoc.server.core.OT;
+import com.piltong.modudoc.server.model.Operation;
+import com.piltong.modudoc.server.model.OperationMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,7 +20,7 @@ public class SyncService {
     // 동시 편집 충돌을 해결하기 위한 OT
     private final OT ot;
     // 편집 기록을 저장하는 히스토리 맵
-    private final Map<String, List<Operation>> operationHistory = new HashMap<>();
+    private final Map<Integer, List<Operation>> operationHistory = new HashMap<>();
 
     // 생성자: 문서 서비스와 OT 초기화
     public SyncService(DocumentService docService) {
@@ -60,7 +61,7 @@ public class SyncService {
         // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
         Operation op;
         try {
-            op = Operation.toEntity(dto);
+            op = OperationMapper.toEntity(dto);
             // op 객체로 변환 실패 시 오류
             if (op == null) {
                 System.err.println("[Error] OperationDto를 Operation 으로 변환 실패");

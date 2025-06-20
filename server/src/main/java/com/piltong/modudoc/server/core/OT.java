@@ -2,8 +2,8 @@ package com.piltong.modudoc.server.core;
 
 import java.util.List;
 
-import com.piltong.modudoc.common.operation.Operation;
-import com.piltong.modudoc.common.operation.OperationType;
+import com.piltong.modudoc.common.model.OperationType;
+import com.piltong.modudoc.server.model.Operation;
 
 /** 추후 확장 기능
  * Undo 기능 (history가 필요함)
@@ -94,7 +94,7 @@ public class OT {
     private Operation copy(Operation op) {
         return new Operation(
                 op.getOperationType(),
-                op.getDocumentId(),
+                op.getDocId(),
                 op.getPosition(),
                 op.getContent()
         );

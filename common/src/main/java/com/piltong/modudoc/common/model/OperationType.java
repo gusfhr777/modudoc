@@ -1,4 +1,4 @@
-package com.piltong.modudoc.common.operation;
+package com.piltong.modudoc.common.model;
 
 
 // 오퍼레이션 타입이 저장되는 열거형.

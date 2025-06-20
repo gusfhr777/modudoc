@@ -1,4 +1,4 @@
-package com.piltong.modudoc.common.operation;
+package com.piltong.modudoc.common.model;
 
 
 import java.io.Serializable;
@@ -9,14 +9,14 @@ import java.io.Serializable;
 public class OperationDto implements Serializable {
 
     private OperationType operationType; // 삽입, 삭제 등 연산 종류
-    private String documentId;           // 대상 문서 ID
+    private Integer docId;           // 대상 문서 ID
     private int position;                // 연산 위치
     private String content;              // 삽입/삭제할 내용
 
     // 생성자
-    public OperationDto(OperationType operationType, String documentId, int position, String content) {
+    public OperationDto(OperationType operationType, Integer docId, int position, String content) {
         this.operationType = operationType;
-        this.documentId = documentId;
+        this.docId = docId;
         this.position = position;
         this.content = content;
     }
@@ -26,12 +26,12 @@ public class OperationDto implements Serializable {
         return operationType;
     }
 
-    public String getDocumentId() {
-        return documentId;
+    public Integer getDocId() {
+        return docId;
     }
 
-    public void setDocumentId(String documentId) {
-        this.documentId = documentId;
+    public void setDocId(Integer docId) {
+        this.docId = docId;
     }
 
     public int getPosition() {

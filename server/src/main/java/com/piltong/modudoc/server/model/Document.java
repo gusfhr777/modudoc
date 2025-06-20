@@ -4,11 +4,7 @@ package com.piltong.modudoc.server.model;
 // 비즈니스 로직 처리용 문서 객체이다.
 // 서버에서 다루는 도메인 객체(Domain Model)이다.
 
-import com.piltong.modudoc.common.document.DocumentDto;
-
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
 
 // 서버, 클라에서 모두 사용하는 문서 엔티티
 // 문서 엔티티 : 프로그램 내부에서 사용하는 객체

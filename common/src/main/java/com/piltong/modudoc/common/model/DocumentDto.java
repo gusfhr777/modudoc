@@ -1,4 +1,4 @@
-package com.piltong.modudoc.common.document;
+package com.piltong.modudoc.common.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -9,16 +9,15 @@ import java.util.List;
 public class DocumentDto implements Serializable {
 
     // 필드 정의
-    private final String id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
+    private final Integer id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
     private final String title; // 문서 제목
     private final String content; // 문서 내용
     private final LocalDateTime createdDate; // 문서의 생성일자.
-    private final LocalDateTime modifiedDate; // 문서 최종 수정일
-    private final List<String> accessUserIds; // 접근하고 있는 유저아이디 리스트
+    private final LocalDateTime modifiedDate; // 문서 최종 수정일자.
 
 
     // Getter
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -38,19 +37,13 @@ public class DocumentDto implements Serializable {
         return modifiedDate;
     }
 
-    public List<String> getAccessUserIds() {
-        return accessUserIds;
-    }
-
-
     // 문서DTO 생성자
-    public DocumentDto(String id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, List<String> accessUserIds) {
+    public DocumentDto(Integer id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
-        this.accessUserIds = accessUserIds;
     }
 
 
