@@ -70,7 +70,7 @@ public class ClientNetworkHandler implements Runnable{
 
                         // 문서 생성 명령
                         case CREATE_DOCUMENT:
-                            listener.onCommandSuccess(command, (DocumentSummaryDto) dto.getPayload());
+                            listener.onCommandSuccess(command, (DocumentDto) dto.getPayload());
                             break;
 
                         // 단일 문서 조회 명령
@@ -90,7 +90,7 @@ public class ClientNetworkHandler implements Runnable{
 
                         // 문서 요약 리스트 조회 명령
                         case READ_DOCUMENT_SUMMARIES:
-                            listener.onCommandSuccess(command, (List<DocumentSummary>) dto.getPayload());
+                            listener.onCommandSuccess(command, (List<DocumentDto>) dto.getPayload());
                             break;
 
                         // Operation 전파 명령
@@ -129,8 +129,8 @@ public class ClientNetworkHandler implements Runnable{
             if (payload instanceof Serializable) {
                 payloadDto = (Serializable) payload;
             } else {
-                if (payload instanceof DocumentSummary) {
-                    payloadDto = DocumentSummary.toDto((DocumentSummary) payload);
+                if (payload instanceof Document) {
+                    payloadDto = Document.toDto((DocumentDto) payload);
                 } else if (payload instanceof Operation) {
                     payloadDto = Operation.toDto((Operation) payload);
                 }

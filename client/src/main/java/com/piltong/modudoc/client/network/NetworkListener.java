@@ -27,7 +27,7 @@ public class NetworkListener implements ClientNetworkListener {
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
                     System.out.println("Create Document");
-                    documentListController.addDocument(DocumentSummary.toEntity((DocumentSummaryDto) payload));
+                    documentListController.addDocument(Document.toEntity((Document) payload));
                     break;
 
                 // 단일 문서 조회 명령
@@ -46,7 +46,7 @@ public class NetworkListener implements ClientNetworkListener {
 
                 // 문서 요약 리스트 조회 명령
                 case READ_DOCUMENT_SUMMARIES:
-                    documentListController.loadDocumentList((List<DocumentSummary>) payload);
+                    documentListController.loadDocumentList((List<Document>) payload);
                     break;
 
                 // Operation 전파 명령
