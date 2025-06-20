@@ -31,7 +31,7 @@ public class StartController {
     //연결 버튼을 눌렀을 때 호출되는 메소드
     public void connect(String host, String Stringport) {
         if(host == null || host.isEmpty()) {
-            host = "localhost";
+            this.host = "localhost";
         }
         else {
             this.host = host;
@@ -42,16 +42,13 @@ public class StartController {
             port = Integer.parseInt(Stringport);
         }
         catch (NumberFormatException e) {
-            port = 8080;
+            port = 4433;
             e.printStackTrace();
         }
 
 
         if(port <= 0|| port > 65535) {
-            port = 8080;
-        }
-        else {
-            this.port = port;
+            port = 4433;
         }
 
         try {

@@ -97,15 +97,30 @@ public class DocumentListView {
         });
         InButton.setOnAction(e -> {
             //접속 버튼 입력시 이벤트
-            controller.requestConnect(documentTable.getSelectionModel().getSelectedItem());
+            if (selectionModel.getSelectedItem() != null) {
+                controller.requestConnect(selectionModel.getSelectedItem());
+            }
+            else {
+                setConcoleLabel("문서를 선택해 주세요");
+            }
         });
         ModifyButton.setOnAction(e->{
             //수정 버튼 입력시 이벤트
-            controller.editDocument(documentTable.getSelectionModel().getSelectedItem());
+            if(selectionModel.getSelectedItem()!=null) {
+                controller.editDocument(selectionModel.getSelectedItem());
+            }
+            else {
+                setConcoleLabel("문서를 선택해 주세요");
+            }
         });
         RemoveButton.setOnAction(e -> {
             //삭제 버튼 입력시 이벤트
-            controller.removeDocument(documentTable.getSelectionModel().getSelectedItem());
+            if(documentTable.getSelectionModel().getSelectedItem() != null) {
+                controller.removeDocument(selectionModel.getSelectedItem());
+            }
+            else {
+                setConcoleLabel("문서를 선택해 주세요");
+            }
         });
     }
 
@@ -116,6 +131,10 @@ public class DocumentListView {
     }
     public void closeView() {
         DocumentListStage.close();
+    }
+
+    public void setConcoleLabel(String concoleLabel) {
+        this.concoleLabel.setText(concoleLabel);
     }
 
 

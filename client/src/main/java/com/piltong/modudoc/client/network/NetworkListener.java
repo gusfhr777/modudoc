@@ -5,6 +5,8 @@ import com.piltong.modudoc.client.model.*;
 
 import com.piltong.modudoc.client.controller.DocumentListController;
 import com.piltong.modudoc.client.controller.TextEditorController;
+import com.piltong.modudoc.common.document.Document;
+import com.piltong.modudoc.common.document.DocumentDto;
 import com.piltong.modudoc.common.network.ClientCommand;
 
 import java.util.List;
@@ -22,8 +24,7 @@ public class NetworkListener implements ClientNetworkListener {
 
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
-                    System.out.println("Create Document");
-                    documentListController.addDocument(DocMapper.toEntity((DocumentDto) payload));
+                    documentListController.addDocument(Document.toEntity((DocumentDto) payload));
                     break;
 
                 // 단일 문서 조회 명령

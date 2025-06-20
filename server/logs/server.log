@@ -1,0 +1,4 @@
+2025-06-19 22:13:28,981 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp Starting.
+2025-06-19 22:13:28,988 INFO com.piltong.modudoc.server.ServerApp [main] Service Started.
+2025-06-19 22:13:28,993 INFO com.piltong.modudoc.server.ServerApp [main] Network handler thread started.
+2025-06-19 22:13:29,001 INFO com.piltong.modudoc.server.ServerApp [main] ServerApp initialized successfully on port 4433

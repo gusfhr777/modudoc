@@ -144,7 +144,7 @@ public class ClientNetworkHandler implements Runnable{
                 payloadDto = (Serializable) payload;
             } else {
                 if (payload instanceof Document) {
-                    payloadDto = DocMapper.toDto((com.piltong.modudoc.client.model.Document) payload);
+                    payloadDto = Document.toDto((Document) payload);
                 } else if (payload instanceof Operation) {
                     payloadDto = OperationMapper.toDto((Operation) payload);
                 }

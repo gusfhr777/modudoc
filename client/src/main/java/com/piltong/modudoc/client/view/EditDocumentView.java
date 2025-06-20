@@ -1,7 +1,7 @@
 package com.piltong.modudoc.client.view;
 
 import com.piltong.modudoc.client.controller.DocumentListController;
-import com.piltong.modudoc.common.model.DocumentSummary;
+import com.piltong.modudoc.common.document.Document;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,11 +23,13 @@ public class EditDocumentView {
 
     DocumentListController controller;
 
-    DocumentSummary summary;
+    Document summary;
 
     public EditDocumentView(DocumentListController controller) {
         this.controller = controller;
     }
+    public EditDocumentView(DocumentListController controller, Document summary) {this.controller = controller;
+    this.summary = summary;}
     public void initialize() {
         initLayout();
         initListeners();
@@ -61,7 +63,7 @@ public class EditDocumentView {
 
     }
 
-    public void setDocument(DocumentSummary document) {
+    public void setDocument(Document document) {
         summary = document;
         setDocumentTitle(summary.getTitle());
     }
@@ -73,7 +75,7 @@ public class EditDocumentView {
                 controller.setIsEditing(false);
                 closeView();
             }else {
-                DocumentSummary oldSummary = summary;
+                Document oldSummary = summary;
                 summary.setTitle(nameField.getText());
                 controller.sendEditDocument(oldSummary,summary);
                 controller.setIsEditing(false);
