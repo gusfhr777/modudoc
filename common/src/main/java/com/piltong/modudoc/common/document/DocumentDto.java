@@ -9,7 +9,7 @@ import java.util.List;
 public class DocumentDto implements Serializable {
 
     // 필드 정의
-    private final String id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
+    private final Integer id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
     private final String title; // 문서 제목
     private final String content; // 문서 내용
     private final LocalDateTime createdDate; // 문서의 생성일자.
@@ -18,7 +18,7 @@ public class DocumentDto implements Serializable {
 
 
     // Getter
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ public class DocumentDto implements Serializable {
 
 
     // 문서DTO 생성자
-    public DocumentDto(String id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, List<String> accessUserIds) {
+    public DocumentDto(Integer id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, List<String> accessUserIds) {
         this.id = id;
         this.title = title;
         this.content = content;

@@ -1,6 +1,7 @@
 package com.piltong.modudoc.client.view;
 
 import com.piltong.modudoc.client.controller.TextEditorController;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -133,6 +134,9 @@ public class TextEditorView {
 
 
                 });
+        textEditorStage.setOnCloseRequest(e->
+                Platform.exit());
+
     }
 
 

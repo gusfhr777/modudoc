@@ -9,12 +9,12 @@ import java.io.Serializable;
 public class OperationDto implements Serializable {
 
     private OperationType operationType; // 삽입, 삭제 등 연산 종류
-    private String documentId;           // 대상 문서 ID
+    private Integer documentId;           // 대상 문서 ID
     private int position;                // 연산 위치
     private String content;              // 삽입/삭제할 내용
 
     // 생성자
-    public OperationDto(OperationType operationType, String documentId, int position, String content) {
+    public OperationDto(OperationType operationType, Integer documentId, int position, String content) {
         this.operationType = operationType;
         this.documentId = documentId;
         this.position = position;
@@ -26,11 +26,11 @@ public class OperationDto implements Serializable {
         return operationType;
     }
 
-    public String getDocumentId() {
+    public Integer getDocumentId() {
         return documentId;
     }
 
-    public void setDocumentId(String documentId) {
+    public void setDocumentId(Integer documentId) {
         this.documentId = documentId;
     }
 

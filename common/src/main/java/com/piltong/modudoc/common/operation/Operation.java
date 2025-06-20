@@ -7,13 +7,13 @@ package com.piltong.modudoc.common.operation;
 public class Operation {
 
     private OperationType operationType; // 문서 형태
-    private String documentId;
+    private Integer documentId;
     private int position; // 변경 위치
     private String content; // 변경 내용
 
 
     // 생성자
-    public Operation(OperationType operationType, String documentId, int position, String content) {
+    public Operation(OperationType operationType, Integer documentId, int position, String content) {
         this.operationType = operationType;
         this.documentId = documentId;
         this.position = position;
@@ -25,7 +25,7 @@ public class Operation {
         return operationType;
     }
 
-    public String getDocumentId() { return documentId; }
+    public Integer getDocumentId() { return documentId; }
 
     public int getPosition() {
         return position;
@@ -43,7 +43,7 @@ public class Operation {
         this.position = position;
     }
 
-    public void setDocumentId(String documentId) { this.documentId = documentId; }
+    public void setDocumentId(Integer documentId) { this.documentId = documentId; }
 
     public void setOperationType(OperationType operationType) {
         this.operationType = operationType;

@@ -31,7 +31,7 @@ public class StartController {
     //연결 버튼을 눌렀을 때 호출되는 메소드
     public void connect(String host, String Stringport) {
         if(host == null || host.isEmpty()) {
-            host = "localhost";
+            this.host = "localhost";
         }
         else {
             this.host = host;

@@ -4,6 +4,7 @@ package com.piltong.modudoc.client.view;
 import com.piltong.modudoc.client.controller.StartController;
 
 
+import javafx.application.Platform;
 import javafx.geometry.Orientation;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -85,6 +86,8 @@ public class StartView {
                 controller.connect(getIPText(), getPortText());
             }
         });
+        startStage.setOnCloseRequest(e->
+                Platform.exit());
 
     }
 
@@ -94,7 +97,6 @@ public class StartView {
 
     public void closeView() {
         startStage.close();
-        System.out.println("창 닫기");
     }
 
     //텍스트 입력 칸의 텍스트를 반환한다
