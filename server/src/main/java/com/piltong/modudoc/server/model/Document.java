@@ -15,19 +15,20 @@ import java.util.Objects;
 public class Document{
 
     // 필드
-    private String id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
+    private Integer id; // 문서의 식별자. 다른 문서와 구분하는 역할을 한다.
     private String title; // 문서 제목
     private String content; // 문서 내용
+
     private LocalDateTime createdDate; // 문서의 생성일자.
     private LocalDateTime modifiedDate; // 문서 최종 수정일
 
 
     // 필드 getter 및 setter
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -51,15 +52,33 @@ public class Document{
         return createdDate;
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
     public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
+    public void setModifiedDate(LocalDateTime modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+
+    // 생성자
     public Document(String title, String content) {
+        this.id = null;
         this.title = title;
         this.content = content;
-        this.createdDate = LocalDateTime.now();
-        this.modifiedDate = this.createdDate;
+    }
+
+    // 생성자 2
+    public Document(Integer id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
     }
 
 
@@ -88,15 +107,6 @@ public class Document{
 //        this.modifiedDate = this.createdDate;
 //    }
 
-
-    // 문서 생성자 2
-//    public Document(String id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate, List<String> accessUserIds) {
-//        this.id = id;
-//        this.title = title;
-//        this.content = content;
-//        this.createdDate = createdDate;
-//        this.modifiedDate = modifiedDate;
-//    }
 
 //    // 문서 수정일 업데이트
 //    public void touch() {

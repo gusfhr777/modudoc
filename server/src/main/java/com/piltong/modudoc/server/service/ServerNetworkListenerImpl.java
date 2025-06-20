@@ -34,7 +34,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                 String generatedId = java.util.UUID.randomUUID().toString();
                 String content = "";    // 빈 문자열로 생성
 
-                documentService.updateDocument(generatedId, title, content);
+                documentService.update(generatedId, title, content);
 
                 return (R) new DocumentSummaryDto(
                         generatedId,
@@ -49,12 +49,12 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             case READ_DOCUMENT:
                 if (!(payload instanceof String docId))
                     throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
-                Document Doc = documentService.getDocument(docId);
+                Document Doc = documentService.find(docId);
                 return (R) Document.toDto(Doc);
 
             // 문서 조회 요청 처리 - 본문(content) 없이
             case READ_DOCUMENT_SUMMARIES: {
-                List<Document> allDocs = documentService.getAllDocuments();
+                List<Document> allDocs = documentService.findAll();
 
                 List<DocumentSummaryDto> summaries = allDocs.stream()
                         .map(doc -> new DocumentSummaryDto(
@@ -74,8 +74,8 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                     throw new CommandException("UPDATE_DOCUMENT: 잫못된 payload 타입입니다.");
                 if (!documentService.exists(dto.getId()))
                     throw new CommandException("존재하지 않는 문서입니다.");
-                String currentContent = documentService.getDocument(dto.getId()).getContent();
-                documentService.updateDocument(dto.getId(), dto.getTitle(), currentContent);
+                String currentContent = documentService.find(dto.getId()).getContent();
+                documentService.update(dto.getId(), dto.getTitle(), currentContent);
                 return (R) new DocumentSummaryDto(
                         dto.getId(),
                         dto.getTitle(),
@@ -96,9 +96,9 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             case PROPAGATE_OPERATION:
                 if (!(payload instanceof OperationDto opDto))
                     throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
-                if (!documentService.exists(opDto.getDocumentId()))
+                if (!documentService.exists(opDto.findId()))
                     throw new CommandException("해당 문서가 존재하지 않습니다.");
-                syncService.syncUpdate(opDto.getDocumentId(), opDto, "null");
+                syncService.syncUpdate(opDto.findId(), opDto, "null");
                 return null;
 
             // 정의되지 않은 커맨드 처리

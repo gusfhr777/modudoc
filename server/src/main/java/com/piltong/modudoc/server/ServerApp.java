@@ -34,10 +34,10 @@ public class ServerApp {
             ExecutorService executor = Executors.newFixedThreadPool(Constants.POOL_SIZE);
 
             // 서비스 객체 생성
-            DocumentRepository documentRepository = new JDBCDocumentRepository();
-            DocumentService documentService = new DocumentService(documentRepository);
-            SyncService syncService = new SyncService();
-            ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(documentService, syncService);
+            DocumentRepository docRepo = new JDBCDocumentRepository();
+            DocumentService docService = new DocumentService(docRepo);
+            SyncService syncService = new SyncService(docService);
+            ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(docService, syncService);
             log.info("Service started.");
 
             // ServerNetworkHandler 스레드 생성 및 시작
