@@ -1,7 +1,6 @@
 package com.piltong.modudoc.common.network;
 
 import com.piltong.modudoc.common.document.Document;
-import com.piltong.modudoc.common.document.DocumentSummary;
 import com.piltong.modudoc.common.operation.Operation;
 
 
@@ -12,7 +11,7 @@ public enum ClientCommand {
     /**
      * 문서 생성 명령.
      * 요청 데이터: String (docTitle)
-     * 응답 데이터: {@link DocumentSummary}
+     * 응답 데이터: {@link Document}
      */
     CREATE_DOCUMENT,
 
@@ -25,7 +24,7 @@ public enum ClientCommand {
 
     /**
      * 문서 수정 명령.
-     * 요청 데이터: {@link DocumentSummary} (updated)
+     * 요청 데이터: {@link Document} (updated)
      * 응답 데이터: null
      */
     UPDATE_DOCUMENT,
@@ -40,7 +39,7 @@ public enum ClientCommand {
     /**
      * 문서 요약 리스트 조회 명령.
      * 요청 데이터: null
-     * 응답 데이터: {@code List<DocumentSummary>}
+     * 응답 데이터: {@code List<Document>}
      */
     READ_DOCUMENT_SUMMARIES,
 

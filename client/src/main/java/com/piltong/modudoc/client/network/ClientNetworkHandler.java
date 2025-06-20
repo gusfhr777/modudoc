@@ -130,7 +130,7 @@ public class ClientNetworkHandler implements Runnable{
                 payloadDto = (Serializable) payload;
             } else {
                 if (payload instanceof Document) {
-                    payloadDto = Document.toDto((DocumentDto) payload);
+                    payloadDto = Document.toDto((Document) payload);
                 } else if (payload instanceof Operation) {
                     payloadDto = Operation.toDto((Operation) payload);
                 }

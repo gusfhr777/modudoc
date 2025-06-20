@@ -14,18 +14,17 @@ import java.util.List;
 
 public class DocumentListController {
     // 서버에서 보낸 Document 객체를 받을 리스트 생성
-    List<Document> documentList = new ArrayList<>();
+    private List<Document> documentList = new ArrayList<>();
 
-    ClientNetworkHandler networkHandler;
+    private ClientNetworkHandler networkHandler;
+    private NetworkListener NetworkListener;
 
-    EditDocumentView editDocumentView;
-
-    NetworkListener NetworkListener;
-
-    // 목록화면
+    // 목록화면 뷰
     private DocumentListView documentListView;
 
-    boolean isEditing = false;
+    private EditDocumentView editDocumentView;
+
+    private boolean isEditing = false;
 
 
     // 생성자에게 뷰를 받아서 필드에 저장
@@ -48,10 +47,10 @@ public class DocumentListController {
     }
 
     //뷰 입력 받기
-    void setView(DocumentListView documentListView) {
+    public void setView(DocumentListView documentListView) {
         this.documentListView = documentListView;
     }
-    void setListener(NetworkListener NetworkListener) {
+    public void setListener(NetworkListener NetworkListener) {
         this.NetworkListener = NetworkListener;
     }
 
@@ -77,7 +76,7 @@ public class DocumentListController {
 
 
 
-    //생성 버튼 입력 시 문서 생성
+    //문서 생성 창 생성
     public void createDocument() {
         if (isEditing) {
             throw new RuntimeException("Document is already editing");
@@ -89,6 +88,8 @@ public class DocumentListController {
             editDocumentView.showView();
         }
     }
+
+    //문서 생성 요청
     public void sendCreateDocument(String title) {
 
         networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT, title);
@@ -97,11 +98,10 @@ public class DocumentListController {
     //목록에 있는 문서 제거
     public void removeDocument(Document document) {
         networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document.getId());
-        documentListView.removeDocument(document);
-        documentList.remove(document);
+        
     }
 
-    //문서 수정 화면
+    //문서 수정 화면 생성
     public void editDocument(Document document) {
         if(!documentListView.isSelectedEmpty()) {
             if (isEditing) {
@@ -118,10 +118,15 @@ public class DocumentListController {
         else throw new RuntimeException("Document is not selected");
     }
 
+    //문서 수정 요청
     public void sendEditDocument(Document olddocument, Document newdocument) {
-        networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT,newdocument);
-        documentListView.removeDocument(olddocument);
-        addDocument(newdocument);
+        try {
+            networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, newdocument);
+            documentListView.removeDocument(olddocument);
+            addDocument(newdocument);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
     public void requestConnect(Document document) {

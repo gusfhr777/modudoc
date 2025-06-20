@@ -73,8 +73,9 @@ public class DocumentListView {
         selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
-    }
 
+
+    }
     //각 구성요소들을 배치하는 메소드
     public void initLayout() {
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton);
@@ -115,6 +116,10 @@ public class DocumentListView {
         DocumentListStage.close();
     }
 
+    public void setConcoleLabel(String concoleLabel) {
+        this.concoleLabel.setText(concoleLabel);
+    }
+
 
     //목록에 문서를 추가하는 메소드
     public void addDocument(Document document) {
@@ -126,10 +131,6 @@ public class DocumentListView {
     }
     //목록을 설정하는 메소드
     public void setDocumentList(List<Document> documentList) {
-<<<<<<< Updated upstream
-=======
-        clearDocumentList();
->>>>>>> Stashed changes
         for (Document document : documentList) {
             addDocument(document); // 목록 뷰 클래스 불러오기
         }
