@@ -150,7 +150,7 @@ public class NetworkHandler implements Runnable{
                         listener.onCommandSuccess(command, null);
                         break;
 
-                    // 대시보드 읽기
+                    // 문서 요약 리스트 조회 명령
                     case READ_DOCUMENT_LIST:
                         listener.onCommandSuccess(command, DocMapper.toEntity((List<DocumentDto>) dto.getPayload()));
                         break;

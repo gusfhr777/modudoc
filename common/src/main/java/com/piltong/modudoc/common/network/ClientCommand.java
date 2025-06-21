@@ -38,7 +38,7 @@ public enum ClientCommand {
     DELETE_DOCUMENT,
 
     /**
-     * 대시보드 조회 명령
+     * 문서 리스트 조회 명령.
      * 요청 데이터: null
      * 응답 데이터: {@code List<DocumentDto>}
      */
