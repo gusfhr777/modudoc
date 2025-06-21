@@ -201,6 +201,7 @@ public class DashboardController{
         }
         document.setTitle(title);
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
+        deleteDocument(document.getId());
 
         this.dialogStage.close();
     }
@@ -240,10 +241,13 @@ public class DashboardController{
 
     public void deleteDocument(Integer id) {
         log.info("DeleteDocument()");
-        documentList.stream().filter(doc -> doc.getId().equals(id)).findFirst().ifPresent(doc -> {
-            this.documentList.remove(doc);
-            this.dashboardView.getDocumentTable().getItems().remove(doc);
-        });
+        for(Document doc: this.documentList) {
+            if(doc.getId().equals(id)) {
+                this.documentList.remove(doc);
+                this.dashboardView.getDocumentTable().getItems().remove(doc);
+                return;
+            }
+        }
     }
 
 
