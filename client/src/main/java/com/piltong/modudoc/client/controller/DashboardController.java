@@ -253,6 +253,17 @@ public class DashboardController{
         }
     }
 
+    public void editDocument(Integer id, String title) {
+        log.info("editDocument()");
+        for(Document doc: dashboardView.getDocumentTable().getItems()) {
+            if(doc.getId().equals(id)) {
+                doc.setTitle(title);
+
+            }
+        }
+
+    }
+
 
 //    private networkService networkController;
 //    private MainView mainView;
