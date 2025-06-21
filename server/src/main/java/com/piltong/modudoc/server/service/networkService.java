@@ -4,24 +4,22 @@ import com.piltong.modudoc.common.Constants;
 import com.piltong.modudoc.common.model.DocumentDto;
 import com.piltong.modudoc.common.model.LoginRequestDto;
 import com.piltong.modudoc.common.model.OperationDto;
-import com.piltong.modudoc.common.model.UserDto;
 import com.piltong.modudoc.server.model.*;
 import com.piltong.modudoc.common.network.*;
-import com.piltong.modudoc.server.network.ServerNetworkListener;
+import com.piltong.modudoc.server.network.networkHandlerListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
 // 각 커맨드에 따라 알맞은 문서 서비스나 동기화 서비스를 호출하여 처리
-public class ServerNetworkListenerImpl implements ServerNetworkListener {
-    private static final Logger log = LogManager.getLogger(ServerNetworkListenerImpl.class);
+public class networkService implements networkHandlerListener {
+    private static final Logger log = LogManager.getLogger(networkService.class);
     private final DocumentService documentService;  // 문서 저장/조회/수정/삭제 처리
     private final SyncService syncService;          // 실시간 편집 동기화 처리
 
-    public ServerNetworkListenerImpl(DocumentService documentService, SyncService syncService) {
+    public networkService(DocumentService documentService, SyncService syncService) {
         this.documentService = documentService;
         this.syncService = syncService;
     }

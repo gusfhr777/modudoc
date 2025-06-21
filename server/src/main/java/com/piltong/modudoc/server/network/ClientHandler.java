@@ -15,12 +15,12 @@ import java.util.Objects;
 public class ClientHandler implements Runnable {
     private static final Logger log = LogManager.getLogger(ClientHandler.class);
     private final Socket socket;                    // 연결된 클라이언트 소켓
-    private final ServerNetworkListener listener;   // 서버 로직 처리 핸들러
+    private final networkHandlerListener listener;   // 서버 로직 처리 핸들러
     protected ObjectInputStream in;                 // 클라이언트 입력 스트림
     protected ObjectOutputStream out;               // 클라이언트 출력 스트림
 
     // 생성자: 클라이언트 소켓과 서버 로직 핸들러 주입
-    public ClientHandler(Socket socket, ServerNetworkListener listener) {
+    public ClientHandler(Socket socket, networkHandlerListener listener) {
         // 변수 할당
         this.listener = listener;
         this.socket = socket;

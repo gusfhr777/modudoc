@@ -1,6 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="modudoc run" type="CompoundRunConfigurationType">
+  <configuration default="false" name="서버 클라2 실행" type="CompoundRunConfigurationType">
     <toRun name="client run" type="GradleRunConfiguration" />
+    <toRun name="client run2" type="GradleRunConfiguration" />
     <toRun name="server run" type="GradleRunConfiguration" />
     <method v="2" />
   </configuration>

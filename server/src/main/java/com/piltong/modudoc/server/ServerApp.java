@@ -7,7 +7,7 @@ import com.piltong.modudoc.server.network.NetworkHandler;
 import com.piltong.modudoc.server.repository.DocumentRepository;
 import com.piltong.modudoc.server.repository.JDBCDocumentRepository;
 import com.piltong.modudoc.server.repository.MapDocumentRepository;
-import com.piltong.modudoc.server.service.ServerNetworkListenerImpl;
+import com.piltong.modudoc.server.service.networkService;
 import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
 
@@ -54,7 +54,7 @@ public class ServerApp {
 
             DocumentService docService = new DocumentService(docRepo);
             SyncService syncService = new SyncService(docService);
-            ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(docService, syncService);
+            networkService listener = new networkService(docService, syncService);
             log.info("Service started.");
 
             // ServerNetworkHandler 스레드 생성 및 시작

@@ -1,4 +1,4 @@
-package com.piltong.modudoc.client.service;
+package com.piltong.modudoc.client.network;
 
 
 import com.piltong.modudoc.client.model.Operation;
@@ -9,7 +9,7 @@ import com.piltong.modudoc.common.network.ClientCommand;
  * 서버로부터 수신된 명령 성공/실패, Operation 브로드캐스트, 네트워크 오류를 처리합니다.
  * 네트워크 계층이 아닌, 비즈니스 계층에서 처리하는 인터페이스이므로, DTO를 다루지 않는다.
  */
-public interface ClientNetworkListener {
+public interface networkHandlerListener {
 
     /**
      * 클라이언트가 보낸 명령(request)에 대한 성공 응답을 수신했을 때 호출됩니다.

@@ -234,7 +234,7 @@ public class DashboardController{
         }
     }
 
-    // NetworkListenerImpl 호출. documentList에 document를 추가한다.
+    // networkService 호출. documentList에 document를 추가한다.
     public void addDocument(Document document) {
         log.info("addDocument()");
         this.documentList.add(document);
@@ -253,7 +253,7 @@ public class DashboardController{
     }
 
 
-//    private NetworkListenerImpl networkController;
+//    private networkService networkController;
 //    private MainView mainView;
 //    private DocCreateView docCreateView;
 //
@@ -389,7 +389,7 @@ public class DashboardController{
 //
 //        mainController.startEditor(document);
 //        mainView.getEditorView().insertStringText(document.getContent(),0);
-////        NetworkListenerImpl.setTextEditorController(editorController);
+////        networkService.setTextEditorController(editorController);
 //        mainView.getEditorView().start();
 //    }
 //

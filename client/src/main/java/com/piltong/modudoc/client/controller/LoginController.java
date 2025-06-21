@@ -40,7 +40,7 @@ public class LoginController{
 //    private MainController mainController;
 //    private MainView mainView;
 //    private LoginView loginView;
-//    private NetworkListenerImpl networkController;
+//    private networkService networkController;
 //
 //    //생성자. 컨트롤러 초기화 담당.
 //    public LoginController(MainController mainController) {

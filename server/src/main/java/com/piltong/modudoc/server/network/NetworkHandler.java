@@ -2,11 +2,8 @@ package com.piltong.modudoc.server.network;
 
 
 import com.piltong.modudoc.common.Constants;
-import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.common.network.ResponseCommandDto;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.*;
 import java.util.concurrent.ExecutorService;
 
@@ -18,12 +15,12 @@ public class NetworkHandler implements Runnable {
     private final int port; // 네트워크 핸들러가 시작되는 포트
     private final ExecutorService executor; // 스레드 풀
     private final ServerSocket serverSocket; // 데이터를 관장하는 서버 소켓
-    private final ServerNetworkListener listener; //
+    private final networkHandlerListener listener; //
 
 
 
     // 핸들러 초기화 함수
-    public NetworkHandler(int port, ExecutorService executor, ServerNetworkListener listener) {
+    public NetworkHandler(int port, ExecutorService executor, networkHandlerListener listener) {
         // 변수 할당
         this.port = port;
         this.executor = executor;

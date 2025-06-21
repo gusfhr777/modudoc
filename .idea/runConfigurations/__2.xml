@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="modudoc test" type="CompoundRunConfigurationType">
+  <configuration default="false" name="서버 클라 테스트" type="CompoundRunConfigurationType">
     <toRun name="client test" type="GradleRunConfiguration" />
     <toRun name="server test" type="GradleRunConfiguration" />
     <method v="2" />

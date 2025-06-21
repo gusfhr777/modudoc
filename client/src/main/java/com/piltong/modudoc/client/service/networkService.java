@@ -4,6 +4,7 @@ import com.piltong.modudoc.client.controller.MainController;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.model.*;
 
+import com.piltong.modudoc.client.network.networkHandlerListener;
 import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.common.network.ClientCommand;
 import org.apache.logging.log4j.LogManager;
@@ -15,17 +16,17 @@ import java.util.List;
 
 // 컨트롤러에서 네트워크 인터페이스를 담당한다.
 // ClientNetworkListener 인터페이스를 사용한다.
-public class NetworkListenerImpl implements ClientNetworkListener {
+public class networkService implements networkHandlerListener {
 
     // 로거
-    private static final Logger log = LogManager.getLogger(NetworkListenerImpl.class);
+    private static final Logger log = LogManager.getLogger(networkService.class);
 
     // 컨트롤러
     private final MainController mainController;
     private NetworkHandler networkHandler;
 
     // 생성자
-    public NetworkListenerImpl(MainController mainController) {
+    public networkService(MainController mainController) {
         this.mainController = mainController;
     }
 

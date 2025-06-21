@@ -5,7 +5,6 @@ import java.io.*;
 import java.util.List;
 
 import com.piltong.modudoc.client.model.*;
-import com.piltong.modudoc.client.service.ClientNetworkListener;
 import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.common.network.*;
 
@@ -18,26 +17,27 @@ public class NetworkHandler implements Runnable{
     private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
-    private final ClientNetworkListener listener;
+    private final networkHandlerListener listener;
 
 
     /**
      *
-     * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
+     * @param listener 네트워크 이벤트를 처리할 {@link networkHandlerListener} 구현체
      */
-    public NetworkHandler(String host, int port, ClientNetworkListener listener)  {
+    public NetworkHandler(String host, int port, networkHandlerListener listener)  {
         log.info("Network Handler Initializing...");
         this.listener = listener;
 
-        int maxAttempts = 5; // 최대 연결 시도
-        int timeoutMillis = 5000; // Timeout 대기 시간
+        final int MAX_ATTEMPTS = 10; // 최대 연결 시도
+        final int CONNECTION_TIMEOUT = 5000; // Timeout 대기 시간
+        final int WAIT_PER_ATTEMPT = 2000; // 시도 이후 대기 시간
 
         Socket tmpSocket = null;
         try {
-            for(int i=0; i < maxAttempts; i++) {
+            for(int i=0; i < MAX_ATTEMPTS; i++) {
                 tmpSocket = new Socket();
                 try {
-                    tmpSocket.connect(new InetSocketAddress(host, port), timeoutMillis);
+                    tmpSocket.connect(new InetSocketAddress(host, port), CONNECTION_TIMEOUT);
                     break;
                 } catch (UnknownHostException e) {
                     log.error("Unknown host : {}", host);
@@ -56,8 +56,8 @@ public class NetworkHandler implements Runnable{
                     log.error(errMsg, e);
                     throw new RuntimeException(errMsg, e);
                 }
-                Thread.sleep(1000);
-                if (i==4) {
+                Thread.sleep(WAIT_PER_ATTEMPT);
+                if (i==(MAX_ATTEMPTS-1)) {
                     String errMsg = "Connection to host failed. Maybe server not working.";
                     log.fatal(errMsg);
                     throw new RuntimeException(errMsg);

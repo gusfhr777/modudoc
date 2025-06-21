@@ -9,7 +9,7 @@ import com.piltong.modudoc.common.network.CommandException;
  * 네트워크 핸들러는 클라이언트로부터 수신된 Command 요청을 이 인터페이스를 통해 서비스 로직에 전달하고,
  * 처리 결과를 반환합니다.
  */
-public interface ServerNetworkListener {
+public interface networkHandlerListener {
 
     /**
      * 클라이언트로부터 명령 요청을 수신했을 때 호출됩니다.
