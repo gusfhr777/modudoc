@@ -21,6 +21,14 @@ public class MapDocumentRepository implements DocumentRepository {
             throw new IllegalArgumentException(errMsg);
         }
 
+        if (document.getTitle() == null) {
+            document.setTitle("");
+        }
+
+        if (document.getContent() == null) {
+            document.setContent("");
+        }
+
         document.setId(documentStorage.size()+1);
         document.setModifiedDate(LocalDateTime.now());
         document.setCreatedDate(LocalDateTime.now());

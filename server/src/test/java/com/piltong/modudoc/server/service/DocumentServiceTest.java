@@ -2,9 +2,11 @@ package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.server.repository.DocumentRepository;
+import com.piltong.modudoc.server.repository.MapDocumentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,27 +18,11 @@ public class DocumentServiceTest {
 
     @BeforeEach
     void setUp() {
-        DocumentRepository docRepo = new DocumentRepository() {
-            @Override
-            public com.piltong.modudoc.server.model.Document save(com.piltong.modudoc.server.model.Document doc) {
-                return null;
-            }
+        DocumentRepository docRepo = new MapDocumentRepository();
 
-            @Override
-            public Optional<com.piltong.modudoc.server.model.Document> findById(int id) {
-                return Optional.empty();
-            }
-
-            @Override
-            public List<com.piltong.modudoc.server.model.Document> findAll() {
-                return List.of();
-            }
-
-            @Override
-            public boolean delete(int id) {
-                return false;
-            }
-        };
+        docRepo.save(new Document(1, "DocumentTest1", "ContentTest1", LocalDateTime.now(), LocalDateTime.now()));
+        docRepo.save(new Document(2, "DocumentTest2", "ContentTest2", LocalDateTime.now(), LocalDateTime.now()));
+        docRepo.save(new Document(2, "DocumentTest3", "ContentTest3", LocalDateTime.now(), LocalDateTime.now()));
 
         docService = new DocumentService(docRepo);
     }

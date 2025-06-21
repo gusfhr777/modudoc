@@ -19,6 +19,17 @@ public class Document{
     private LocalDateTime modifiedDate; // 문서 최종 수정일
 
 
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                '}';
+    }
+
     // 필드 getter 및 setter
     public Integer getId() {
         return id;
@@ -76,11 +87,6 @@ public class Document{
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
-
-
-
-
-
 
 
 //    public List<String> getAccessUserIds() {

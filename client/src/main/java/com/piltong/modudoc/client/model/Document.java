@@ -84,6 +84,19 @@ public class Document {
     }
 
 
+
+
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                '}';
+    }
+
     // 접근하는 유저 추가
 //    public void addUser(String userId) {
 //        if (!accessUserIds.contains(userId)) {

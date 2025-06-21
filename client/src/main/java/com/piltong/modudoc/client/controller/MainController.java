@@ -41,10 +41,7 @@ public class MainController {
         return dashboardController;
     }
 
-
-
-
-
+    
     
     // 생성자
     public MainController(Stage stage) {
@@ -71,9 +68,6 @@ public class MainController {
 
 
 
-
-
-
     private void showFatalErrorAndExit(String message) {
         if (Constants.DEBUG) Platform.exit();
         Platform.runLater(() -> {
@@ -86,9 +80,6 @@ public class MainController {
         });
 
     }
-
-
-
 
 
     // 로그인 씬 활성화

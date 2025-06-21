@@ -200,6 +200,7 @@ public class DashboardController{
             return;
         }
         document.setTitle(title);
+        document.setContent("");
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
         deleteDocument(document.getId());
 

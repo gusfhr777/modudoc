@@ -80,6 +80,8 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                             dto.getModifiedDate()
                     );
 
+                    log.info(doc);
+
                     documentService.update(doc);
                     log.info("문서 수정: id={}", doc.getId());
                     return (R) doc;
@@ -154,7 +156,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
             }
 
         } catch (Exception e) {
-            log.error("NetworkImpl Error while executing command : ", e);
+            log.error("NetworkImpl Error while executing command : {} ", command, e);
             throw new RuntimeException(e);
         }
     }

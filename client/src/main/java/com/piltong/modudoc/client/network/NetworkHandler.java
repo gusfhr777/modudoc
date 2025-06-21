@@ -34,8 +34,8 @@ public class NetworkHandler implements Runnable{
 
         Socket tmpSocket = null;
         try {
-            tmpSocket = new Socket();
             for(int i=0; i < maxAttempts; i++) {
+                tmpSocket = new Socket();
                 try {
                     tmpSocket.connect(new InetSocketAddress(host, port), timeoutMillis);
                     break;
@@ -46,8 +46,15 @@ public class NetworkHandler implements Runnable{
                     String msg = "Connection timed out after 5 seconds.";
                     log.error(msg, e);
                     throw new RuntimeException(msg, e);
+                } catch (ConnectException e) {
+                    log.error("connection failed : {} retry..", e.getMessage());
+                } catch (SocketException e) {
+                    log.fatal("Socket Related failed..", e);
+                    throw new RuntimeException("Socket Related failed..", e);
                 } catch (IOException e) {
-                    log.error("connection failed. retry..");
+                    String errMsg = "Socket IO Excpetion.";
+                    log.error(errMsg, e);
+                    throw new RuntimeException(errMsg, e);
                 }
                 Thread.sleep(1000);
                 if (i==4) {
@@ -84,85 +91,94 @@ public class NetworkHandler implements Runnable{
     public void run() {
         log.info("Client Thread Running...");
 
-        try {
-            // 인터럽트 받기 전까지 무한 반복
-            while (!Thread.currentThread().isInterrupted()) {
-                log.info("message Receiving...");  // 대기
-                Object msg = in.readObject(); // 오브젝트 읽기
-                log.info("message Received : " + msg);  // Debugging the received object
-
-                // 메시지가 ResponseCommandDto 형식일 경우
-                if (msg instanceof ResponseCommandDto<?> dto) {
-
-                    ClientCommand command = dto.getCommand();
 
 
-                    // 실패 응답
-                    if (!dto.isSuccess()) {
-                        listener.onCommandFailure(command, dto.getErrorMsg());
-                        continue;
-                    }
+        while (!Thread.currentThread().isInterrupted()) {
+            log.info("message Receiving...");  // 대기
 
-                    // 성공 응답
-                    switch (command) {
+            Object msg = null;
 
-                        // 문서 생성 명령
-                        case CREATE_DOCUMENT:
-                            listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
-                            break;
+            try {
+                msg = in.readObject(); // 오브젝트 읽기
+            } catch (EOFException e) {
+                String errMsg;
+                if (e.getMessage() == null) errMsg = "Socket closed from server.";
+                else errMsg ="readObject() failed";
 
-                        // 단일 문서 조회 명령
-                        case READ_DOCUMENT:
-                            listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
-                            break;
+                log.fatal(errMsg, e);
+                throw new RuntimeException(e);
+            } catch (Exception e) {
+                continue;
+            }
 
-                        // 문서 수정 명령
-                        case UPDATE_DOCUMENT:
-                            listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
-                            break;
+            log.info("message Received : " + msg);  // Debugging the received object
 
-                        // 문서 삭제 명령
-                        case DELETE_DOCUMENT:
-                            listener.onCommandSuccess(command, null);
-                            break;
+            // 메시지가 ResponseCommandDto 형식일 경우
+            if (msg instanceof ResponseCommandDto<?> dto) {
 
-                        // 문서 요약 리스트 조회 명령
-                        case READ_DOCUMENT_LIST:
-                            listener.onCommandSuccess(command, DocMapper.toEntity((List<DocumentDto>) dto.getPayload()));
-                            break;
+                ClientCommand command = dto.getCommand();
 
-                        // Operation 전파 명령
-                        case PROPAGATE_OPERATION:
-                            listener.onCommandSuccess(command, null);
-                            break;
 
-                        case LOGIN:
-                            listener.onCommandSuccess(command, UserMapper.toEntity((UserDto) dto.getPayload()));
-                            break;
-
-                        // 이외 명령
-                        default:
-                            String errMsg = "Unkown Command Detected.";
-                            log.error(errMsg);
-                            listener.onNetworkError(new IllegalArgumentException(errMsg));
-                    }
-
-                } else {
-                    String errMsg = "Unknown DTO Received.";
-                    log.error(errMsg);
-                    listener.onNetworkError(new IllegalArgumentException(errMsg));
-
+                // 실패 응답
+                if (!dto.isSuccess()) {
+                    listener.onCommandFailure(command, dto.getErrorMsg());
+                    continue;
                 }
 
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            String errMsg = "Client Thread Failed while running";
-            log.error(errMsg, e);
-            listener.onNetworkError(e);
+                // 성공 응답
+                switch (command) {
 
-        } finally { // 핸들러 처리 이후
-            shutdown(); // 종료
+                    // 문서 생성 명령
+                    case CREATE_DOCUMENT:
+                        listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
+                        break;
+
+                    // 단일 문서 조회 명령
+                    case READ_DOCUMENT:
+                        listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
+                        break;
+
+                    // 문서 수정 명령
+                    case UPDATE_DOCUMENT:
+                        listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
+                        break;
+
+                    // 문서 삭제 명령
+                    case DELETE_DOCUMENT:
+                        listener.onCommandSuccess(command, null);
+                        break;
+
+                    // 문서 요약 리스트 조회 명령
+                    case READ_DOCUMENT_LIST:
+                        listener.onCommandSuccess(command, DocMapper.toEntity((List<DocumentDto>) dto.getPayload()));
+                        break;
+
+                    // Operation 전파 명령
+                    case PROPAGATE_OPERATION:
+                        listener.onCommandSuccess(command, null);
+                        break;
+
+                    case LOGIN:
+                        listener.onCommandSuccess(command, UserMapper.toEntity((UserDto) dto.getPayload()));
+                        break;
+
+                    // 이외 명령
+                    default:
+                        String errMsg = "Unkown Command Detected.";
+                        log.error(errMsg);
+                        listener.onNetworkError(new IllegalArgumentException(errMsg));
+                }
+
+            } else {
+                String errMsg = "Unknown DTO Received.";
+                log.error(errMsg);
+                listener.onNetworkError(new IllegalArgumentException(errMsg));
+
+            }
         }
+        log.info("Client Network Thread Interrupted.");
+        shutdown();
+
 
     }
 
@@ -181,6 +197,7 @@ public class NetworkHandler implements Runnable{
                 payloadDto = (Serializable) payload;
             } else {
                 if (payload instanceof Document) {
+                    log.info(payload);
                     payloadDto = DocMapper.toDto((Document) payload);
                 } else if (payload instanceof Operation) {
                     payloadDto = OperationMapper.toDto((Operation) payload);
