@@ -72,5 +72,10 @@ public class ServerApp {
 
         log.info("ServerApp successfully initialized on port {}", Constants.SERVER_PORT);
 
+        try {
+            Thread.currentThread().join();
+        } catch (InterruptedException e) {
+            log.error("Main thread interrupted", e);
+        }
     }
 }
