@@ -29,6 +29,8 @@ public class CreateDocumentDialog {
         return editButton;
     }
 
+    public Label getNameLabel() {return nameLabel;}
+
     TextField titleField = new TextField(); // 문서 제목
 
     public void setPrompt(String text) {
