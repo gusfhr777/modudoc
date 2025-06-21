@@ -45,7 +45,7 @@ public class OperationDto implements Serializable {
 
     @Override
     public String toString() {
-        return "Operation{" +
+        return "OperationDto{" +
                 "operationType=" + operationType +
                 ", docId=" + docId +
                 ", position=" + position +

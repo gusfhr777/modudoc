@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.net.*;
 import java.io.*;
+import java.util.List;
 import java.util.Objects;
 
 // 한 클라이언트와의 소켓 통신을 관리한다.
@@ -45,59 +46,17 @@ public class ClientHandler implements Runnable {
                     log.info("Client Thread Message receiveing.");
                     RequestCommandDto<?> dto = (RequestCommandDto<?>) in.readObject(); // 클라이언트 명령 요청 대기
                     log.info("Client Thread Message received.");
-
                     ClientCommand command = dto.getCommand(); // 커맨드 가져오기
-
-                    Object resultPayload;
-                    boolean success = true;
-                    String errorMsg = null;
-
-                    Serializable payloadDto = null;
-                    try {
-                        // 명령 처리 후 결과 반환
-                        resultPayload = listener.onCommandReceived(command, dto.getPayload());
-                        log.info("resultPayload received: {}", resultPayload);
-
-                        // payload가 Serializable을 구현한 객체인지 확인한다.
-                        if (resultPayload instanceof Serializable) {
-                            payloadDto = (Serializable) resultPayload;
-                        } else {
-                            if (resultPayload instanceof Document) {
-                                payloadDto = DocMapper.toDto((Document) resultPayload);
-                            } else if (resultPayload instanceof Operation) {
-                                payloadDto = OperationMapper.toDto((Operation) resultPayload);
-                            } else if (resultPayload instanceof User) {
-                                payloadDto = UserMapper.toDto((User) resultPayload);
-                            } else if (resultPayload instanceof LoginRequest) {
-                                payloadDto = LoginRequestMapper.toDto((LoginRequest) resultPayload);
-                            }
-                        }
-
-                    } catch (CommandException e) {
-                        // 처리 중 오류 발생 시 에러 메세지 설정
-                        log.error("networkListenerImpl Failed: command execution fail.");
-                        success = false;
-                        payloadDto = null;
-//                        throw new RuntimeException(e);
-                    }
-
-                    // 클라이언트에게 응답 전송
-                    ResponseCommandDto<Object> response = new ResponseCommandDto<>(
-                            command,
-                            payloadDto,
-                            success,
-                            errorMsg
-                    );
-
-                    out.writeObject(response);
-                    out.flush();
-                    log.info("Command Sent : {} : {} : {}", command, success, payloadDto);
-
+                    // 명령 처리 후 결과 반환
+                    Object resultPayload = listener.onCommandReceived(command, dto.getPayload(), this.socket.getRemoteSocketAddress());
+                    log.info("resultPayload received: {}", resultPayload);
+                    send(command, resultPayload);
                 } catch (EOFException e) {
                     // 클라이언트가 연결을 끊은 경우
                     log.warn("클라이언트가 연결을 종료했습니다.");
                     break;
                 }
+
             }
 
             log.info("Client Thread Interrupted.");
@@ -112,6 +71,71 @@ public class ClientHandler implements Runnable {
         }
     }
 
+
+    public void send(ClientCommand command, Object resultPayload) {
+        log.info("send() : {}, {}",  command, resultPayload);
+        boolean success = true;
+        String errorMsg = null;
+
+        if (resultPayload == null) {
+            String errMsg = "resultPayload is null";
+            throw new IllegalArgumentException(errMsg);
+        }
+        Serializable payloadDto = null;
+        try {
+
+            // payload가 Serializable을 구현한 객체인지 확인한다.
+            if (resultPayload instanceof Serializable) {
+                payloadDto = (Serializable) resultPayload;
+//                log.info("payloadDto1 : {}", payloadDto);
+            } else {
+                if (resultPayload instanceof Document) {
+                    payloadDto = DocMapper.toDto((Document) resultPayload);
+//                    log.info("payloadDto2 : {}", payloadDto);
+                } else if (resultPayload instanceof Operation) {
+                    payloadDto = OperationMapper.toDto((Operation) resultPayload);
+//                    log.info("payloadDto3 : {}", payloadDto);
+                } else if (resultPayload instanceof User) {
+                    payloadDto = UserMapper.toDto((User) resultPayload);
+//                    log.info("payloadDto4 : {}", payloadDto);
+                } else if (resultPayload instanceof LoginRequest) {
+//                    log.info("payloadDto5 : {}", payloadDto);
+                    payloadDto = LoginRequestMapper.toDto((LoginRequest) resultPayload);
+                } else {
+                    String errMsg = "Unkown Model.";
+                    log.error(errMsg);
+                    throw new RuntimeException(errMsg);
+                }
+            }
+//            log.info("payloadDto : {}", payloadDto);
+
+        } catch (CommandException e) {
+            // 처리 중 오류 발생 시 에러 메세지 설정
+            log.error("networkListenerImpl Failed: command execution fail.");
+            success = false;
+            payloadDto = null;
+//                        throw new RuntimeException(e);
+        }
+
+        // 클라이언트에게 응답 전송
+        ResponseCommandDto<Object> response = new ResponseCommandDto<>(
+                command,
+                payloadDto,
+                success,
+                errorMsg
+        );
+        log.info("response : {} ", response);
+
+        try {
+            log.info("command send : {}, {}", command, success, payloadDto);
+            out.writeObject(response);
+            out.flush();
+
+        } catch (IOException e) {
+            log.error("Failed to send response for socket: {}", e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
+    }
 
     // 핸들러 종료
     public void shutdown() {

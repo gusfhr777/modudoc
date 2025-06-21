@@ -2,9 +2,13 @@ package com.piltong.modudoc.server.network;
 
 
 import com.piltong.modudoc.common.Constants;
+import com.piltong.modudoc.common.network.ClientCommand;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
@@ -13,6 +17,7 @@ import java.util.concurrent.ExecutorService;
 // 클라와의 데이터 송수신, 내부 로직에 데이터 전달, 수정 사항 반영 등
 public class NetworkHandler implements Runnable {
 
+    private static final Logger log = LogManager.getLogger(NetworkHandler.class);
     private final int port; // 네트워크 핸들러가 시작되는 포트
     private final ServerSocket serverSocket; // 데이터를 관장하는 서버 소켓
     private final ExecutorService executor; // 스레드 풀
@@ -53,6 +58,7 @@ public class NetworkHandler implements Runnable {
                 ClientHandler clientHandler = new ClientHandler(clientSocket, listener);
 
                 sessionMap.put(clientSocket.getRemoteSocketAddress(), clientHandler);
+                log.info("SessionMap : {}", sessionMap);
                 executor.submit(clientHandler); // 스레드 풀에 할당한다.
             }
 
@@ -64,6 +70,21 @@ public class NetworkHandler implements Runnable {
         }
     }
 
+
+    // 한 Client 빼고 broadcasting한다.
+    public void braodcastCommandExceptOne(ClientCommand command, Object resultPayload, SocketAddress exceptClient) {
+        for (Map.Entry<SocketAddress, ClientHandler> entry : sessionMap.entrySet()) {
+            SocketAddress clientAddress = entry.getKey();
+            ClientHandler clientHandler = entry.getValue();
+
+            if (clientAddress.equals(exceptClient)) {
+                continue;
+            }
+            log.info("broadcastCommandExceptOne {}", resultPayload);
+            clientHandler.send(command, resultPayload);
+        }
+
+    }
 
 //    // 명령어를 클라 측으로 전송한다. 성공한 경우.
 //    public <T extends Serializable> void sendCommandSuccess(ClientHandler target, ClientCommand command, T payload) {

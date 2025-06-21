@@ -58,7 +58,8 @@ public class ServerApp {
             log.info("Service started.");
 
             // ServerNetworkHandler 스레드 생성 및 시작
-            Runnable networkHandler = new NetworkHandler(Constants.SERVER_PORT, executor, listener);
+            NetworkHandler networkHandler = new NetworkHandler(Constants.SERVER_PORT, executor, listener);
+            listener.setNetworkHandler(networkHandler);
             new Thread(networkHandler).start();
             log.info("Network handler started.");
 

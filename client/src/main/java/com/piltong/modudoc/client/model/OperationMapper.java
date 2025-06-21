@@ -1,6 +1,10 @@
 package com.piltong.modudoc.client.model;
 
+import com.piltong.modudoc.common.model.DocumentDto;
 import com.piltong.modudoc.common.model.OperationDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OperationMapper {
 
@@ -27,5 +31,24 @@ public class OperationMapper {
                 dto.getPosition(),
                 dto.getContent()
         );
+    }
+
+
+    // DTO 리스트 -> 문서 리스트 변환
+    public static List<Operation> toEntity(List<OperationDto> dtoList) {
+        return dtoList
+                .stream()
+                .map(OperationMapper::toEntity)
+                .collect(Collectors.toList());
+    }
+
+
+    // docList -> dtoList로 변환
+    public static List<OperationDto> toDto(List<Operation> operationList) {
+        return operationList
+                .stream()
+                .map(OperationMapper::toDto)
+                .collect(Collectors.toList());
+
     }
 }

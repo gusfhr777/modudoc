@@ -4,6 +4,8 @@ package com.piltong.modudoc.server.network;
 import com.piltong.modudoc.common.network.ClientCommand;
 import com.piltong.modudoc.common.network.CommandException;
 
+import java.net.SocketAddress;
+
 /**
  * 서버 네트워크 핸들러와 서비스 로직 간의 연결을 위한 인터페이스입니다.
  * 네트워크 핸들러는 클라이언트로부터 수신된 Command 요청을 이 인터페이스를 통해 서비스 로직에 전달하고,
@@ -29,7 +31,7 @@ public interface networkHandlerListener {
      *         </ul>
      * @throws CommandException 비즈니스 로직 처리 중 에러가 발생한 경우 던집니다.
      */
-    <T, R> R onCommandReceived(ClientCommand command, T payload) throws CommandException;
+    <T, R> R onCommandReceived(ClientCommand command, T payload, SocketAddress socketAddress) throws CommandException;
 
     /**
      * 네트워크 연결 또는 I/O 처리 중 예외가 발생했을 때 호출됩니다.
@@ -37,5 +39,7 @@ public interface networkHandlerListener {
      * @param t 발생한 예외 {@link Throwable} 객체로, 스택 트레이스 등을 통해 원인 분석이 가능합니다.
      */
     void onNetworkError(Throwable t);
+
+    void setNetworkHandler(NetworkHandler networkHandler);
 
 }

@@ -4,6 +4,8 @@ package com.piltong.modudoc.client.network;
 import com.piltong.modudoc.client.model.Operation;
 import com.piltong.modudoc.common.network.ClientCommand;
 
+import java.util.List;
+
 /**
  * 클라이언트 네트워크 핸들러와 서비스 로직 간의 연결을 위한 인터페이스입니다.
  * 서버로부터 수신된 명령 성공/실패, Operation 브로드캐스트, 네트워크 오류를 처리합니다.
@@ -40,6 +42,14 @@ public interface networkHandlerListener {
      * @param op 수신된 {@link Operation} 객체
      */
     void onOperationReceived(Operation op);
+
+
+    /**
+     * 서버 또는 다른 클라이언트로부터 브로드캐스트된 Operation을 수신했을 때 호출됩니다.
+     *
+     * @param opList 수신된 {@link Operation} 객체 리스트
+     */
+    void onOperationReceived(List<Operation> opList);
 
     /**
      * 서버 또는 네트워크 처리 중 예외가 발생했을 때 호출됩니다.

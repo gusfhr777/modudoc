@@ -6,11 +6,17 @@ import com.piltong.modudoc.common.model.LoginRequestDto;
 import com.piltong.modudoc.common.model.OperationDto;
 import com.piltong.modudoc.server.model.*;
 import com.piltong.modudoc.common.network.*;
+import com.piltong.modudoc.server.network.NetworkHandler;
 import com.piltong.modudoc.server.network.networkHandlerListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.image.AffineTransformOp;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.ArrayList;
 import java.util.List;
+
 
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
 // 각 커맨드에 따라 알맞은 문서 서비스나 동기화 서비스를 호출하여 처리
@@ -18,17 +24,30 @@ public class networkService implements networkHandlerListener {
     private static final Logger log = LogManager.getLogger(networkService.class);
     private final DocumentService documentService;  // 문서 저장/조회/수정/삭제 처리
     private final SyncService syncService;          // 실시간 편집 동기화 처리
+    private NetworkHandler networkHandler; // 네트워크 핸들러
 
     public networkService(DocumentService documentService, SyncService syncService) {
         this.documentService = documentService;
         this.syncService = syncService;
     }
 
+    public void setNetworkHandler(NetworkHandler networkHandler) {
+        this.networkHandler = networkHandler;
+    }
+
+
+
+
+
+
+
+
+
     // 클라이언트로부터 명령을 수신했을 때 호출됨
     // 각 명령 유형에 따라 분기 처리
     @Override
     @SuppressWarnings("unchecked")
-    public <T, R> R onCommandReceived(ClientCommand command, T payload) throws CommandException {
+    public <T, R> R onCommandReceived(ClientCommand command, T payload, SocketAddress socketAddress) throws CommandException {
         log.info("Command Received from Client : {} : {}", command, payload);
 
         try {
@@ -131,6 +150,14 @@ public class networkService implements networkHandlerListener {
                     log.info("동기화 시작: docID={}, fromClient=null", docId);
                     syncService.syncUpdate(docId, operation, ""); // 추후 수정
                     log.info("동기화 완료: docId={}", docId);
+
+                    List<Operation> opList = new ArrayList<>();
+                    opList.add(operation);
+//                    List<Operation> opList = syncService.getOperationList();
+
+                    List<OperationDto> opListDto = OperationMapper.toDto(opList);
+                    log.info("opListDto={}", opListDto);
+                    networkHandler.braodcastCommandExceptOne(ClientCommand.RECEIVE_OPERATION, opListDto, socketAddress);
                     return null;
 
                 // 로그인 명령

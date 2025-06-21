@@ -29,6 +29,11 @@ public class SyncService {
         log.info("SyncService initialized");
     }
 
+
+    // PROPAGATE_OPERATION으로 받은 Opertion 리스트를 networkService에게 전달하는 함수
+//    public synchronized List<Operation> getOperationList() {
+
+
     // 클라이언트 변경사항 반영 및 브로드캐스트
     // docId : ㅂsenderId : 보낸 사람 아이디
 

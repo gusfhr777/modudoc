@@ -52,7 +52,11 @@ public enum ClientCommand {
     PROPAGATE_OPERATION,
 
 
-    // Operation 입력(다른 클라가 입력받음)
+    /**
+     * OperationDto 입력 받음.
+     * 요청 데이터: null
+     * 응답 데이터: List<OperationDto>
+     */
     RECEIVE_OPERATION,
 
     /**
