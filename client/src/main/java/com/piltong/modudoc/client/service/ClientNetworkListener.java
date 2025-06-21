@@ -1,4 +1,4 @@
-package com.piltong.modudoc.client.network;
+package com.piltong.modudoc.client.service;
 
 
 import com.piltong.modudoc.client.model.Operation;

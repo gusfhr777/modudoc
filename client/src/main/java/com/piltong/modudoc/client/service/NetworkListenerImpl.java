@@ -1,9 +1,7 @@
 package com.piltong.modudoc.client.service;
 
 import com.piltong.modudoc.client.controller.MainController;
-import com.piltong.modudoc.client.network.ClientNetworkListener;
 import com.piltong.modudoc.client.network.NetworkHandler;
-import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.client.model.*;
 
 import com.piltong.modudoc.common.network.ClientCommand;
@@ -95,13 +93,14 @@ public class NetworkListenerImpl implements ClientNetworkListener {
 
     @Override
     public <T> void onCommandSuccess(ClientCommand command, T payload) {
-        log.info("Successful command Recevied : " + command );
+        log.info("Successful command Recevied : " + command);
         switch (command) {
             case CREATE_DOCUMENT:
                 mainController.getDashboardController().addDocument((Document) payload);
                 break;
 
             case READ_DOCUMENT:
+//                mainController.getEditorController().loadDocument((Document) payload);
                 break;
 
             case UPDATE_DOCUMENT:
@@ -189,6 +188,7 @@ public class NetworkListenerImpl implements ClientNetworkListener {
     @Override
     public void onNetworkError(Throwable t) {
         log.error("Network Error Received : " + t.getMessage());
+        t.printStackTrace();
 
     }
 

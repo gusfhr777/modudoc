@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * 서버 → 클라이언트로 전송할 응답 명령을 감싸는 DTO입니다.
- *
+ * Network Handler <-> Network Handler 간 통신 시 사용하는 객체입니다.
  * @param <T> 응답 페이로드 타입
  */
 public class ResponseCommandDto<T> implements Serializable {

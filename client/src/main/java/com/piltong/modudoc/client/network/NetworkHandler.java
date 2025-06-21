@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.List;
 
 import com.piltong.modudoc.client.model.*;
+import com.piltong.modudoc.client.service.ClientNetworkListener;
 import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.common.network.*;
 
@@ -51,6 +52,7 @@ public class NetworkHandler implements Runnable{
     // 스레드를 통해 실행할 때, 처음 실행되는 지점이다.
     @Override
     public void run() {
+        log.info("Client Thread Start.");
         try {
             // 스트림 초기화 순서 주의 : out 다음 in을 해야한다.
             this.out = new ObjectOutputStream(socket.getOutputStream());
@@ -65,7 +67,7 @@ public class NetworkHandler implements Runnable{
         try {
             // 인터럽트 받기 전까지 무한 반복
             while (!Thread.currentThread().isInterrupted()) {
-
+                log.info("message Receiving...");  // 대기
                 Object msg = in.readObject(); // 오브젝트 읽기
                 log.info("message Received : " + msg);  // Debugging the received object
 
@@ -147,6 +149,7 @@ public class NetworkHandler implements Runnable{
 
     // 명령어를 서버 측으로 전송한다.
     public <T> void sendCommand(ClientCommand command, T payload) {
+        log.info("sendCommad() {} : {}", command, payload);
         Serializable payloadDto = null;
 
         try {
@@ -175,39 +178,40 @@ public class NetworkHandler implements Runnable{
     }
 
 
-    // Operation 요청 함수
-    public Operation requestOperation() {
-        try {
-            return OperationMapper.toEntity((OperationDto) in.readObject());
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
-    // Operation 전송 함수
-    public void sendOperation(Operation operation) {
-        try {
-            out.writeObject(OperationMapper.toDto(operation)); // 전송 버퍼에 로드
-            out.flush(); // 전송
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    // Operation 요청 함수
+//    public Operation requestOperation() {
+//        try {
+//            return OperationMapper.toEntity((OperationDto) in.readObject());
+//        } catch (IOException | ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//    }
+//
+//    // Operation 전송 함수
+//    public void sendOperation(Operation operation) {
+//        try {
+//            out.writeObject(OperationMapper.toDto(operation)); // 전송 버퍼에 로드
+//            out.flush(); // 전송
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
     // Document 요청 함수
-    public Document requestDocument() {
-        try {
-            return DocMapper.toEntity((DocumentDto) in.readObject());
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public Document requestDocument() {
+//        try {
+//            return DocMapper.toEntity((DocumentDto) in.readObject());
+//        } catch (IOException | ClassNotFoundException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 
     // 핸들러 종료 함수
     public void shutdown() {
+        log.info("Network handler Shutting down.");
         try {
             if (socket != null && !socket.isClosed()) {
                 socket.close();

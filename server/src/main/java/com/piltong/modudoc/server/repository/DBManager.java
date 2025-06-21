@@ -4,12 +4,15 @@ import java.sql.*;
 
 //import com.piltong.modudoc.common.RichTextSerializer;
 import com.piltong.modudoc.server.model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 // 데이터베이스를 관리하는 클래스. MySQL Database <-> Server의 관리를 중개한다.
 // 서비스 로직에서 사용하는 클래스를 정의한다. Domain 객체에 대한 CRUD를 지원한다.
 // SQL 실행 책임만을 가진다.
 public class DBManager {
+    private static final Logger log = LogManager.getLogger(DBManager.class);
 
     // DB 정보
     public static final String url = "jdbc:mysql://modudoc_mysql:3306/modudoc_db";
@@ -18,6 +21,7 @@ public class DBManager {
 
 
     public static Connection getConnection() throws SQLException {
+        log.info("getConnection()");
         return DriverManager.getConnection(url, user, password);
     }
 }

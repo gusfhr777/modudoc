@@ -6,6 +6,7 @@ import com.piltong.modudoc.common.model.OperationDto;
 
 /**
  * 클라이언트에서 서버로 전송 가능한 명령어 종류를 정의한 열거형입니다.
+ * Server Network Handler <-> Client Network Handler 간 요청 데이터, 응답 데이터 세트가 들어있습니다.
  */
 public enum ClientCommand {
     /**
