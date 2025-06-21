@@ -59,12 +59,40 @@ public class EditorView {
 //
 
     public EditorView() {
+        //기본 스타일 설정
+        editor.setStyle("-fx-font-family: Arial; -fx-font-scale: 14;");
+        //폰트 선택 박스 설정
+        for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
+            fontSizeBox.getItems().add(size);
+        }
+        for(String font : new String[]{"Arial", "Helvetica"}) {
+            fontFamilyBox.getItems().add(font);
+        }
+        //기본 폰트 값 설정
+        fontSizeBox.setValue(14);
+        //기본 폰트 설정
+        fontFamilyBox.setValue("Arial");
+
+        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox);
+        root = new VBox();
+        root.getChildren().addAll(toolBar,editor);
+        VBox.setVgrow(editor, Priority.ALWAYS);
 
     }
 
+    // Getter
     public Parent getRoot() {
         return root;
     }
+
+    public InlineCssTextArea getEditor() {return editor;}
+
+    public Button getBoldButton() {return boldButton;}
+    public Button getUnderbarButton() {return underbarButton;}
+    public ColorPicker getColorPicker() {return colorPicker;}
+    public ComboBox<Integer> getFontSizeBox() {return fontSizeBox;}
+    public ComboBox<String> getFontFamilyBox() {return fontFamilyBox;}
+
 //
 //
 //

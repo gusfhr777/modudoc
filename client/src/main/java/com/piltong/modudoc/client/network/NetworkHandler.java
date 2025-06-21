@@ -118,7 +118,7 @@ public class NetworkHandler implements Runnable{
 
                         // 문서 수정 명령
                         case UPDATE_DOCUMENT:
-                            listener.onCommandSuccess(command, null);
+                            listener.onCommandSuccess(command, DocMapper.toEntity((DocumentDto) dto.getPayload()));
                             break;
 
                         // 문서 삭제 명령

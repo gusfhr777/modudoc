@@ -100,10 +100,12 @@ public class NetworkListenerImpl implements ClientNetworkListener {
                 break;
 
             case READ_DOCUMENT:
-//                mainController.getEditorController().loadDocument((Document) payload);
+                mainController.showEditor((Document) payload);
+                //mainController.getEditorController().loadDocument((Document) payload);
                 break;
 
             case UPDATE_DOCUMENT:
+                mainController.getDashboardController().addDocument((Document) payload);
                 break;
 
             case DELETE_DOCUMENT:

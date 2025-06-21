@@ -84,12 +84,10 @@ public class DashboardView {
     public DashboardView() {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         createdDateColumn.setCellValueFactory(celldata ->{
-            LocalDateTime time = celldata.getValue().getCreatedDate();
-            return new SimpleStringProperty(time.format(formatter));
+            return new SimpleStringProperty(celldata.getValue().getCreatedDate().format(formatter));
         });
         modifiedDateColumn.setCellValueFactory(celldata -> {
-            LocalDateTime time = celldata.getValue().getModifiedDate();
-            return new SimpleStringProperty(time.format(formatter));
+            return new SimpleStringProperty(celldata.getValue().getModifiedDate().format(formatter));
         });
 
         //도표에서 원하는 문서를 선택할 때 필요한 선택 모델 설정
