@@ -1,45 +1,37 @@
 package com.piltong.modudoc.client.controller;
 
 
+import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.view.*;
 import com.piltong.modudoc.client.model.*;
 import com.piltong.modudoc.common.Constants;
 
 // MVC 구조에서 중앙 컨트롤러 클래스
-public class MainController {
+public class MainController implements Controller{
 
-    /**
-     * 필드 영역
-     */
+//    // 모델
+//    private Document document;
+
+//    // 상태
+//    private boolean isEditing = false;
+//    private User user;
 
 
-//    private User user; // 유저 객체
-    private Document document; // 문서 객체
-
-    // 하위 컨트롤러
+    // 뷰, 하위 컨트롤러, 서비스
+    private MainView mainView;
     private final LoginController loginController; // 첫 로그인 화면 제어
     private final EditorController editorController; // 편집기 화면 제어
-    private final NetworkController networkController; // 네트워크 제어
     private final DashboardController dashboardController; // 대시보드(메인화면) 제어
-
-    // 메인 뷰
-    private MainView view;
-
-    // 하위 뷰
-    private LoginScene loginScene; // 로그인 화면
-    private DashboardScene dashboardScene; // 대시보드 화면
-    private DocCreateScene docCreateScene; // 문서 생성 화면
-    private EditorScene editorScene; // 문서 편집 화면
+    private final NetworkService networkService; // 네트워크 제어
 
 
+    private Controller currentController; // 현재 동작 중인 컨트롤러
 
 
+    public MainView getMainView() {
+        return mainView;
+    }
 
-
-
-
-
-    // 컨트롤러 Getter
     public LoginController getLoginController() {
         return loginController;
     }
@@ -48,40 +40,59 @@ public class MainController {
         return editorController;
     }
 
-    public NetworkController getNetworkController() {
-        return networkController;
-    }
-
     public DashboardController getDashboardController() {
         return dashboardController;
     }
 
+    public NetworkService getNetworkService() {
+        return networkService;
+    }
 
 
-    // 컨트롤러 생성자
+
+
+
+    // 컨트롤러 생성자. 초기화 담당
     public MainController() {
-        // 하위 컨트롤러 생성
-        loginController = new LoginController();
-        editorController = new EditorController();
-        networkController = new NetworkController();
-        dashboardController = new DashboardController();
+        // 하위 컨트롤러, 서비스 초기화
+        networkService = new NetworkService(this);
+        loginController = new LoginController(this);
+        dashboardController = new DashboardController(this);
+        editorController = new EditorController(this);
+    }
 
+
+    // 뷰 의존성 주입
+    public void setView(MainView mainView) {
+        this.mainView = mainView;
+    }
+
+
+
+    // 시작
+    public void start() {
         if (Constants.DEBUG) {
-            loginController.connect("localhost", "4433");
+            networkService.connect("localhost", 4433);
+            currentController = dashboardController;
+        } else {
+            currentController = loginController; // 로그인 컨트롤러로 시작
         }
 
+        currentController.start(); // 하위 컨트롤러 시작
+    }
+
+    // 끝
+    public void end() {
 
     }
 
-    public void setView(MainView view) {
-        this.view = view;
-        this.loginScene = view.getLoginScene();
-        this.dashboardScene = view.getDashboardScene();
-        this.docCreateScene = view.getDocCreateScene();
-        this.editorScene = view.getEditorScene();
-    }
-
-    public void startApp() {
+    // 종료
+    public void shutdown() {
 
     }
+
+
+
+
+
 }

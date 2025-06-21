@@ -11,7 +11,7 @@ public class ClientApp extends Application {
     private static final Logger log = LogManager.getLogger(ClientApp.class);
 
     public static void main(String[] args) {
-        log.info("환영합니다!");
+        log.info("Client Starting..");
         ClientApp.launch(args); // JavaFX 앱 초기화
     }
 
@@ -23,14 +23,11 @@ public class ClientApp extends Application {
         MainController controller = new MainController();
         MainView view = new MainView();
 
-
         controller.setView(view);
         view.setController(controller);
 
-
         // 애플리케이션 시작
-        view.show();
-
+        controller.start();
 
 //        StartView startView = new StartView();
 //        StartController startController = new StartController(startView);

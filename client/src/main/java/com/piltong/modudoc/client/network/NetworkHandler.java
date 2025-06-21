@@ -12,8 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // 클라이언트에서 네트워크 로직을 처리하는 클래스
-public class ClientNetworkHandler implements Runnable{
-    private static final Logger log = LogManager.getLogger(ClientNetworkHandler.class);
+public class NetworkHandler implements Runnable{
+    private static final Logger log = LogManager.getLogger(NetworkHandler.class);
     private final Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
@@ -24,7 +24,7 @@ public class ClientNetworkHandler implements Runnable{
      *
      * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
      */
-    public ClientNetworkHandler(String host, int port, ClientNetworkListener listener) throws IOException {
+    public NetworkHandler(String host, int port, ClientNetworkListener listener) throws IOException {
         try {
             this.socket = new Socket(host, port);
             this.listener = listener;

@@ -1,69 +1,52 @@
 package com.piltong.modudoc.client.controller;
 
-import com.piltong.modudoc.client.view.DashboardScene;
-import com.piltong.modudoc.client.view.LoginScene;
-import com.piltong.modudoc.client.network.ClientNetworkHandler;
+import com.piltong.modudoc.client.view.EditorView;
+import com.piltong.modudoc.client.view.LoginView;
+import com.piltong.modudoc.client.view.MainView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+public class LoginController implements Controller{
+    private static final Logger log = LogManager.getLogger(LoginController.class);
 
-public class LoginController {
-    private LoginScene loginScene;
 
-    //생성자,
-    public LoginController(LoginScene startview) {
-        this.loginScene = startview;
-        this.loginScene.initialize();
+    // 컨트롤러, 뷰, 서비스
+    private MainController mainController;
+    private MainView mainView;
+    private LoginView loginView;
+    private NetworkService networkService;
+
+    //생성자. 컨트롤러 초기화 담당.
+    public LoginController(MainController mainController) {
+        this.mainController = mainController;
+        this.loginView = mainController.getMainView().getLoginView();
     }
-    public LoginController() {}
+    
 
 
 
-    public void setView(LoginScene loginScene) {
-        this.loginScene = loginScene;
-        this.loginScene.initialize();
+    // 시작
+    public void start() {
+        this.loginView.initialize();
+        this.loginView.show();
+
+    }
+
+    // 끝
+    public void end() {
+
+    }
+
+    // 종료
+    public void shutdown() {
+
     }
 
 
-    //연결 버튼을 눌렀을 때 호출되는 메소드
-    public void connect(String host, String Stringport) {
-        if(host == null || host.isEmpty()) {
-            this.host = "localhost";
-        }
-        else {
-            this.host = host;
-        }
 
-
-        try {
-            port = Integer.parseInt(Stringport);
-        }
-        catch (NumberFormatException e) {
-            port = 4433;
-            e.printStackTrace();
-        }
-
-
-        if(port <= 0|| port > 65535) {
-            port = 4433;
-        }
-
-        try {
-            NetworkController networkController = new NetworkController();
-            ClientNetworkHandler networkHandler = new ClientNetworkHandler(this.host,port, networkController);
-            DashboardController dashboardController = new DashboardController(networkHandler);
-            networkController.setDocumentListController(dashboardController);
-            DashboardScene dashboardScene = new DashboardScene();
-            dashboardScene.setController(dashboardController);
-            dashboardController.setView(dashboardScene);
-            dashboardScene.showView();
-            dashboardController.start();
-            loginScene.closeView();
-        }catch (RuntimeException e) {
-            System.out.println("Error: "+e.getMessage());
-            loginScene.setPromptText("Error: "+e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    //연결 버튼을 눌렀을 때, 네트워크 연결
+    public void connect(String host, int port) {
+        networkService.connect(host, port);
     }
 
 }

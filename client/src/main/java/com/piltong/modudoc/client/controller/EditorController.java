@@ -1,32 +1,59 @@
 package com.piltong.modudoc.client.controller;
 
 
-import com.piltong.modudoc.client.view.EditorScene;
-import com.piltong.modudoc.client.network.ClientNetworkHandler;
+import com.piltong.modudoc.client.view.EditorView;
+import com.piltong.modudoc.client.network.NetworkHandler;
+import com.piltong.modudoc.client.view.MainView;
 import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.client.model.*;
 
-public class EditorController {
-    private EditorScene editorScene;
-    private ClientNetworkHandler networkHandler;
+public class EditorController implements Controller{
+
+
+    // 모델
     private Document document;
 
+    // 컨트롤러, 뷰, 서비스
+    private MainController mainController;
+    private MainView mainView;
+    private EditorView editorView;
+    private NetworkService networkService;
+
+
     //생성자, 뷰와 네트워크를 입력받아 생성하거나 네트워크만 입력받아 생성
-    public EditorController(EditorScene editorScene, ClientNetworkHandler networkHandler, Document document) {
-        this.editorScene = editorScene;
-        this.networkHandler = networkHandler;
-        this.document = document;
-    }
-    public EditorController(ClientNetworkHandler networkHandler) {
-        this.networkHandler = networkHandler;
+    public EditorController(MainController mainController) {
+        this.mainController = mainController;
+        this.mainView = mainController.
     }
 
+
+    // 시작
+    public void start() {
+
+    }
+
+    // 끝
+    public void end() {
+
+    }
+
+    // 종료
+    public void shutdown() {
+
+    }
+
+
+
+
+
+
+
     //뷰 설정
-    public void setView(EditorScene editorScene) {
-        this.editorScene = editorScene;
+    public void setView(EditorView editorView) {
+        this.editorView = editorView;
     }
     //네트워크 설정
-    public void setNetworkHandler(ClientNetworkHandler networkHandler) {
+    public void setNetworkHandler(NetworkHandler networkHandler) {
         this.networkHandler = networkHandler;
     }
 
@@ -38,10 +65,10 @@ public class EditorController {
     }
 
     public void insertText(String text, int position) {
-        editorScene.insertStringText(text,position);
+        editorView.insertStringText(text,position);
     }
     public void deleteText(int position, int length) {
-        editorScene.deleteText(position, position+length);
+        editorView.deleteText(position, position+length);
     }
 
     //문서가 편집되었을 때 편집사항을 서버로 전송

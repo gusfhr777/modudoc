@@ -13,9 +13,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class LoginScene {
-    LoginController controller;
 
+
+// 로그인 화면 출력을 다루는 뷰. 생성자 -> setController -> initialize -> showView -> closeView의 생명 주기를 갖는다.
+public class LoginView {
+
+    // 컨트롤러
+    LoginController loginController;
+
+
+    // UI 컴포넌트
     GridPane serverGrid = new GridPane();
     GridPane userGrid = new GridPane();
     GridPane consoleGrid = new GridPane();
@@ -35,12 +42,16 @@ public class LoginScene {
     PasswordField passwordField = new PasswordField();
 
 
+    // JavaFX Stage 객체
     Stage startStage = new Stage();
 
-    public void setController(LoginController controller) {
-        this.controller = controller;
+
+    public void setController(LoginController loginController) {
+        this.loginController = loginController;
     }
 
+
+    // 초기화 -> show를 위한 준비
     public void initialize() {
         initLayout();
         initListeners();
@@ -69,21 +80,21 @@ public class LoginScene {
 
     }
 
-    //모든 이벤트를 감지하는 메소드
+    //모든 이벤트의 리스너를 할당하는 메소드
     public void initListeners() {
         connectButton.setOnAction(e -> {
             //접속 버튼을 입력했을 때 이벤트
-            controller.connect(getIPText(),getPortText());
+            loginController.connect(getIPText(),getPortText());
         });
         nameField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 //엔터를 입력했을 때 이벤트
-                controller.connect(getIPText(),getPortText());
+                loginController.connect(getIPText(),getPortText());
             }
         });
         portField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
-                controller.connect(getIPText(), getPortText());
+                loginController.connect(getIPText(), getPortText());
             }
         });
         startStage.setOnCloseRequest(e->
@@ -91,13 +102,6 @@ public class LoginScene {
 
     }
 
-    public void showView() {
-        startStage.show();
-    }
-
-    public void closeView() {
-        startStage.close();
-    }
 
     //텍스트 입력 칸의 텍스트를 반환한다
     public String getIPText() {
@@ -109,11 +113,17 @@ public class LoginScene {
         nameField.setText(text);
     }
 
-    public String getPortText() {return portField.getText();}
+    public int getPortText() {
+        return Integer.parseInt(portField.getText());
+    }
     public void setPortText(String text) {portField.setText(text);}
 
     //텍스트 칸 밑에 설명 텍스트를 설정한다.
     public void setPromptText(String text) {
             promptLabel.setText(text);
         }
+
+    public Stage getStage() {
+        return startStage;
+    }
 }

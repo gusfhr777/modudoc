@@ -13,8 +13,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 //문서를 생성할 때 생성창을 만드는 클래스
-public class DocCreateScene {
+public class DocCreateView {
 
+    // 컨트롤러
+
+
+    // UI 객체
     GridPane grid = new GridPane();
     Label nameLabel = new Label();
     TextField nameField = new TextField();
@@ -27,11 +31,10 @@ public class DocCreateScene {
 
     Document summary;
 
-    public DocCreateScene(DashboardController controller) {
-        this.controller = controller;
-    }
-    public DocCreateScene(DashboardController controller, Document summary) {this.controller = controller;
-    this.summary = summary;}
+
+
+//    public DocCreateView(DashboardController controller, Document summary) {this.controller = controller;
+//    this.summary = summary;}
     public void initialize() {
         initLayout();
         initListeners();

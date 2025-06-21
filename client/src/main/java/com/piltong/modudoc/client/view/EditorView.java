@@ -18,7 +18,7 @@ import org.fxmisc.richtext.model.StyledDocument;
 import com.piltong.modudoc.client.model.Document;
 
 //텍스트 편집기를 생성
-public class EditorScene {
+public class EditorView {
     InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
     Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
     Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
