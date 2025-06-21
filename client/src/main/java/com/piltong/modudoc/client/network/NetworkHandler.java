@@ -39,35 +39,37 @@ public class NetworkHandler implements Runnable{
                 try {
                     tmpSocket.connect(new InetSocketAddress(host, port), timeoutMillis);
                     break;
+                } catch (UnknownHostException e) {
+                    log.error("Unknown host : {}", host);
+                    throw new RuntimeException("Unknown Host Detected.", e);
+                } catch (SocketTimeoutException e) {
+                    String msg = "Connection timed out after 5 seconds.";
+                    log.error(msg, e);
+                    throw new RuntimeException(msg, e);
                 } catch (IOException e) {
                     log.error("connection failed. retry..");
                 }
                 Thread.sleep(1000);
+                if (i==4) {
+                    String errMsg = "Connection to host failed. Maybe server not working.";
+                    log.fatal(errMsg);
+                    throw new RuntimeException(errMsg);
+                }
             }
         } catch (InterruptedException e) {
-            log.error("Thread Interrupted while Initializing Networkhandler.");
+            log.fatal("Thread Interrupted while Initializing Networkhandler.");
+            throw new RuntimeException(e);
         }
 
 
-
-
-
         try {
-            this.socket = new Socket(host, port);
+            this.socket = tmpSocket;
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
             log.info("Connection established with {}:{}", host, port);
-        } catch (SocketTimeoutException e) {
-            String msg = "Connection timed out after 5 seconds.";
-            log.error(msg, e);
-            throw new RuntimeException(msg, e);
-        } catch (UnknownHostException e) {
-            String msg = "Unknown host: " + host;
-            log.error(msg, e);
-            throw new RuntimeException(msg, e);
         } catch (IOException e) {
             String msg = "I/O error during connection to " + host + ":" + port;
-            log.error(msg, e);
+            log.fatal(msg, e);
             throw new RuntimeException(msg, e);
         }
 
@@ -80,8 +82,7 @@ public class NetworkHandler implements Runnable{
     // 스레드를 통해 실행할 때, 처음 실행되는 지점이다.
     @Override
     public void run() {
-        log.info("Client Thread Start.");
-
+        log.info("Client Thread Running...");
 
         try {
             // 인터럽트 받기 전까지 무한 반복
@@ -156,7 +157,7 @@ public class NetworkHandler implements Runnable{
             }
         } catch (IOException | ClassNotFoundException e) {
             String errMsg = "Client Thread Failed while running";
-            log.error(errMsg);
+            log.error(errMsg, e);
             listener.onNetworkError(e);
 
         } finally { // 핸들러 처리 이후
@@ -168,7 +169,10 @@ public class NetworkHandler implements Runnable{
 
     // 명령어를 서버 측으로 전송한다.
     public <T> void sendCommand(ClientCommand command, T payload) {
-        log.info("sendCommad() {} : {}", command, payload);
+        log.info("send Command to Server {} : {}", command, payload);
+
+
+
         Serializable payloadDto = null;
 
         try {

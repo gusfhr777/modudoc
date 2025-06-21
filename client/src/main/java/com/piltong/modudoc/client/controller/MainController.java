@@ -6,7 +6,10 @@ import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.service.NetworkListenerImpl;
 import com.piltong.modudoc.client.view.*;
 import com.piltong.modudoc.common.Constants;
+import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,10 +22,10 @@ public class MainController {
     private static final Logger log = LogManager.getLogger(MainController.class);
     // 주요 필드
     private final Stage stage;
-    private final LoginController loginController; // 첫 로그인 화면 제어
-    private final EditorController editorController; // 편집기 화면 제어
-    private final DashboardController dashboardController; // 대시보드(메인화면) 제어
-    private final NetworkHandler networkHandler;
+    private LoginController loginController; // 첫 로그인 화면 제어
+    private EditorController editorController; // 편집기 화면 제어
+    private DashboardController dashboardController; // 대시보드(메인화면) 제어
+    private NetworkHandler networkHandler;
 
 
     // 필드 Getter
@@ -46,19 +49,22 @@ public class MainController {
     // 생성자
     public MainController(Stage stage) {
         this.stage = stage;
+        try {
+            NetworkListenerImpl networkListener = new NetworkListenerImpl(this);
+            this.networkHandler = new NetworkHandler("localhost", 4433, networkListener);
+            new Thread(this.networkHandler).start();
+            networkListener.setNetworkHandler(this.networkHandler); // 의존성 주입
 
-        NetworkListenerImpl networkListener = new NetworkListenerImpl(this);
-        this.networkHandler = new NetworkHandler("localhost", 4433, networkListener);
-        new Thread(this.networkHandler).start();
-        networkListener.setNetworkHandler(this.networkHandler); // 의존성 주입
+            this.loginController = new LoginController(this, networkHandler);
+            this.dashboardController = new DashboardController(this, networkHandler);
+            this.editorController = new EditorController(this, networkHandler);
 
-        this.loginController = new LoginController(this, networkHandler);
-        this.dashboardController = new DashboardController(this, networkHandler);
-        this.editorController = new EditorController(this, networkHandler);
-
-
-        // 로그인 씬
-        showLogin();
+            // 로그인 씬
+            showLogin();
+        } catch (RuntimeException e) {
+            log.fatal("MainController initialize Failed.");
+            showFatalErrorAndExit("MainController initialize Failed.");
+        }
 
     }
 
@@ -68,7 +74,18 @@ public class MainController {
 
 
 
+    private void showFatalErrorAndExit(String message) {
+        if (Constants.DEBUG) Platform.exit();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("치명적인 오류");
+            alert.setHeaderText("애플리케이션 실행 실패");
+            alert.setContentText(message);
+            alert.showAndWait();
+            Platform.exit();
+        });
 
+    }
 
 
 
@@ -76,15 +93,27 @@ public class MainController {
 
     // 로그인 씬 활성화
     public void showLogin() {
-        stage.setScene(new Scene(loginController.getView(), 300, 200));
-        log.info("Login Open");
+        try {
+            stage.setScene(new Scene(loginController.getView(), 300, 200));
+            log.info("Login Open");
+        } catch (RuntimeException e) {
+            String errMsg = "show Login Failed.";
+            log.fatal(errMsg);
+            showFatalErrorAndExit(errMsg);
+        }
     }
 
     // 대시보드 씬 활성화
     public void showDashboard() {
-//        dashboardController.getDocumentList(); // 문서 리스트 요청
-        stage.getScene().setRoot(dashboardController.getView());
-        log.info("Dashboard Open");
+        try {
+            stage.getScene().setRoot(dashboardController.getView());
+            log.info("Dashboard Open");
+        } catch (RuntimeException e) {
+            String errMsg = "show Dashboard Failed.";
+            log.fatal(errMsg);
+            showFatalErrorAndExit(errMsg);
+        }
+
 
     }
 

@@ -53,8 +53,8 @@ public enum ClientCommand {
 
     /**
      * 로그인 명령
-     * 요청 데이터: loginRequest
-     * 응답 데이터: null
+     * 요청 데이터: loginRequestDto
+     * 응답 데이터: UserDto
      */
     LOGIN;
 }
