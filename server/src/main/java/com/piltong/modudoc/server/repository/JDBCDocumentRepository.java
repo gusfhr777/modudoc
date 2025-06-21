@@ -4,7 +4,6 @@ package com.piltong.modudoc.server.repository;
 import com.piltong.modudoc.server.repository.exception.document.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.*;
 
 import com.piltong.modudoc.server.model.Document;

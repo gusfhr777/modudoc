@@ -15,6 +15,8 @@ import org.fxmisc.richtext.model.StyleSpan;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.util.List;
+
 public class EditorController {
 
     // 모델
@@ -26,6 +28,8 @@ public class EditorController {
     private final NetworkHandler networkHandler;
     private final EditorView editorView;
 
+    private boolean programmaticChange = false;
+    private List<Operation> operations;
 
     public EditorController(MainController mainController, NetworkHandler networkHandler) {
         this.mainController = mainController;
@@ -43,7 +47,10 @@ public class EditorController {
     }
 
     public void setContent(String content) {
-        editorView.getEditor().replaceText(content);
+        programmaticChange = true;
+        editorView.getEditor().clear();
+        editorView.getEditor().insertText(0, content);
+        programmaticChange = false;
     }
     public Document getDocument() {
         return this.document;
@@ -70,7 +77,7 @@ public class EditorController {
             addCssStyle(this.editorView.getEditor(),"-fx-font-family",this.editorView.getFontFamilyBox().getValue());
         });
         this.editorView.getEditor().richChanges()
-                .filter(ch -> !ch.getInserted().getText().isEmpty() || !ch.getRemoved().getText().isEmpty())
+                .filter(ch -> (!ch.getInserted().getText().isEmpty() || !ch.getRemoved().getText().isEmpty())&&!programmaticChange)
                 .subscribe(change -> {
                     int from = change.getPosition();
                     int to = from + change.getNetLength();
@@ -79,7 +86,8 @@ public class EditorController {
 
                     if(!insertedText.equals(removedText)) {
                         if(!removedText.isEmpty()) {
-                            sendDeleteText(removedText,to);                        }
+                            sendDeleteText(removedText,to);
+                        }
                         if(!insertedText.isEmpty()) {
                             sendInsertText(insertedText,from);
                         }
@@ -97,10 +105,14 @@ public class EditorController {
     }
 
     public void insertText(String text,int from) {
+        programmaticChange = true;
         editorView.getEditor().insertText(from,text);
+        programmaticChange = false;
     }
     public void deleteText(String text,int from) {
+        programmaticChange = true;
         editorView.getEditor().deleteText(from,from+text.length());
+        programmaticChange = false;
     }
     //토글 형식의 스타일 변경용 메소드
     void toggleCssStyle(InlineCssTextArea area, String cssFragment) {
