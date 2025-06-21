@@ -65,6 +65,7 @@ public class ClientHandler implements Runnable {
 
                     out.writeObject(response);
                     out.flush();
+                    log.info("Command Sent : " + command + " : " + "errorMsg");
 
                 } catch (EOFException e) {
                     // 클라이언트가 연결을 끊은 경우

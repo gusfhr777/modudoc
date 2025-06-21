@@ -1,8 +1,11 @@
 package com.piltong.modudoc.server.service;
 
+import com.piltong.modudoc.common.Constants;
 import com.piltong.modudoc.common.model.DocumentDto;
+import com.piltong.modudoc.common.model.LoginRequestDto;
 import com.piltong.modudoc.common.model.OperationDto;
-import com.piltong.modudoc.server.model.Document;
+import com.piltong.modudoc.common.model.UserDto;
+import com.piltong.modudoc.server.model.*;
 import com.piltong.modudoc.common.network.*;
 import com.piltong.modudoc.server.network.ServerNetworkListener;
 import org.apache.logging.log4j.LogManager;
@@ -133,10 +136,26 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                 log.info("동기화 완료: docId={}", docId);
                 return null;
 
+                // 로그인 명령
+            case LOGIN:
+                if (!(payload instanceof LoginRequestDto loginRequestDto)) {
+                    log.error("LOGIN: payload 타입 오류");
+                    throw new CommandException("LOGIN: 잘못된 payload 타입입니다.");
+
+                }
+
+                LoginRequest loginRequest = LoginRequestMapper.toEntity((LoginRequestDto) payload);
+
+                UserDto dto = UserMapper.toDto(new User(loginRequest.getId(), "testUser", loginRequest.getPassword()));
+                if (Constants.DEBUG) {
+                    return (R) dto;
+                }
+
             // 정의되지 않은 커맨드 처리
             default:
-                log.error("정의되지 않은 커맨드 수신: {}", command);
-                throw new CommandException("알 수 없는 커맨드: " + command);
+                String msg = "정의되지 않은 커맨드 수신: " + command;
+                log.error(msg);
+                throw new CommandException(msg);
         }
     }
 

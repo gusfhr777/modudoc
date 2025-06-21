@@ -1,4 +1,4 @@
-package com.piltong.modudoc.server.model;
+package com.piltong.modudoc.client.model;
 
 public class User {
 

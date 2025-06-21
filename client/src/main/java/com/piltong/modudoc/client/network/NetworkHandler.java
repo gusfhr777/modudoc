@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 // 클라이언트에서 네트워크 로직을 처리하는 클래스
 public class NetworkHandler implements Runnable{
     private static final Logger log = LogManager.getLogger(NetworkHandler.class);
-    private final Socket socket;
+    private Socket socket;
     private ObjectInputStream in;
     private ObjectOutputStream out;
     private final ClientNetworkListener listener;
@@ -24,18 +24,21 @@ public class NetworkHandler implements Runnable{
      *
      * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
      */
-    public NetworkHandler(String host, int port, ClientNetworkListener listener) throws IOException {
+    public NetworkHandler(String host, int port, ClientNetworkListener listener) {
+
+        this.listener = listener;
         try {
+            Thread.sleep(2000);
             this.socket = new Socket(host, port);
-            this.listener = listener;
         } catch (UnknownHostException e) {
             String msg = "Unknown Hostname Detected.";
             log.error(msg, e);
-            throw e;
         } catch (IOException e) {
             String msg = "IOException occured.";
             log.error(msg, e);
-            throw e;
+        } catch (InterruptedException e) {
+            String msg = "InterruptedException occured.";
+            log.error(msg, e);
         }
 
         log.info("Network Handler Initialized.");
@@ -64,7 +67,7 @@ public class NetworkHandler implements Runnable{
             while (!Thread.currentThread().isInterrupted()) {
 
                 Object msg = in.readObject(); // 오브젝트 읽기
-                log.debug("Received message: " + msg);  // Debugging the received object
+                log.info("message Received : " + msg);  // Debugging the received object
 
                 // 메시지가 ResponseCommandDto 형식일 경우
                 if (msg instanceof ResponseCommandDto<?> dto) {
@@ -111,6 +114,10 @@ public class NetworkHandler implements Runnable{
                             listener.onCommandSuccess(command, null);
                             break;
 
+                        case LOGIN:
+                            listener.onCommandSuccess(command, UserMapper.toEntity((UserDto) dto.getPayload()));
+                            break;
+
                         // 이외 명령
                         default:
                             String errMsg = "Unkown Command Detected.";
@@ -151,6 +158,8 @@ public class NetworkHandler implements Runnable{
                     payloadDto = DocMapper.toDto((Document) payload);
                 } else if (payload instanceof Operation) {
                     payloadDto = OperationMapper.toDto((Operation) payload);
+                } else if (payload instanceof LoginRequest) {
+                    payloadDto = LoginRequestMapper.toDto((LoginRequest) payload);
                 }
             }
 

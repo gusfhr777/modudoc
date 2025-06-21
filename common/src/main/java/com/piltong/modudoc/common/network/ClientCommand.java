@@ -48,5 +48,12 @@ public enum ClientCommand {
      * 요청 데이터: {@link OperationDto}
      * 응답 데이터: null
      */
-    PROPAGATE_OPERATION;
+    PROPAGATE_OPERATION,
+
+    /**
+     * 로그인 명령
+     * 요청 데이터: loginRequest
+     * 응답 데이터: null
+     */
+    LOGIN;
 }
