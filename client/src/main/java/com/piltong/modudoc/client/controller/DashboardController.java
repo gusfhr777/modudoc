@@ -211,7 +211,7 @@ public class DashboardController{
     public void requestConnect(Document document) {
         log.info("requestConnect()");
 
-        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT, document);
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT, document.getId());
     }
 
     // 내부 호출. 문서를 삭제한다. -> REMOVE_DOCUMENT
