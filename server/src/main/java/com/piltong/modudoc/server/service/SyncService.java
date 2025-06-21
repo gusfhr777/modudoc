@@ -66,19 +66,25 @@ public class SyncService {
         operationHistory.putIfAbsent(docId, new ArrayList<>());
         List<Operation> history = operationHistory.get(docId);
 
+
+        /**
+         * 예외 발생 원인 -> Opration 결과 이후 또 Operation 수신 시, 결과 위치가 달라지는 오류 발생.
+         * 하나의 List<Operation> 만을 수신했다면, 송신한 클라의 document가 제일 최신이라고 가정해야한다.
+         */
         // 이전 모든 연산을 기준으로 현재 연산 위치 조정(OT 알고리즘 적용)
-        Operation transformedOp;
-        try {
-            transformedOp = ot.transformAgainstAll(operation, history);
-            if (transformedOp == null) {
-                System.err.println("[Error] OT transform 결과가 null");
-                return;
-            }
-        } catch (Exception e) {
-            System.err.println("[Error] OT transform 과정에서 예외 발생: " + e);
-            e.printStackTrace();
-            return;
-        }
+//        Operation transformedOp;
+//        try {
+//            transformedOp = ot.transformAgainstAll(operation, history);
+//            if (transformedOp == null) {
+//                System.err.println("[Error] OT transform 결과가 null");
+//                return;
+//            }
+//        } catch (Exception e) {
+//            System.err.println("[Error] OT transform 과정에서 예외 발생: " + e);
+//            e.printStackTrace();
+//            return;
+//        }
+        Operation transformedOp = operation;
 
         // 무시 연산 일 경우 처리 중단
         if (transformedOp.getPosition() == -1) {

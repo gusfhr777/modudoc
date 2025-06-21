@@ -17,7 +17,7 @@ public class OT {
     private static final Logger log = LogManager.getLogger(OT.class);
 
     /**
-     * 두 연산 간 충돌 해결
+     * 하나의 수신 단위에서 두 Operation이 동시에 수신된 경우, 두 Operation 사이의 충돌을 해결하는 함수.
      * @param prior
      * @param current
      * @return
@@ -67,7 +67,13 @@ public class OT {
         return new Operation[]{op1, op2};
     }
 
-    // 여러 선행 연산에 대해 순차적으로 조정
+
+    /**
+     * 여러 선행 연산에 대해 순차적으로 조정
+     * @param op
+     * @param priorOps
+     * @return
+     */
     public Operation transformAgainstAll(Operation op, List<Operation> priorOps) {
         Operation result = copy(op);
         for (Operation prior : priorOps) {
