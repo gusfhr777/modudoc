@@ -9,6 +9,11 @@ import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.view.*;
 import com.piltong.modudoc.common.network.ClientCommand;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,13 +21,26 @@ import java.util.List;
 
 public class DashboardController{
 
+    private static final Logger log = LogManager.getLogger(DashboardController.class);
     // 서버에서 보낸 Document 객체를 받을 리스트 생성
     private List<Document> documentList = new ArrayList<>();
 
-    // 컨트롤러, 뷰
+    // 컨트롤러
     private final MainController mainController;
     private final NetworkHandler networkHandler;
+
+
+    // 뷰
     private final DashboardView dashboardView;
+
+
+    private CreateDocumentDialog createDocumentDialog;
+    private Stage dialogStage;
+
+
+
+
+
 
 
     // 생성자
@@ -30,6 +48,7 @@ public class DashboardController{
         this.mainController = mainController;
         this.networkHandler = networkHandler;
         this.dashboardView = new DashboardView();
+        log.info("DashboardController initialize.");
     }
 
     public Parent getView() {
@@ -39,7 +58,7 @@ public class DashboardController{
     public void initListeners() {
         this.dashboardView.getCreateButton().setOnAction(e -> {
             //생성 버튼 입력시 이벤트
-            createDocument();
+            openCreateDocumentDialog();
         });
         this.dashboardView.getInButton().setOnAction(e -> {
             //접속 버튼 입력시 이벤트
@@ -69,32 +88,100 @@ public class DashboardController{
             }
         });
 
+//        editButton.setOnAction(e -> {
+//            //생성 버튼을 입력했을 때 이벤트
+//            returnEdit(controller);
+//        });
+//        nameField.setOnKeyPressed(e -> {
+//            if (e.getCode() == KeyCode.ENTER) {
+//                //엔터를 입력했을 때 이벤트
+//                returnEdit(controller);
+//            }
+//        });
+//        editStage.setOnCloseRequest(e->{
+//            controller.setIsEditing(false);
+//        });
     }
 
 
-    // 문서를 생성한다. CREATE_DOCUMENT.
+
+
+
+
+
+
+
+    // 내부 호출. 문서 생성 창을 연다.
+    public void openCreateDocumentDialog() {
+        log.info("openCreateDocumentDialog()");
+        createDocumentDialog = new CreateDocumentDialog();
+        this.dialogStage = new Stage();
+        dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 200));
+
+        createDocumentDialog.getEditButton().setOnAction(e -> {
+            //생성 버튼을 입력했을 때 이벤트
+            createDocument();
+        });
+        createDocumentDialog.getTitleField().setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                //엔터를 입력했을 때 이벤트
+                createDocument() ;
+            }
+        });
+
+        this.dialogStage.show();
+//        stage.setOnCloseRequest(e->{
+//            controller.setIsEditing(false);
+//        });
+    }
+
+
+    // 내부 호출. 문서를 생성한다. CREATE_DOCUMENT.
     public void createDocument() {
+        log.info("createDocument()");
+        String title = this.createDocumentDialog.getTitleField().getText();
+        if (title.isEmpty()) {
+            this.createDocumentDialog.setPrompt("문서 제목을 입력하세요.");
+            return;
+        }
 
+        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT, title);
+
+        this.dialogStage.close(); // 다일로그 종료
+        
     }
 
-    // 문서를 수정한다. -> UPDATE_DOCUMENT
+
+
+
+
+
+
+
+
+
+    // 내부 호출. 문서를 수정한다. -> UPDATE_DOCUMENT
     public void editDocument(Document document) {
+        log.info("editDocument()");
 
     }
 
-    // 문서에 접속한다. -> EditorView Open, READ_DOCUMENT
+    // 내부 호출. 문서에 접속한다. -> EditorView Open, READ_DOCUMENT
     public void requestConnect(Document document) {
+        log.info("requestConnect()");
 
     }
 
-    // 문서를 삭제한다. -> REMOVE_DOCUMENT
+    // 내부 호출. 문서를 삭제한다. -> REMOVE_DOCUMENT
     public void removeDocument(Document document) {
+        log.info("removeDocument()");
 
     }
 
 
     // NetworkListenerImpl에서 호출. documentList를 할당받고, View에 반영한다.
     public void loadDocumentList(List<Document> documentList) {
+        log.info("loadDocumentList()");
         this.documentList.clear();
         this.documentList.addAll(documentList);
 
@@ -102,6 +189,14 @@ public class DashboardController{
             this.dashboardView.getDocumentTable().getItems().add(document);
         }
     }
+
+    // NetworkListenerImpl 호출. documentList에 document를 추가한다.
+    public void addDocument(Document document) {
+        log.info("addDocument()");
+        this.documentList.add(document);
+        this.dashboardView.getDocumentTable().getItems().add(document);
+    }
+
 
 //    private NetworkListenerImpl networkController;
 //    private MainView mainView;

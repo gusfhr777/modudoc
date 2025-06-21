@@ -98,22 +98,30 @@ public class NetworkListenerImpl implements ClientNetworkListener {
         log.info("Successful command Recevied : " + command );
         switch (command) {
             case CREATE_DOCUMENT:
+                mainController.getDashboardController().addDocument((Document) payload);
                 break;
+
             case READ_DOCUMENT:
                 break;
+
             case UPDATE_DOCUMENT:
                 break;
+
             case DELETE_DOCUMENT:
                 break;
+
             case READ_DOCUMENT_LIST:
                 mainController.getDashboardController().loadDocumentList((List<Document>) payload);
                 break;
+
             case PROPAGATE_OPERATION:
                 break;
+
             case LOGIN:
                 networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
                 mainController.showDashboard();
                 break;
+
             default:
                 break;
         }

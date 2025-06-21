@@ -1,7 +1,6 @@
 package com.piltong.modudoc.client;
 
 import com.piltong.modudoc.client.controller.MainController;
-import com.piltong.modudoc.client.view.MainView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;

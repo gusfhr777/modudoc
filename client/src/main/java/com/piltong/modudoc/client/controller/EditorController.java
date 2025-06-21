@@ -3,12 +3,7 @@ package com.piltong.modudoc.client.controller;
 
 import com.piltong.modudoc.client.view.EditorView;
 import com.piltong.modudoc.client.network.NetworkHandler;
-import com.piltong.modudoc.client.view.LoginView;
-import com.piltong.modudoc.client.view.MainView;
-import com.piltong.modudoc.client.view.View;
-import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.client.model.*;
-import com.sun.java.accessibility.util.EventID;
 import javafx.scene.Parent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

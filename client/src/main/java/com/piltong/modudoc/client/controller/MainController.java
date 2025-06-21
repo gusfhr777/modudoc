@@ -8,12 +8,15 @@ import com.piltong.modudoc.client.view.*;
 import com.piltong.modudoc.common.Constants;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 // MVC 구조에서 중앙 컨트롤러 클래스
 public class MainController {
 
+    private static final Logger log = LogManager.getLogger(MainController.class);
     // 주요 필드
     private final Stage stage;
     private final LoginController loginController; // 첫 로그인 화면 제어
@@ -74,12 +77,14 @@ public class MainController {
     // 로그인 씬 활성화
     public void showLogin() {
         stage.setScene(new Scene(loginController.getView(), 300, 200));
+        log.info("Login Open");
     }
 
     // 대시보드 씬 활성화
     public void showDashboard() {
 //        dashboardController.getDocumentList(); // 문서 리스트 요청
         stage.getScene().setRoot(dashboardController.getView());
+        log.info("Dashboard Open");
 
     }
 
@@ -87,6 +92,7 @@ public class MainController {
     public void showEditor(Document document) {
         editorController.setDocument(document);
         stage.getScene().setRoot(editorController.getView());
+        log.info("Editor Open");
 
     }
 
