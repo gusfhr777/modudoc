@@ -114,12 +114,12 @@ public class EditorController {
     }
 
     public void insertText(String text,int from) {
-        programmaticChange = true;
         Platform.runLater(()->{
+            programmaticChange = true;
             editorView.getEditor().insertText(from,text);
+            programmaticChange = false;
 
         });
-        programmaticChange = false;
     }
     public void deleteText(String text,int from) {
         programmaticChange = true;
