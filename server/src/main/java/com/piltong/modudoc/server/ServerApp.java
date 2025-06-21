@@ -11,6 +11,7 @@ import com.piltong.modudoc.server.service.ServerNetworkListenerImpl;
 import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
 
+import java.time.LocalDateTime;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,7 +38,20 @@ public class ServerApp {
 
             // 서비스 객체 생성
 //            DocumentRepository docRepo = new JDBCDocumentRepository();
-            DocumentRepository docRepo = new MapDocumentRepository();
+
+            DocumentRepository docRepo;
+
+
+            if (Constants.DEBUG) { // 문서 테스트용 : 추후 삭제
+                docRepo = new MapDocumentRepository();
+                docRepo.save(new Document(1, "DocumentTest1", "ContentTest1", LocalDateTime.now(), LocalDateTime.now()));
+                docRepo.save(new Document(2, "DocumentTest2", "ContentTest2", LocalDateTime.now(), LocalDateTime.now()));
+
+            } else {
+                docRepo = new JDBCDocumentRepository();
+            }
+
+
             DocumentService docService = new DocumentService(docRepo);
             SyncService syncService = new SyncService(docService);
             ServerNetworkListenerImpl listener = new ServerNetworkListenerImpl(docService, syncService);

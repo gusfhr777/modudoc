@@ -2,6 +2,7 @@ package com.piltong.modudoc.client.view;
 
 import com.piltong.modudoc.client.controller.EditorController;
 import javafx.application.Platform;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
@@ -19,16 +20,16 @@ import com.piltong.modudoc.client.model.Document;
 
 //텍스트 편집기를 생성
 public class EditorView {
-//    InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
-//    Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
-//    Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
-//    ColorPicker colorPicker = new ColorPicker(); //문자의 색깔을 선택하는 선택기
-//    ToolBar toolBar = new ToolBar(); //텍스트 편집에 사용될 요소들이 들어갈 창
-//    VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
-//    ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
-//    ComboBox<String> fontFamilyBox = new ComboBox<>();
-//
-//    Stage textEditorStage = new Stage();
+    InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
+    Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
+    Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
+    ColorPicker colorPicker = new ColorPicker(); //문자의 색깔을 선택하는 선택기
+    ToolBar toolBar = new ToolBar(); //텍스트 편집에 사용될 요소들이 들어갈 창
+    VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
+    ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
+    ComboBox<String> fontFamilyBox = new ComboBox<>();
+
+    Stage textEditorStage = new Stage();
 //
 //
 //
@@ -59,6 +60,10 @@ public class EditorView {
 
     public EditorView() {
 
+    }
+
+    public Parent getRoot() {
+        return root;
     }
 //
 //

@@ -61,14 +61,14 @@ public class Document{
     }
 
 
-    // 생성자
+    // 생성자 - 일부 필드값 지정
     public Document(String title, String content) {
         this.id = null;
         this.title = title;
         this.content = content;
     }
 
-    // 생성자 2
+    // 생성자 2 - 전체 필드값 지정
     public Document(Integer id, String title, String content, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.title = title;

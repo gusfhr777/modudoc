@@ -44,12 +44,15 @@ public class MainController {
     public MainController(Stage stage) {
         this.stage = stage;
 
-        this.networkHandler = new NetworkHandler("localhost", 4433, new NetworkListenerImpl(this));
+        NetworkListenerImpl networkListener = new NetworkListenerImpl(this);
+        this.networkHandler = new NetworkHandler("localhost", 4433, networkListener);
         new Thread(this.networkHandler).start();
+        networkListener.setNetworkHandler(this.networkHandler); // 의존성 주입
 
         this.loginController = new LoginController(this, networkHandler);
         this.dashboardController = new DashboardController(this, networkHandler);
         this.editorController = new EditorController(this, networkHandler);
+
 
         // 로그인 씬
         showLogin();
@@ -68,23 +71,24 @@ public class MainController {
 
 
 
-    // 로그인 씬
+    // 로그인 씬 활성화
     public void showLogin() {
         stage.setScene(new Scene(loginController.getView(), 300, 200));
     }
 
-//    // 대시보드 씬
-//    public void showDashboard() {
-//        stage.getScene().setRoot(dashboardController.getView());
-//
-//    }
-//
-//    // 에디터 씬
-//    public void showEditor(Document document) {
-//        editorController.setDocument(document);
-//        stage.getScene().setRoot(editorController.getView());
-//
-//    }
+    // 대시보드 씬 활성화
+    public void showDashboard() {
+//        dashboardController.getDocumentList(); // 문서 리스트 요청
+        stage.getScene().setRoot(dashboardController.getView());
+
+    }
+
+    // 에디터 씬 활성화
+    public void showEditor(Document document) {
+        editorController.setDocument(document);
+        stage.getScene().setRoot(editorController.getView());
+
+    }
 
 
 

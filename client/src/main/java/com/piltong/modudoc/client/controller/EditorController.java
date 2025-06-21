@@ -9,11 +9,14 @@ import com.piltong.modudoc.client.view.View;
 import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.client.model.*;
 import com.sun.java.accessibility.util.EventID;
+import javafx.scene.Parent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class EditorController {
 
+    // 모델
+    private Document document;
 
     private static final Logger log = LogManager.getLogger(EditorController.class);
 
@@ -21,14 +24,20 @@ public class EditorController {
     private final NetworkHandler networkHandler;
     private final EditorView editorView;
 
-    // 모델
-    private Document document;
 
     public EditorController(MainController mainController, NetworkHandler networkHandler) {
         this.mainController = mainController;
         this.networkHandler = networkHandler;
 
         this.editorView = new EditorView();
+    }
+
+    public Parent getView() {
+        return this.editorView.getRoot();
+    }
+
+    public void setDocument(Document document) {
+        this.document = document;
     }
 
 

@@ -2,6 +2,7 @@ package com.piltong.modudoc.client.service;
 
 import com.piltong.modudoc.client.controller.MainController;
 import com.piltong.modudoc.client.network.ClientNetworkListener;
+import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.client.model.*;
 
@@ -22,10 +23,16 @@ public class NetworkListenerImpl implements ClientNetworkListener {
 
     // 컨트롤러
     private final MainController mainController;
+    private NetworkHandler networkHandler;
 
     // 생성자
     public NetworkListenerImpl(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    // 의존성 주입
+    public void setNetworkHandler(NetworkHandler networkHandler) {
+        this.networkHandler = networkHandler;
     }
 
     // 뷰 설정
@@ -99,10 +106,15 @@ public class NetworkListenerImpl implements ClientNetworkListener {
             case DELETE_DOCUMENT:
                 break;
             case READ_DOCUMENT_LIST:
+                mainController.getDashboardController().loadDocumentList((List<Document>) payload);
                 break;
             case PROPAGATE_OPERATION:
                 break;
             case LOGIN:
+                networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
+                mainController.showDashboard();
+                break;
+            default:
                 break;
         }
 

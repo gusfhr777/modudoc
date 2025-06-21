@@ -6,9 +6,9 @@ import com.piltong.modudoc.client.model.*;
 
 
 import com.piltong.modudoc.client.network.NetworkHandler;
-import com.piltong.modudoc.client.service.NetworkListenerImpl;
 import com.piltong.modudoc.client.view.*;
 import com.piltong.modudoc.common.network.ClientCommand;
+import javafx.scene.Parent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,10 @@ import java.util.List;
 
 public class DashboardController{
 
-//    // 서버에서 보낸 Document 객체를 받을 리스트 생성
-//    private List<Document> documentList = new ArrayList<>();
-//    private boolean isEditing = false;
-//
-//
-//    // 컨트롤러, 뷰
+    // 서버에서 보낸 Document 객체를 받을 리스트 생성
+    private List<Document> documentList = new ArrayList<>();
+
+    // 컨트롤러, 뷰
     private final MainController mainController;
     private final NetworkHandler networkHandler;
     private final DashboardView dashboardView;
@@ -34,12 +32,76 @@ public class DashboardController{
         this.dashboardView = new DashboardView();
     }
 
+    public Parent getView() {
+        return this.dashboardView.getRoot();
+    }
+
+    public void initListeners() {
+        this.dashboardView.getCreateButton().setOnAction(e -> {
+            //생성 버튼 입력시 이벤트
+            createDocument();
+        });
+        this.dashboardView.getInButton().setOnAction(e -> {
+            //접속 버튼 입력시 이벤트
+            if (this.dashboardView.getSelectionModel().getSelectedItem() != null) {
+                requestConnect(this.dashboardView.getSelectionModel().getSelectedItem());
+            }
+            else {
+                this.dashboardView.setConsoleText("문서를 선택해 주세요");
+            }
+        });
+        this.dashboardView.getModifyButton().setOnAction(e->{
+            //수정 버튼 입력시 이벤트
+            if(this.dashboardView.getSelectionModel().getSelectedItem()!=null) {
+                editDocument(this.dashboardView.getSelectionModel().getSelectedItem());
+            }
+            else {
+                this.dashboardView.setConsoleText("문서를 선택해 주세요");
+            }
+        });
+        this.dashboardView.getRemoveButton().setOnAction(e -> {
+            //삭제 버튼 입력시 이벤트
+            if(this.dashboardView.getSelectionModel().getSelectedItem() != null) {
+                removeDocument(this.dashboardView.getSelectionModel().getSelectedItem());
+            }
+            else {
+                this.dashboardView.setConsoleText("문서를 선택해 주세요");
+            }
+        });
+
+    }
 
 
+    // 문서를 생성한다. CREATE_DOCUMENT.
+    public void createDocument() {
+
+    }
+
+    // 문서를 수정한다. -> UPDATE_DOCUMENT
+    public void editDocument(Document document) {
+
+    }
+
+    // 문서에 접속한다. -> EditorView Open, READ_DOCUMENT
+    public void requestConnect(Document document) {
+
+    }
+
+    // 문서를 삭제한다. -> REMOVE_DOCUMENT
+    public void removeDocument(Document document) {
+
+    }
 
 
+    // NetworkListenerImpl에서 호출. documentList를 할당받고, View에 반영한다.
+    public void loadDocumentList(List<Document> documentList) {
+        this.documentList.clear();
+        this.documentList.addAll(documentList);
 
-
+        for (Document document: this.documentList) {
+            this.dashboardView.getDocumentTable().getItems().add(document);
+        }
+    }
 
 //    private NetworkListenerImpl networkController;
 //    private MainView mainView;
