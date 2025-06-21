@@ -2,7 +2,6 @@ package com.piltong.modudoc.client.controller;
 
 
 
-import com.piltong.modudoc.client.model.DashDoc;
 import com.piltong.modudoc.client.model.Document;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.view.*;
@@ -223,15 +222,11 @@ public class DashboardController{
 
 
     // NetworkListenerImpl에서 호출. documentList를 할당받고, View에 반영한다.
-    public void loadDashboard(List<DashDoc> dashDocs) {
+    public void loadDashboard(List<Document> documentList) {
         log.info("loadDashboard()");
-        List<Document> documents = new ArrayList<>();
-        for (DashDoc dashDoc : dashDocs) {
-            documents.add(new Document(dashDoc.getId(), dashDoc.getTitle(), "", dashDoc.getCreatedDate(), dashDoc.getModifiedDate()));
-        }
 
         this.documentList.clear();
-        this.documentList.addAll(documents);
+        this.documentList.addAll(documentList);
 
         for (Document document: this.documentList) {
             this.dashboardView.getDocumentTable().getItems().add(document);

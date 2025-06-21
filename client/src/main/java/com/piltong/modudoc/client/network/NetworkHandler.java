@@ -151,8 +151,8 @@ public class NetworkHandler implements Runnable{
                         break;
 
                     // 대시보드 읽기
-                    case READ_DASHBOARD:
-                        listener.onCommandSuccess(command, DashDocMapper.toEntity((List<DashDocDto>) dto.getPayload()));
+                    case READ_DOCUMENT_LIST:
+                        listener.onCommandSuccess(command, DocMapper.toEntity((List<DocumentDto>) dto.getPayload()));
                         break;
 
                     // Operation 전파 명령

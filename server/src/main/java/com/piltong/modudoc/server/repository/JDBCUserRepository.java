@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -47,11 +46,11 @@ public class JDBCUserRepository implements UserRepository {
 
     /**
      * 사용자 저장 (생성 or 수정)
+     *
      * @param user 저장할 유저 객체
-     * @return 저장 완료된 유저 객체
      */
     @Override
-    public User save(User user) {
+    public void save(User user) {
         if (user.getId() == null) { // 생성
             try (PreparedStatement PreState = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
                 PreState.setString(1, user.getUsername());
@@ -75,7 +74,7 @@ public class JDBCUserRepository implements UserRepository {
                 PreState.setString(2, user.getPassword());
                 PreState.setString(3, user.getId());
                 PreState.executeUpdate();
-                return findById(user.getId()).orElse(user);
+//                return findById(user.getId()).orElse(user);
             } catch (SQLException e) {
                 log.error("User 업데이트 실패", e);
                 throw new RuntimeException("User 업데이트 실패", e);

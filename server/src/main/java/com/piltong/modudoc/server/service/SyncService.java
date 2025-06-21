@@ -64,19 +64,21 @@ public class SyncService {
         // 수정사항이 null 값일 시 오류
         if (content == null) content = "";
 
-        // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
-        Operation op;
-        try {
-            op = OperationMapper.toEntity(dto);
-            // op 객체로 변환 실패 시 오류
-            if (op == null) {
-                log.warn("OperationDto -> Operation 변환 실패");
-                return;
-            }
-        } catch (Exception e) {
-            log.warn("Operation 변환 중 예외 발생: {}", e.getMessage());
-            return;
-        }
+        // 클라이언트에서 ?보낸 DTO를 실제 Operation 객체로 변환
+//        Operation op;
+//        try {
+//            op = OperationMapper.toEntity(dto);
+//            // op 객체로 변환 실패 시 오류
+//            if (op == null) {
+//                log.warn("OperationDto -> Operation 변환 실패");
+//                return;
+//            }
+//        } catch (Exception e) {
+//            log.warn("Operation 변환 중 예외 발생: {}", e.getMessage());
+//            return;
+//        }
+
+        Operation op = operation;
 
         // 문서별 히스토리가 없다면 새로 생성
         operationHistory.putIfAbsent(docId, new ArrayList<>());
