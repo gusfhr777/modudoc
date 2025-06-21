@@ -203,6 +203,7 @@ public class DashboardController{
         document.setContent("");
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
         deleteDocument(document.getId());
+        addDocument(document);
 
         this.dialogStage.close();
     }
