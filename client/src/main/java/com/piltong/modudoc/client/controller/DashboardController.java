@@ -48,7 +48,9 @@ public class DashboardController{
         this.mainController = mainController;
         this.networkHandler = networkHandler;
         this.dashboardView = new DashboardView();
+        initListeners();
         log.info("DashboardController initialize.");
+
     }
 
     public Parent getView() {
@@ -72,7 +74,8 @@ public class DashboardController{
         this.dashboardView.getModifyButton().setOnAction(e->{
             //수정 버튼 입력시 이벤트
             if(this.dashboardView.getSelectionModel().getSelectedItem()!=null) {
-                editDocument(this.dashboardView.getSelectionModel().getSelectedItem());
+                openEditDocumentDialog(this.dashboardView.getSelectionModel().getSelectedItem());
+                //editDocument(this.dashboardView.getSelectionModel().getSelectedItem());
             }
             else {
                 this.dashboardView.setConsoleText("문서를 선택해 주세요");
@@ -115,6 +118,9 @@ public class DashboardController{
     public void openCreateDocumentDialog() {
         log.info("openCreateDocumentDialog()");
         createDocumentDialog = new CreateDocumentDialog();
+        createDocumentDialog.getNameLabel().setText("문서 제목 :");
+        createDocumentDialog.getEditButton().setText("문서 생성");
+
         this.dialogStage = new Stage();
         dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 200));
 
@@ -154,7 +160,32 @@ public class DashboardController{
 
 
 
+    public void openEditDocumentDialog(Document document) {
+        log.info("openEditDocumentDialog()");
 
+        createDocumentDialog = new CreateDocumentDialog();
+        createDocumentDialog.getTitleField().setText(document.getTitle());
+        createDocumentDialog.getNameLabel().setText("문서 제목 :");
+        createDocumentDialog.getEditButton().setText("문서 수정");
+
+        this.dialogStage = new Stage();
+        dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 200));
+
+
+
+        createDocumentDialog.getEditButton().setOnAction(e -> {
+            //생성 버튼을 입력했을 때 이벤트
+            editDocument(document);
+        });
+        createDocumentDialog.getTitleField().setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                //엔터를 입력했을 때 이벤트
+                editDocument(document);
+            }
+        });
+
+        this.dialogStage.show();
+    }
 
 
 
@@ -163,7 +194,13 @@ public class DashboardController{
     // 내부 호출. 문서를 수정한다. -> UPDATE_DOCUMENT
     public void editDocument(Document document) {
         log.info("editDocument()");
-
+        String title = this.createDocumentDialog.getTitleField().getText();
+        if (title.isEmpty()) {
+            this.createDocumentDialog.setPrompt("문서 제목을 입력하세요.");
+            return;
+        }
+        document.setTitle(title);
+        networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
     }
 
     // 내부 호출. 문서에 접속한다. -> EditorView Open, READ_DOCUMENT
