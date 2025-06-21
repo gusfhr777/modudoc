@@ -38,11 +38,11 @@ public enum ClientCommand {
     DELETE_DOCUMENT,
 
     /**
-     * 문서 리스트 조회 명령.
+     * 대시보드 조회 명령
      * 요청 데이터: null
-     * 응답 데이터: {@code List<DocumentDto>}
+     * 응답 데이터: {@code List<DashDocDto>}
      */
-    READ_DOCUMENT_LIST,
+    READ_DASHBOARD,
 
     /**
      * OperationDto 전파 명령. 다른 클라에게 전파.

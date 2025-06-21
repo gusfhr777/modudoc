@@ -22,7 +22,7 @@ public interface networkHandlerListener {
      *         <ul>
      *           <li>{@link ClientCommand#CREATE_DOCUMENT}         → {@link com.piltong.modudoc.server.model.Document}</li>
      *           <li>{@link ClientCommand#READ_DOCUMENT}           → {@link com.piltong.modudoc.server.model.Document}</li>
-     *           <li>{@link ClientCommand#READ_DOCUMENT_LIST} → {@code List<com.piltong.modudoc.server.model.Document>}</li>
+     *           <li>{@link ClientCommand#READ_DASHBOARD} → {@code List<com.piltong.modudoc.server.model.Document>}</li>
      *           <li>{@link ClientCommand#UPDATE_DOCUMENT}         → {@link com.piltong.modudoc.server.model.Document}</li>
      *           <li>{@link ClientCommand#DELETE_DOCUMENT}         → {@code String} (삭제된 문서 ID)</li>
      *           <li>{@link ClientCommand#PROPAGATE_OPERATION}     → {@link com.piltong.modudoc.server.model.Operation}</li>

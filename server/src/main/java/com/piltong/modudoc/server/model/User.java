@@ -1,5 +1,7 @@
 package com.piltong.modudoc.server.model;
 
+import java.util.Objects;
+
 public class User {
 
     private String id; // 유저 아이디.
@@ -48,4 +50,14 @@ public class User {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

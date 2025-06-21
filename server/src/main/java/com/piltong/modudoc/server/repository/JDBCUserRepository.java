@@ -65,7 +65,6 @@ public class JDBCUserRepository implements UserRepository {
                 }
 
                 // created_date, modified_date 포함 전체 유저 반환
-                return findById(user.getId()).orElse(user); // c
             } catch (SQLException e) {
                 log.error("User 생성 실패", e);
                 throw new RuntimeException("User 생성 실패", e);

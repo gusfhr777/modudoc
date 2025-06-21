@@ -2,8 +2,6 @@ package com.piltong.modudoc.client.model;
 
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 // 클라이언트 상태 관리를 위한 문서 객체이다.

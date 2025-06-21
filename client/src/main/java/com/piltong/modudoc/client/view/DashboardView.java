@@ -5,13 +5,11 @@ import com.piltong.modudoc.client.model.Document;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DashboardView {
@@ -23,7 +21,6 @@ public class DashboardView {
     TableColumn<Document, String> titleColumn = new TableColumn<>("파일 이름");
     TableColumn<Document, String> createdDateColumn = new TableColumn<>("생성 일자");
     TableColumn<Document, String> modifiedDateColumn = new TableColumn<>("수정 일자");
-    TableColumn<Document, Integer> usercountColumn = new TableColumn<>("접속 인원");
 
     public TableView.TableViewSelectionModel<Document> getSelectionModel() {
         return selectionModel;
@@ -51,7 +48,6 @@ public class DashboardView {
     }
 
     Label consoleLabel = new Label("");
-
 
 
     // Getter
@@ -90,14 +86,16 @@ public class DashboardView {
             return new SimpleStringProperty(celldata.getValue().getModifiedDate().format(formatter));
         });
 
+
         //도표에서 원하는 문서를 선택할 때 필요한 선택 모델 설정
         selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
+        documentTable.setEditable(true);
 
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton);
         root.getChildren().addAll(hBox, documentTable, consoleLabel);
-        documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn, usercountColumn);
+        documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn);
 //        Scene scene = new Scene(vBox);
 //        DocumentListStage.setScene(scene);
 //        DocumentListStage.setTitle("파일 목록");
