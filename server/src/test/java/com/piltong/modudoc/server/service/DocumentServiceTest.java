@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,11 +20,6 @@ public class DocumentServiceTest {
     @BeforeEach
     void setUp() {
         DocumentRepository docRepo = new MapDocumentRepository();
-
-        docRepo.save(new Document(1, "DocumentTest1", "ContentTest1", LocalDateTime.now(), LocalDateTime.now()));
-        docRepo.save(new Document(2, "DocumentTest2", "ContentTest2", LocalDateTime.now(), LocalDateTime.now()));
-        docRepo.save(new Document(2, "DocumentTest3", "ContentTest3", LocalDateTime.now(), LocalDateTime.now()));
-
         docService = new DocumentService(docRepo);
     }
 
@@ -53,7 +49,7 @@ public class DocumentServiceTest {
         Document doc = docService.create("Title A", "Content A");
         docService.update(doc.getId(), "Z", "Z");
         docService.delete(doc.getId());
-        assertThrows(IllegalArgumentException.class, () -> docService.findById(32838));
+        assertThrows(NoSuchElementException.class, () -> docService.findById(doc.getId()));
     }
 
     @Test

@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 // 문서 관련 비즈니스 로직 처리 클래스
@@ -52,7 +53,7 @@ public class DocumentService {
         } else {
             String msg = "Select Failed from Document ID : " + docId.toString();
             log.error(msg);
-            throw new RuntimeException(msg);
+            throw new NoSuchElementException();
         }
     }
 
