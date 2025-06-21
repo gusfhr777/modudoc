@@ -31,131 +31,131 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
     @Override
     @SuppressWarnings("unchecked")
     public <T, R> R onCommandReceived(ClientCommand command, T payload) throws CommandException {
-        switch (command) {
+        log.info("Command Received from Client : {} : {}", command, payload);
 
-            // 문서 생성 요청 처리
-            case CREATE_DOCUMENT: {
-                if (!(payload instanceof String title)) {
-                    String errMsg = "CREATE_DOCUMENT: 잘못된 payload 타입입니다.";
-                    log.error(errMsg);
-                    throw new CommandException(errMsg);
+        try {
+            switch (command) {
+                // 문서 생성 요청 처리
+                case CREATE_DOCUMENT: {
+                    if (!(payload instanceof String title)) {
+                        String errMsg = "CREATE_DOCUMENT: 잘못된 payload 타입입니다.";
+                        log.error(errMsg);
+                        throw new CommandException(errMsg);
+                    }
+
+                    // content 지정
+                    String content = "";    // 빈 문자열로 생성
+
+                    Document doc = documentService.create(title, content);
+
+                    return (R) doc;
                 }
 
-                // content 지정
-                String content = "";    // 빈 문자열로 생성
+                // 문서 조회 요청 처리
+                case READ_DOCUMENT:
+                    if (!(payload instanceof Integer docId)) {
+                        throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
+                    }
+                    Document document = documentService.findById((Integer) payload);
+                    log.info("문서 조회 성공: id={}", document.getId());
+                    return (R) document;
 
-                Document doc = documentService.create(title, content);
+                // 문서 수정 요청 처리
+                case UPDATE_DOCUMENT: {
+                    if (!(payload instanceof DocumentDto dto)) {
+                        log.error("UPDATE_DOCUMENT: payload 타입 오류");
+                        throw new CommandException("UPDATE_DOCUMENT: 잘못된 payload 타입입니다.");
+                    }
+                    if (!documentService.exists(dto.getId())) {
+                        log.error("UPDATE_DOCUMENT: 존재하지 않는 문서: id={}", dto.getId());
+                        throw new CommandException("존재하지 않는 문서입니다.");
+                    }
 
-                return (R) new DocumentDto(
-                        doc.getId(),
-                        doc.getTitle(),
-                        doc.getContent(),
-                        doc.getCreatedDate(),
-                        doc.getModifiedDate()
-                );
-            }
+                    // DocumentDto -> Document 변환
+                    Document doc = new Document(
+                            dto.getId(),
+                            dto.getTitle(),
+                            dto.getContent(),
+                            dto.getCreatedDate(),
+                            dto.getModifiedDate()
+                    );
 
-            // 문서 조회 요청 처리
-            case READ_DOCUMENT:
-                if (!(payload instanceof Integer docId)) {
-                    throw new CommandException("READ_DOCUMENT: 잘못된 payload 타입입니다.");
-                }
-                Document document = documentService.findById((Integer) payload);
-                log.info("문서 조회 성공: id={}", document.getId());
-                return (R) document;
-
-            // 문서 수정 요청 처리
-            case UPDATE_DOCUMENT: {
-                if (!(payload instanceof DocumentDto dto)) {
-                    log.error("UPDATE_DOCUMENT: payload 타입 오류");
-                    throw new CommandException("UPDATE_DOCUMENT: 잘못된 payload 타입입니다.");
-                }
-                if (!documentService.exists(dto.getId())) {
-                    log.error("UPDATE_DOCUMENT: 존재하지 않는 문서: id={}", dto.getId());
-                    throw new CommandException("존재하지 않는 문서입니다.");
-                }
-
-                // DocumentDto -> Document 변환
-                Document doc = new Document(
-                        dto.getId(),
-                        dto.getTitle(),
-                        dto.getContent(),
-                        dto.getCreatedDate(),
-                        dto.getModifiedDate()
-                );
-
-                documentService.update(doc);
-                log.info("문서 수정: id={}", doc.getId());
-                return (R) doc;
-            }
-
-            // 문서 삭제 요청 처리
-            case DELETE_DOCUMENT:
-                if (!(payload instanceof Integer docId)) {
-                    log.error("DELETE_DOCUMENT: payload 타입 오류");
-                    throw new CommandException("DELETE_DOCUMENT: 잘못된 payload 타입입니다.");
+                    documentService.update(doc);
+                    log.info("문서 수정: id={}", doc.getId());
+                    return (R) doc;
                 }
 
-                documentService.delete(docId);
-                log.info("문서 삭제: id={}", docId);
-                return null;
+                // 문서 삭제 요청 처리
+                case DELETE_DOCUMENT:
+                    if (!(payload instanceof Integer docId)) {
+                        log.error("DELETE_DOCUMENT: payload 타입 오류");
+                        throw new CommandException("DELETE_DOCUMENT: 잘못된 payload 타입입니다.");
+                    }
 
-            // 문서 조회 요청 처리 - 본문(content) 없이
-            case READ_DOCUMENT_LIST: {
-                List<Document> allDocs = documentService.findAll();
+                    documentService.delete(docId);
+                    log.info("문서 삭제: id={}", docId);
+                    return null;
 
-                List<DocumentDto> dtoList = allDocs.stream()
-                        .map(doc -> new DocumentDto(
-                                doc.getId(),
-                                doc.getTitle(),
-                                null,
-                                doc.getCreatedDate(),
-                                doc.getModifiedDate()
-                        )).toList();
+                // 문서 조회 요청 처리 - 본문(content) 없이
+                case READ_DOCUMENT_LIST: {
+                    List<Document> allDocs = documentService.findAll();
 
-                log.info("문서 요약 리스트 조회 완료({}개)", dtoList.size());
-                return (R) dtoList;
-            }
+                    List<DocumentDto> dtoList = allDocs.stream()
+                            .map(doc -> new DocumentDto(
+                                    doc.getId(),
+                                    doc.getTitle(),
+                                    null,
+                                    doc.getCreatedDate(),
+                                    doc.getModifiedDate()
+                            )).toList();
 
-            // 클라이언트 편집 연산 동기화 요청 처리
-            case PROPAGATE_OPERATION:
-                if (!(payload instanceof OperationDto opDto)) {
-                    log.error("PROPAGATE_OPERATION: payload 타입 오류");
-                    throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
+                    log.info("문서 요약 리스트 조회 완료({}개)", dtoList.size());
+                    return (R) dtoList;
                 }
 
-                Integer docId = opDto.getDocId();
+                // 클라이언트 편집 연산 동기화 요청 처리
+                case PROPAGATE_OPERATION:
+                    if (!(payload instanceof OperationDto opDto)) {
+                        log.error("PROPAGATE_OPERATION: payload 타입 오류");
+                        throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
+                    }
 
-                if (!documentService.exists(docId)) {
-                    log.error("PROPAGATE_OPERATION: 문서 존재하지 않음: id={}", docId);
-                    throw new CommandException("해당 문서가 존재하지 않습니다.");
-                }
+                    Integer docId = opDto.getDocId();
 
-                log.info("동기화 시작: docID={}, fromClient=null", docId);
-                syncService.syncUpdate(docId, opDto, null);
-                log.info("동기화 완료: docId={}", docId);
-                return null;
+                    if (!documentService.exists(docId)) {
+                        log.error("PROPAGATE_OPERATION: 문서 존재하지 않음: id={}", docId);
+                        throw new CommandException("해당 문서가 존재하지 않습니다.");
+                    }
+
+                    log.info("동기화 시작: docID={}, fromClient=null", docId);
+                    syncService.syncUpdate(docId, opDto, null);
+                    log.info("동기화 완료: docId={}", docId);
+                    return null;
 
                 // 로그인 명령
-            case LOGIN:
-                if (!(payload instanceof LoginRequestDto loginRequestDto)) {
-                    log.error("LOGIN: payload 타입 오류");
-                    throw new CommandException("LOGIN: 잘못된 payload 타입입니다.");
+                case LOGIN:
+                    if (!(payload instanceof LoginRequestDto loginRequestDto)) {
+                        log.error("LOGIN: payload 타입 오류");
+                        throw new CommandException("LOGIN: 잘못된 payload 타입입니다.");
 
-                }
+                    }
 
-                LoginRequest loginRequest = LoginRequestMapper.toEntity((LoginRequestDto) payload);
+                    LoginRequest loginRequest = LoginRequestMapper.toEntity((LoginRequestDto) payload);
 
-                UserDto dto = UserMapper.toDto(new User(loginRequest.getId(), "testUser", loginRequest.getPassword()));
-                if (Constants.DEBUG) {
-                    return (R) dto;
-                }
+                    if (Constants.DEBUG) {
+                        return (R) new User(loginRequest.getId(), "testUser", loginRequest.getPassword());
+                    }
 
-            // 정의되지 않은 커맨드 처리
-            default:
-                String msg = "정의되지 않은 커맨드 수신: " + command;
-                log.error(msg);
-                throw new CommandException(msg);
+                    // 정의되지 않은 커맨드 처리
+                default:
+                    String msg = "정의되지 않은 커맨드 수신: " + command;
+                    log.error(msg);
+                    throw new CommandException(msg);
+            }
+
+        } catch (Exception e) {
+            log.error("NetworkImpl Error while executing command : ", e);
+            throw new RuntimeException(e);
         }
     }
 

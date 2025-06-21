@@ -26,6 +26,7 @@ public class NetworkHandler implements Runnable{
      * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
      */
     public NetworkHandler(String host, int port, ClientNetworkListener listener) {
+        log.info("Network Handler initalize.");
 
         this.listener = listener;
         try {
@@ -42,7 +43,6 @@ public class NetworkHandler implements Runnable{
             log.error(msg, e);
         }
 
-        log.info("Network Handler Initialized.");
     }
 
 
@@ -58,7 +58,7 @@ public class NetworkHandler implements Runnable{
             this.out = new ObjectOutputStream(socket.getOutputStream());
             this.in = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            String msg = "Client Handler Thread Error occured.";
+            String msg = "Client Handler Thread Initialize Failed: ObjectStream error.";
             log.error(msg, e);
             throw new RuntimeException(e);
         }
@@ -136,7 +136,7 @@ public class NetworkHandler implements Runnable{
 
             }
         } catch (IOException | ClassNotFoundException e) {
-            String errMsg = "Client Thread Receive Failed.";
+            String errMsg = "Client Thread Failed while running";
             log.error(errMsg);
             listener.onNetworkError(e);
 

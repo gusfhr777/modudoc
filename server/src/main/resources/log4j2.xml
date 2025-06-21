@@ -7,14 +7,15 @@
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout disableAnsi="false" pattern="%style{%d{MM-dd HH:mm:ss}}{magenta} %highlight${LOG_LEVEL_PATTERN} %style{[%c{1.1.1.*}]}{cyan} %m%n" />
         </Console>
+        <File name="FileLogger" fileName="logs/server.log" append="true">
+            <PatternLayout pattern="%d %p %c [%t] %m%n"/>
+        </File>
     </Appenders>
 
     <Loggers>
-        ...
-
         <Root level="INFO">
             <AppenderRef ref="console" />
-            <AppenderRef ref="FILE" />
+            <AppenderRef ref="FileLogger" />
         </Root>
     </Loggers>
 </Configuration>
