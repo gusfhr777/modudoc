@@ -106,7 +106,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                             .map(doc -> new DocumentDto(
                                     doc.getId(),
                                     doc.getTitle(),
-                                    null,
+                                    "",
                                     doc.getCreatedDate(),
                                     doc.getModifiedDate()
                             )).toList();
