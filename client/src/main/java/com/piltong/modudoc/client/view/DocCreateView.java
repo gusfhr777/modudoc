@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 //문서를 생성할 때 생성창을 만드는 클래스
-public class DocCreateView {
+public class DocCreateView implements View{
 
     // 컨트롤러
 
@@ -27,17 +27,40 @@ public class DocCreateView {
 
     Stage editStage = new Stage();
 
-    DashboardController controller;
-
     Document summary;
 
 
 
-//    public DocCreateView(DashboardController controller, Document summary) {this.controller = controller;
+    // 시작
+    public void start() {
+        editStage.show();
+    }
+
+    // 끝
+    public void end() {
+        editStage.close();
+
+    }
+
+    // 종료
+    public void shutdown() {
+
+    }
+
+
+
+
+
+
+
+
+
+
+    //    public DocCreateView(DashboardController controller, Document summary) {this.controller = controller;
 //    this.summary = summary;}
-    public void initialize() {
+    public void initialize(DashboardController controller) {
         initLayout();
-        initListeners();
+        initListeners(controller);
     }
 
     void initLayout() {
@@ -51,15 +74,15 @@ public class DocCreateView {
     }
 
     //모든 이벤트 처리
-    void initListeners() {
+    void initListeners(DashboardController controller) {
         editButton.setOnAction(e -> {
             //생성 버튼을 입력했을 때 이벤트
-            returnEdit();
+            returnEdit(controller);
         });
         nameField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 //엔터를 입력했을 때 이벤트
-                returnEdit();
+                returnEdit(controller);
             }
         });
         editStage.setOnCloseRequest(e->{
@@ -73,7 +96,7 @@ public class DocCreateView {
         setDocumentTitle(summary.getTitle());
     }
 
-    public void returnEdit() {
+    public void returnEdit(DashboardController controller) {
         if (!nameField.getText().isEmpty()) {
             if(summary == null) {
                 controller.sendCreateDocument(nameField.getText());

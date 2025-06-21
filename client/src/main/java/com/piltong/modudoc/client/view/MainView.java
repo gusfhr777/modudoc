@@ -3,8 +3,7 @@ package com.piltong.modudoc.client.view;
 import com.piltong.modudoc.client.controller.*;
 import javafx.stage.Stage;
 
-public class MainView {
-
+public class MainView implements View{
 
 
     // 하위 뷰
@@ -13,20 +12,14 @@ public class MainView {
     private final DocCreateView docCreateView; // 문서 생성 화면
     private final EditorView editorView; // 문서 편집 화면
 
-    // 스테이지
-    private Stage currentStage;
+    // 현재 뷰
+    private View currentView;
 
 
-    // 메인 컨트롤러
-    private MainController mainController;
-
-    // 하위 컨트롤러
-//    private LoginController loginController; // 첫 로그인 화면 제어
-//    private EditorController editorController; // 편집기 화면 제어
-//    private DashboardController dashboardController; // 대시보드(메인화면) 제어
 
 
-    // 뷰 Getter
+
+    // Getter
     public LoginView getLoginView() {
         return loginView;
     }
@@ -43,7 +36,18 @@ public class MainView {
         return editorView;
     }
 
+    public View getCurrentView() {
+        return currentView;
+    }
 
+
+
+
+
+
+
+
+    // 초기화
     public MainView() {
         loginView = new LoginView();
         dashboardView = new DashboardView();
@@ -52,27 +56,34 @@ public class MainView {
 
     }
 
-    public void setController(MainController mainController) {
-        this.mainController = mainController;
-//        this.loginController = mainController.getLoginController();
-//        this.editorController = mainController.getEditorController();
-//        this.dashboardController = mainController.getDashboardController();
-    }
 
-    // View 시작 함수.
+
+    // 시작
     public void start() {
-        this.loginView.initialize(); // 로그인 뷰 준비
-        this.currentStage = this.loginView.getStage(); // 로그인 스테이지 획득
-        this.currentStage.show(); // 로그인 뷰 시작
+
+
+//        this.loginView.initialize(); // 로그인 뷰 준비x   x
+//        this.currentView = this.loginView; // 로그인 스테이지 획득
+//        this.currentView.show(); // 로그인 뷰 시작
+//    }
+    }
+    // 끝
+    public void end() {
+
     }
 
-    public void show() {
-        this.currentStage.show();
+    // 종료
+    public void shutdown() {
+
     }
 
-    public void close() {
-        this.currentStage.close();
-    }
+//    public void show() {
+//        this.currentView.show();
+//    }
+//
+//    public void close() {
+//        this.currentView.close();
+//    }
     
 
     public void showLoginView() {

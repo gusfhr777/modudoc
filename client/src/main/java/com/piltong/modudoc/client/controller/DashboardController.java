@@ -5,11 +5,9 @@ package com.piltong.modudoc.client.controller;
 import com.piltong.modudoc.client.model.*;
 
 
-import com.piltong.modudoc.client.view.DashboardView;
-import com.piltong.modudoc.client.view.EditorView;
-import com.piltong.modudoc.client.view.MainView;
+import com.piltong.modudoc.client.network.NetworkHandler;
+import com.piltong.modudoc.client.view.*;
 import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.client.view.DocCreateView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,21 +22,37 @@ public class DashboardController implements Controller{
 
     // 컨트롤러, 뷰
     private MainController mainController;
-    private NetworkService networkService;
+    private NetworkController networkController;
+    private NetworkHandler networkHandler;
     private MainView mainView;
     private DashboardView dashboardView;
+    private DocCreateView docCreateView;
 
 
     // 생성자
     public DashboardController(MainController mainController) {
         this.mainController = mainController;
-        this.networkService = this.mainController.getNetworkService();
+        this.networkController = this.mainController.getNetworkService();
     }
 
 
+
+    public void setView(View view) {
+        this.mainView = (MainView) view;
+        this.dashboardView = this.mainView.getDashboardView();
+
+    }
+
+    // 초기화
+    public void init() {
+        this.dashboardView.initComponents();
+        this.dashboardView.initLayout();
+        this.dashboardView.initListeners(this);
+    }
+
     // 시작
     public void start() {
-
+        dashboardView.start();
     }
 
     // 끝
@@ -61,7 +75,7 @@ public class DashboardController implements Controller{
     // dashboard 시작
 //    public void start() {
 //        dashboardView.initialize();
-//        documentList = networkService.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
+//        documentList = networkController.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
 //        dashboardView.setDocumentList(documentList);
 //    }
 
@@ -93,22 +107,22 @@ public class DashboardController implements Controller{
             throw new RuntimeException("Document is already editing");
         } else {
             isEditing = true;
-            editDocumentView = new DocCreateView(this);
-            editDocumentView.initialize();
-            editDocumentView.setButtonText("문서 생성");
-            editDocumentView.showView();
+            docCreateView = new DocCreateView();
+            docCreateView.initialize(this);
+            docCreateView.setButtonText("문서 생성");
+            docCreateView.start();
         }
     }
 
     //문서 생성 요청
     public void sendCreateDocument(String title) {
 
-        networkService.sendCommand(ClientCommand.CREATE_DOCUMENT, title);
+        networkHandler.sendCommand(ClientCommand.CREATE_DOCUMENT, title);
     }
 
     //목록에 있는 문서 제거
     public void removeDocument(Document document) {
-        networkService.sendCommand(ClientCommand.DELETE_DOCUMENT,document.getId());
+        networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT,document.getId());
         
     }
 
@@ -119,11 +133,11 @@ public class DashboardController implements Controller{
                 throw new RuntimeException("Document is already editing");
             } else {
                 isEditing = true;
-                editDocumentView = new DocCreateView(this);
-                editDocumentView.initialize();
-                editDocumentView.setDocument(document);
-                editDocumentView.setButtonText("문서 제목 수정");
-                editDocumentView.showView();
+                docCreateView = new DocCreateView();
+                docCreateView.initialize(this);
+                docCreateView.setDocument(document);
+                docCreateView.setButtonText("문서 제목 수정");
+                docCreateView.showView();
             }
         }
         else throw new RuntimeException("Document is not selected");
@@ -132,7 +146,7 @@ public class DashboardController implements Controller{
     //문서 수정 요청
     public void sendEditDocument(Document olddocument, Document newdocument) {
         try {
-            networkService.sendCommand(ClientCommand.UPDATE_DOCUMENT, newdocument);
+            networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, newdocument);
             dashboardView.removeDocument(olddocument);
             addDocument(newdocument);
         }catch (Exception e) {
@@ -141,15 +155,17 @@ public class DashboardController implements Controller{
 
     }
     public void requestConnect(Document document) {
-        networkService.sendCommand(ClientCommand.READ_DOCUMENT,document.getId());
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT,document.getId());
     }
     //문서 접속
     public void connectDocument(Document document) {
-        EditorView editorScene = new EditorView();
-        EditorController editorController = new EditorController(editorScene, networkService, document);
-        editorScene.insertStringText(document.getContent(),0);
-        NetworkService.setTextEditorController(editorController);
-        editorScene.showView();
+//        EditorView editorScene = new EditorView();
+//        EditorController editorController = new EditorController(editorScene, networkController, document);
+
+        mainController.startEditor(document);
+        mainView.getEditorView().insertStringText(document.getContent(),0);
+//        NetworkController.setTextEditorController(editorController);
+        mainView.getEditorView().start();
     }
 
     public boolean getIsEditing() {

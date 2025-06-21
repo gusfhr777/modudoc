@@ -18,7 +18,7 @@ import org.fxmisc.richtext.model.StyledDocument;
 import com.piltong.modudoc.client.model.Document;
 
 //텍스트 편집기를 생성
-public class EditorView {
+public class EditorView implements View {
     InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
     Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
     Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
@@ -28,14 +28,45 @@ public class EditorView {
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
     ComboBox<String> fontFamilyBox = new ComboBox<>();
 
-    EditorController controller;
     Stage textEditorStage = new Stage();
 
 
-    public void initialize(Document document) {
+
+
+
+
+    // 시작
+    public void start() {
+        textEditorStage.show();
+    }
+
+    // 끝
+    public void end() {
+        textEditorStage.close();
+
+    }
+
+    // 종료
+    public void shutdown() {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void initialize(Document document, EditorController controller) {
         initComponent(document);
         initLayout();
-        initListeners();
+        initListeners(controller);
     }
     //구성요소들을 초기화하는 메소드
     void initComponent(Document document) {
@@ -68,7 +99,7 @@ public class EditorView {
     }
 
     //이벤트를 감지하는 메소드
-    void initListeners() {
+    void initListeners(EditorController controller) {
 
         //볼드 버튼이 눌렸을 때
         boldButton.setOnAction(e -> {
@@ -237,17 +268,6 @@ public class EditorView {
         return result.toString().trim();
     }
 
-
-    public void setController(EditorController controller) {
-        this.controller = controller;
-    }
-
-    public void showView() {
-        textEditorStage.show();
-    }
-    public void closeView() {
-        textEditorStage.close();
-    }
 
 
     //입력받은 영역의 문자 및 스타일 반환

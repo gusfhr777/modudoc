@@ -4,6 +4,7 @@ package com.piltong.modudoc.client.controller;
 import com.piltong.modudoc.client.view.EditorView;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.view.MainView;
+import com.piltong.modudoc.client.view.View;
 import com.piltong.modudoc.common.model.*;
 import com.piltong.modudoc.client.model.*;
 
@@ -13,19 +14,29 @@ public class EditorController implements Controller{
     // 모델
     private Document document;
 
-    // 컨트롤러, 뷰, 서비스
+    // 컨트롤러, 뷰
     private MainController mainController;
     private MainView mainView;
     private EditorView editorView;
-    private NetworkService networkService;
+    private NetworkHandler networkHandler;
 
 
     //생성자, 뷰와 네트워크를 입력받아 생성하거나 네트워크만 입력받아 생성
     public EditorController(MainController mainController) {
         this.mainController = mainController;
-        this.mainView = mainController.
     }
 
+
+    public void setView(View view) {
+        this.mainView = (MainView) view;
+        this.editorView = this.mainView.getEditorView();
+    }
+
+    // 초기화
+    public void init(Document document) {
+        this.document = document;
+        this.editorView.initialize(document, this);
+    }
 
     // 시작
     public void start() {
@@ -46,12 +57,6 @@ public class EditorController implements Controller{
 
 
 
-
-
-    //뷰 설정
-    public void setView(EditorView editorView) {
-        this.editorView = editorView;
-    }
     //네트워크 설정
     public void setNetworkHandler(NetworkHandler networkHandler) {
         this.networkHandler = networkHandler;

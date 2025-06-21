@@ -16,10 +16,7 @@ import javafx.stage.Stage;
 
 
 // 로그인 화면 출력을 다루는 뷰. 생성자 -> setController -> initialize -> showView -> closeView의 생명 주기를 갖는다.
-public class LoginView {
-
-    // 컨트롤러
-    LoginController loginController;
+public class LoginView implements View{
 
 
     // UI 컴포넌트
@@ -46,16 +43,13 @@ public class LoginView {
     Stage startStage = new Stage();
 
 
-    public void setController(LoginController loginController) {
-        this.loginController = loginController;
-    }
-
 
     // 초기화 -> show를 위한 준비
-    public void initialize() {
-        initLayout();
-        initListeners();
-    }
+//    public void LoginView() {
+//        initLayout();
+//        initListeners();
+//
+//    }
 
     //구성요소들을 배치하는 메소드
     public void initLayout() {
@@ -80,8 +74,23 @@ public class LoginView {
 
     }
 
+    // 시작
+    public void start() {
+        startStage.show();
+    }
+
+    // 끝
+    public void end() {
+
+    }
+
+    // 종료
+    public void shutdown() {
+
+    }
+
     //모든 이벤트의 리스너를 할당하는 메소드
-    public void initListeners() {
+    public void initListeners(LoginController loginController) {
         connectButton.setOnAction(e -> {
             //접속 버튼을 입력했을 때 이벤트
             loginController.connect(getIPText(),getPortText());
@@ -97,7 +106,7 @@ public class LoginView {
                 loginController.connect(getIPText(), getPortText());
             }
         });
-        startStage.setOnCloseRequest(e->
+        startStage.setOnCloseRequest(e ->
                 Platform.exit());
 
     }

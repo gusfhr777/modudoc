@@ -2,8 +2,8 @@ package com.piltong.modudoc.client.controller;
 
 import com.piltong.modudoc.client.network.ClientNetworkListener;
 import com.piltong.modudoc.client.network.NetworkHandler;
-import com.piltong.modudoc.client.view.DashboardView;
 import com.piltong.modudoc.client.view.MainView;
+import com.piltong.modudoc.client.view.View;
 import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.client.model.*;
 
@@ -18,10 +18,10 @@ import java.util.List;
 
 // 컨트롤러에서 네트워크 인터페이스를 담당한다.
 // ClientNetworkListener 인터페이스를 사용한다.
-public class NetworkService implements ClientNetworkListener {
+public class NetworkController implements ClientNetworkListener, Controller {
 
     // 로거
-    private static final Logger log = LogManager.getLogger(NetworkService.class);
+    private static final Logger log = LogManager.getLogger(NetworkController.class);
 
     // 컨트롤러, 뷰, 네트워크 핸들러
     private MainController mainController;
@@ -31,13 +31,26 @@ public class NetworkService implements ClientNetworkListener {
 
 
     // 생성자
-    public NetworkService(MainController mainController) {
+    public NetworkController(MainController mainController) {
         this.mainController = mainController;
     }
 
     // 뷰 설정
-    public void setView(MainView mainView) {
-        this.mainView = mainView;
+    public void setView(View view) {
+        this.mainView = (MainView) view;
+
+    }
+
+    public void start() {
+
+    }
+
+    public void end() {
+
+    }
+
+    public void shutdown() {
+
     }
 
 
@@ -62,37 +75,38 @@ public class NetworkService implements ClientNetworkListener {
 //            DashboardView dashboardView = new DashboardView();
 //            dashboardView.setController(dashboardController);
 //            dashboardController.setView(dashboardView);
-            mainController.
             
             
-            dashboardView.showView();
-
-            dashboardController.start();
-            loginScene.closeView();
+//            dashboardView.showView();
+//
+//            dashboardController.start();
+//            loginScene.closeView();
+            return true;
         }catch (RuntimeException e) {
             System.out.println("Error: "+e.getMessage());
-            loginScene.setPromptText("Error: "+e.getMessage());
+//            loginView.setPromptText("Error: "+e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
-
+        return true;
     }
 
 
     @Override
     public <T> void onCommandSuccess(ClientCommand command, T payload) {
-        if(dashboardController != null) {
+        if(mainController.getDashboardController() != null) {
             // 성공 응답
             switch (command) {
 
                 // 문서 생성 명령
                 case CREATE_DOCUMENT:
-                    dashboardController.addDocument((Document) payload);
+                    mainController.getDashboardController().addDocument((Document) payload);
                     break;
 
                 // 단일 문서 조회 명령
                 case READ_DOCUMENT:
-                    dashboardController.connectDocument((Document) payload);
+                    mainController.getDashboardController().connectDocument((Document) payload);
                     break;
 
                 // 문서 수정 명령
@@ -106,7 +120,7 @@ public class NetworkService implements ClientNetworkListener {
 
                 // 문서 리스트 조회 명령
                 case READ_DOCUMENT_LIST:
-                    dashboardController.loadDocumentList((List<Document>) payload);
+                    mainController.getDashboardController().loadDocumentList((List<Document>) payload);
                     break;
 
                 // Operation 전파 명령
@@ -126,11 +140,11 @@ public class NetworkService implements ClientNetworkListener {
 
     @Override
     public void onOperationReceived(Operation op) {
-        if(editorController != null&& editorController.getDocument().getId() == op.getDocId()) {
+        if(mainController.getEditorController() != null&& mainController.getEditorController().getDocument().getId() == op.getDocId()) {
             if (op.getOperationType() == OperationType.INSERT) {
-                editorController.insertText(op.getContent(), op.getPosition());
+                mainController.getEditorController().insertText(op.getContent(), op.getPosition());
             } else if (op.getOperationType() == OperationType.DELETE) {
-                editorController.deleteText(op.getPosition(), op.getContent().length());
+                mainController.getEditorController().deleteText(op.getPosition(), op.getContent().length());
             }
         }
     }

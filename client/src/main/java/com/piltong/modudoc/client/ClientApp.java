@@ -24,7 +24,6 @@ public class ClientApp extends Application {
         MainView view = new MainView();
 
         controller.setView(view);
-        view.setController(controller);
 
         // 애플리케이션 시작
         controller.start();

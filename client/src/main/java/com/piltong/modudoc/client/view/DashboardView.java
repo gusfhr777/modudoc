@@ -17,9 +17,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class DashboardView {
-
-    DashboardController controller;
+public class DashboardView implements View {
 
     TableView<Document> documentTable = new TableView<>(); //문서 목록이 표시될 도표
 
@@ -48,16 +46,29 @@ public class DashboardView {
     Label concoleLabel = new Label("");
     Stage DocumentListStage = new Stage();
 
-    //컨트롤러 설정
-    public void setController(DashboardController controller) {
-        this.controller = controller;
+
+
+
+
+    // 시작
+    public void start() {
+        DocumentListStage.show();
     }
 
-    public void initialize() {
-        initComponents();
-        initLayout();
-        initListeners();
+    // 끝
+    public void end() {
+        DocumentListStage.close();
+
     }
+
+    // 종료
+    public void shutdown() {
+
+    }
+
+
+
+
 
     //각 구성요소들을 초기화하는 메소드
     public void initComponents() {
@@ -90,7 +101,7 @@ public class DashboardView {
     }
 
     //이벤트들을 감지하는 메소드
-    public void initListeners() {
+    public void initListeners(DashboardController controller) {
         createButton.setOnAction(e -> {
             //생성 버튼 입력시 이벤트
             controller.createDocument();

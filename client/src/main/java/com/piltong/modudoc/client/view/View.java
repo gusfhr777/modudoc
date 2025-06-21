@@ -8,4 +8,10 @@ package com.piltong.modudoc.client.view;
 // 끝 : 컨트롤러 동작 끝
 // 종료 : 컨트롤러 종료.
 public interface View {
+
+    public void start();
+
+    public void end();
+
+    public void shutdown();
 }
