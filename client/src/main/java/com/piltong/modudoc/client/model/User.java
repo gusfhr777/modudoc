@@ -7,7 +7,6 @@ public class User {
     private String password; // 유저 비밀번호
 
 
-
     public User(String id, String username, String password) {
         this.id = id;
         this.username = username;
@@ -36,6 +35,17 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 
 }

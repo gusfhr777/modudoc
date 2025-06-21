@@ -30,5 +30,13 @@ public class LoginRequest {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "LoginRequestDto{" +
+                "id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
 
 }

@@ -41,4 +41,16 @@ public class OperationDto implements Serializable {
     public String getContent() {
         return content;
     }
+
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "operationType=" + operationType +
+                ", docId=" + docId +
+                ", position=" + position +
+                ", content='" + content + '\'' +
+                '}';
+    }
+
 }

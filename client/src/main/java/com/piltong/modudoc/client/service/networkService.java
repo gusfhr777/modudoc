@@ -120,57 +120,25 @@ public class networkService implements networkHandlerListener {
                 break;
 
             case LOGIN:
-                networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
-                mainController.showDashboard();
+                onLoginResponse();
                 break;
 
             default:
                 break;
         }
-
-
-//        if(mainController.getDashboardController() != null) {
-//            // 성공 응답
-//            switch (command) {
-//
-//                // 문서 생성 명령
-//                case CREATE_DOCUMENT:
-//                    mainController.getDashboardController().addDocument((Document) payload);
-//                    break;
-//
-//                // 단일 문서 조회 명령
-//                case READ_DOCUMENT:
-//                    mainController.getDashboardController().connectDocument((Document) payload);
-//                    break;
-//
-//                // 문서 수정 명령
-//                case UPDATE_DOCUMENT:
-//
-//                    break;
-//
-//                // 문서 삭제 명령
-//                case DELETE_DOCUMENT:
-//                    break;
-//
-//                // 문서 리스트 조회 명령
-//                case READ_DOCUMENT_LIST:
-//                    mainController.getDashboardController().loadDocumentList((List<Document>) payload);
-//                    break;
-//
-//                // Operation 전파 명령
-//                case PROPAGATE_OPERATION:
-//
-//                    break;
-//
-//                // 이외 명령
-//                default:
-//                    log.error("Unknown Command Received: " + command);
-//                    break;
-//            }
-//        }
-//        else
-//            log.error("NetworkListener not called");
     }
+
+
+    // 요청 별 처리 함수
+
+    public void onLoginResponse() {
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
+        mainController.showDashboard();
+
+    }
+
+
+
 
     @Override
     public void onOperationReceived(Operation op) {

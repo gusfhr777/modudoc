@@ -15,7 +15,7 @@ import java.util.Objects;
 public class ClientHandler implements Runnable {
     private static final Logger log = LogManager.getLogger(ClientHandler.class);
     private final Socket socket;                    // 연결된 클라이언트 소켓
-    private final networkHandlerListener listener;   // 서버 로직 처리 핸들러
+    private final networkHandlerListener listener;   // 서버 비즈니스 네트워크 처리용 리스너
     protected ObjectInputStream in;                 // 클라이언트 입력 스트림
     protected ObjectOutputStream out;               // 클라이언트 출력 스트림
 

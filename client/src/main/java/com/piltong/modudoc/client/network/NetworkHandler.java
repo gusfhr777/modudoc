@@ -108,7 +108,9 @@ public class NetworkHandler implements Runnable{
                 log.fatal(errMsg, e);
                 throw new RuntimeException(e);
             } catch (Exception e) {
-                continue;
+                String errMsg = "Socket error Received.";
+                log.fatal(errMsg, e);
+                throw new RuntimeException(e);
             }
 
             log.info("message Received : " + msg);  // Debugging the received object

@@ -97,19 +97,4 @@ public class Document {
                 '}';
     }
 
-    // 접근하는 유저 추가
-//    public void addUser(String userId) {
-//        if (!accessUserIds.contains(userId)) {
-//            accessUserIds.add(userId);
-//            touch();
-//        }
-//    }
-
-    // 접근하는 유저 제거
-//    public void removeUser(String userId) {
-//        if (accessUserIds.contains(userId)) {
-//            accessUserIds.add(userId);
-//            touch();
-//        }
-//    }
 }

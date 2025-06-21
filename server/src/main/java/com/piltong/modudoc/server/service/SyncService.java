@@ -26,51 +26,41 @@ public class SyncService {
     public SyncService(DocumentService docService) {
         this.docService = docService;
         this.ot = new OT();
+        log.info("SyncService initialized");
     }
 
     // 클라이언트 변경사항 반영 및 브로드캐스트
-    public synchronized void syncUpdate(Integer docId, OperationDto dto, String senderId) {
-        // null 값의 파라미터가 들어올 시 오류
-        if (docId == null || dto == null || senderId == null) {
-            String msg = "Invalid docId, dto or senderId";
-            log.error(msg);
-            throw new RuntimeException(msg);
+    // docId : ㅂsenderId : 보낸 사람 아이디
+
+    /**
+     * 클라이언트로부터 수신한 Operation을 이용해 server.document.content를 client.document.content와 동기화한다.
+     * @param docId : 수정할 문서의 아이디
+     * @param operation : 수정할 Operation
+     * @param senderId : 전송자의 유저 아이디
+     */
+    public synchronized void syncUpdate(Integer docId, Operation operation, String senderId) {
+        log.info("sync update : {}, {}, {}",  docId, operation, senderId);
+        if (docId == null || operation == null || senderId == null) {
+            String errMsg = "Invalid docId, dto or senderId";
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
         }
 
         // 현재 문서 가져오기
         Document doc;
-        // Document가 null 값일 시 오류
         try {
             doc = docService.findById(docId);
-            if (doc == null) {
-                String msg = "Invalid doc";
-                log.error(msg);
-                throw new RuntimeException(msg);
-            }
-        } catch (Exception e) {
-            String msg = "Exception on syncUpdate";
+        } catch (NoSuchElementException e) {
+            String msg = "Invalid Document ID";
             log.error(msg, e);
             throw new RuntimeException(msg);
         }
 
-        String current = doc.getContent();
+        String content = doc.getContent();
 
         // 수정사항이 null 값일 시 오류
-        if (current == null) current = "";
+        if (content == null) content = "";
 
-        // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
-        Operation op;
-        try {
-            op = OperationMapper.toEntity(dto);
-            // op 객체로 변환 실패 시 오류
-            if (op == null) {
-                System.err.println("[Error] OperationDto를 Operation 으로 변환 실패");
-                return;
-            }
-        } catch (Exception e) {
-            System.err.println("[Error] Operation 변환 중 예외 발생: " + e);
-            return;
-        }
 
         // 문서별 히스토리가 없다면 새로 생성
         operationHistory.putIfAbsent(docId, new ArrayList<>());
@@ -79,7 +69,7 @@ public class SyncService {
         // 이전 모든 연산을 기준으로 현재 연산 위치 조정(OT 알고리즘 적용)
         Operation transformedOp;
         try {
-            transformedOp = ot.transformAgainstAll(op, history);
+            transformedOp = ot.transformAgainstAll(operation, history);
             if (transformedOp == null) {
                 System.err.println("[Error] OT transform 결과가 null");
                 return;
@@ -99,7 +89,7 @@ public class SyncService {
         // 문서 내용 적용 및 저장
         String updated;
         try {
-            updated = ot.apply(current, transformedOp);
+            updated = ot.apply(content, transformedOp);
             if (updated == null) {
                 System.err.println("[Error] apply() 결과가 null");
                 return;

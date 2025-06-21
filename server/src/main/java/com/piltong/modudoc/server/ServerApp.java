@@ -44,8 +44,8 @@ public class ServerApp {
 
             if (Constants.DEBUG) { // 문서 테스트용 : 추후 삭제
                 docRepo = new MapDocumentRepository();
-                docRepo.save(new Document(1, "DocumentTest1", "ContentTest1", LocalDateTime.now(), LocalDateTime.now()));
-                docRepo.save(new Document(2, "DocumentTest2", "ContentTest2", LocalDateTime.now(), LocalDateTime.now()));
+                docRepo.save(new Document(1, "DocumentTest1", "c1", LocalDateTime.now(), LocalDateTime.now()));
+                docRepo.save(new Document(2, "DocumentTest2", "c2", LocalDateTime.now(), LocalDateTime.now()));
 
             } else {
                 docRepo = new JDBCDocumentRepository();

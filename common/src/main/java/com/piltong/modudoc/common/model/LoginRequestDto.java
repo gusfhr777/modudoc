@@ -19,4 +19,14 @@ public class LoginRequestDto implements Serializable {
         this.id = id;
         this.password = password;
     }
+
+
+    @Override
+    public String toString() {
+        return "LoginRequestDto{" +
+                "id='" + id + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
+
 }

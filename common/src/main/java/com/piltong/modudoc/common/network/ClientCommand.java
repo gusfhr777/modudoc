@@ -51,6 +51,10 @@ public enum ClientCommand {
      */
     PROPAGATE_OPERATION,
 
+
+    // Operation 입력(다른 클라가 입력받음)
+    RECEIVE_OPERATION,
+
     /**
      * 로그인 명령
      * 요청 데이터: loginRequestDto

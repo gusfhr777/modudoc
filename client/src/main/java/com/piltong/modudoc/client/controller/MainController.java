@@ -22,6 +22,7 @@ public class MainController {
     private EditorController editorController; // 편집기 화면 제어
     private DashboardController dashboardController; // 대시보드(메인화면) 제어
     private NetworkHandler networkHandler;
+    private networkService networkService;
 
 
     // 필드 Getter
@@ -43,17 +44,20 @@ public class MainController {
     public MainController(Stage stage) {
         this.stage = stage;
         try {
-            networkService networkListener = new networkService(this);
-            this.networkHandler = new NetworkHandler("localhost", 4433, networkListener);
+            networkService networkService = new networkService(this);
+            this.networkHandler = new NetworkHandler("localhost", 4433, networkService);
             new Thread(this.networkHandler).start();
-            networkListener.setNetworkHandler(this.networkHandler); // 의존성 주입
+            networkService.setNetworkHandler(this.networkHandler); // 의존성 주입
 
             this.loginController = new LoginController(this, networkHandler);
             this.dashboardController = new DashboardController(this, networkHandler);
             this.editorController = new EditorController(this, networkHandler);
 
             // 로그인 씬
-            showLogin();
+//            showLogin();
+            if (Constants.DEBUG) {
+                networkService.onLoginResponse();
+            }
         } catch (RuntimeException e) {
             log.fatal("MainController initialize Failed.");
             showFatalErrorAndExit("MainController initialize Failed.");
@@ -135,51 +139,6 @@ public class MainController {
             alert.showAndWait();
             Platform.exit();
         });
-
-    }
-
-
-    // 로그인 씬 활성화
-    public void showLogin() {
-        try {
-            stage.setScene(new Scene(loginController.getView(), 300, 200));
-            log.info("Login Open");
-        } catch (RuntimeException e) {
-            String errMsg = "show Login Failed.";
-            log.fatal(errMsg);
-            showFatalErrorAndExit(errMsg);
-        }
-    }
-
-    // 대시보드 씬 활성화
-    public void showDashboard() {
-        try {
-            Platform.runLater(() -> {
-                stage.getScene().setRoot(dashboardController.getView());
-                stage.setWidth(500);
-                stage.setHeight(300);
-            });
-            log.info("Dashboard Open");
-        } catch (RuntimeException e) {
-            String errMsg = "show Dashboard Failed.";
-            log.fatal(errMsg);
-            showFatalErrorAndExit(errMsg);
-        }
-
-
-    }
-
-    // 에디터 씬 활성화
-    public void showEditor(Document document) {
-        Platform.runLater(() -> {
-            editorController.setDocument(document);
-            stage.getScene().setRoot(editorController.getView());
-            editorController.setContent(document.getContent());
-            stage.setWidth(900);
-            stage.setHeight(600);
-        });
-
-        log.info("Editor Open");
 
     }
 

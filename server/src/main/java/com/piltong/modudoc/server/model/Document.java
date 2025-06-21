@@ -19,16 +19,6 @@ public class Document{
     private LocalDateTime modifiedDate; // 문서 최종 수정일
 
 
-    @Override
-    public String toString() {
-        return "Document{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", createdDate=" + createdDate +
-                ", modifiedDate=" + modifiedDate +
-                '}';
-    }
 
     // 필드 getter 및 setter
     public Integer getId() {
@@ -89,85 +79,14 @@ public class Document{
     }
 
 
-//    public List<String> getAccessUserIds() {
-//        return accessUserIds;
-//    }
-//
-//    public void setAccessUserIds(List<String> accessUserIds) {
-//        this.accessUserIds = accessUserIds;
-//    }
-
-
-    // 문서 생성자
-//    public Document(String id, String title, String content) {
-//
-//        // 모든 데이터는 Null이 아닌 형태로 저장한다.
-//        this.id = Objects.requireNonNull(id);
-//        this.title = Objects.requireNonNull(title);
-//        this.content = Objects.requireNonNull(content);
-//        this.createdDate = LocalDateTime.now();
-//        this.modifiedDate = this.createdDate;
-//    }
-
-
-//    // 문서 수정일 업데이트
-//    public void touch() {
-//        modifiedDate = LocalDateTime.now();
-//    }
-
-
-//    // 접근하는 유저 추가
-//    public void addUser(String userId) {
-//        if (!accessUserIds.contains(userId)) {
-//            accessUserIds.add(userId);
-//            touch();
-//        }
-//    }
-//
-//    // 접근하는 유저 제거
-//    public void removeUser(String userId) {
-//        if (accessUserIds.contains(userId)) {
-//            accessUserIds.add(userId);
-//            touch();
-//        }
-//    }
-//
-//
-//    // DTO 객체 -> 엔티티 객체로 변환하는 함수
-//    // 추후 최적화 필요
-//    public static com.piltong.modudoc.common.document.Document toEntity(DocumentDto doc) {
-//        return new com.piltong.modudoc.common.document.Document(
-//                doc.getId(),
-//                doc.getTitle(),
-//                doc.getContent(),
-//                doc.getCreatedDate(),
-//                doc.getModifiedDate(),
-//                List.copyOf(doc.getAccessUserIds())
-//        );
-//    }
-//
-//    // 엔티티 객체 -> DTO 객체로 변환하는 함수
-//    // 추후 최적화 필요
-//    public static DocumentDto toDto(com.piltong.modudoc.common.document.Document doc) {
-//        return new DocumentDto(
-//                doc.getId(),
-//                doc.getTitle(),
-//                doc.getContent(),
-//                doc.getCreatedDate(),
-//                doc.getModifiedDate(),
-//                List.copyOf(doc.getAccessUserIds())
-//        );
-//    }
-//
-//
-//    // 엔티티 객체 -> 요약 객체로 변환하는 함수
-//    public static DocumentSummary toSummary(com.piltong.modudoc.common.document.Document doc) {
-//        return new DocumentSummary(
-//                doc.getId(),
-//                doc.getTitle(),
-//                doc.getCreatedDate(),
-//                doc.getModifiedDate(),
-//                List.copyOf(doc.getAccessUserIds())
-//        );
-//    }
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                '}';
+    }
 }

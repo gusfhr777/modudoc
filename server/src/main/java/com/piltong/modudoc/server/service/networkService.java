@@ -120,7 +120,8 @@ public class networkService implements networkHandlerListener {
                         throw new CommandException("PROPAGATE_OPERATION: 잘못된 payload 타입입니다.");
                     }
 
-                    Integer docId = opDto.getDocId();
+                    Operation operation = OperationMapper.toEntity(opDto);
+                    Integer docId = operation.getDocId();
 
                     if (!documentService.exists(docId)) {
                         log.error("PROPAGATE_OPERATION: 문서 존재하지 않음: id={}", docId);
@@ -128,7 +129,7 @@ public class networkService implements networkHandlerListener {
                     }
 
                     log.info("동기화 시작: docID={}, fromClient=null", docId);
-                    syncService.syncUpdate(docId, opDto, "");
+                    syncService.syncUpdate(docId, operation, ""); // 추후 수정
                     log.info("동기화 완료: docId={}", docId);
                     return null;
 
