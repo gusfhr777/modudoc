@@ -7,6 +7,7 @@ import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.model.*;
 import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.common.network.ClientCommand;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
@@ -114,7 +115,10 @@ public class EditorController {
 
     public void insertText(String text,int from) {
         programmaticChange = true;
-        editorView.getEditor().insertText(from,text);
+        Platform.runLater(()->{
+            editorView.getEditor().insertText(from,text);
+
+        });
         programmaticChange = false;
     }
     public void deleteText(String text,int from) {

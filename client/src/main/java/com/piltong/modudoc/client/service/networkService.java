@@ -154,9 +154,11 @@ public class networkService implements networkHandlerListener {
 
     @Override
     public void onOperationReceived(List<Operation> opList) {
+        log.info("Operation Recevied : " + opList);
         for (Operation op : opList) {
             if(mainController.getEditorController().getDocument().getId() == op.getDocId()) {
                 if (op.getOperationType() == OperationType.INSERT) {
+
                     mainController.getEditorController().insertText(op.getContent(), op.getPosition());
                 } else if (op.getOperationType() == OperationType.DELETE) {
                     mainController.getEditorController().deleteText(op.getContent(), op.getPosition());

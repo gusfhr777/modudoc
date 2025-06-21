@@ -77,10 +77,10 @@ public class ClientHandler implements Runnable {
         boolean success = true;
         String errorMsg = null;
 
-        if (resultPayload == null) {
-            String errMsg = "resultPayload is null";
-            throw new IllegalArgumentException(errMsg);
-        }
+//        if (resultPayload == null) {
+//            String errMsg = "resultPayload is null";
+//            throw new IllegalArgumentException(errMsg);
+//        }
         Serializable payloadDto = null;
         try {
 
@@ -89,7 +89,9 @@ public class ClientHandler implements Runnable {
                 payloadDto = (Serializable) resultPayload;
 //                log.info("payloadDto1 : {}", payloadDto);
             } else {
-                if (resultPayload instanceof Document) {
+                if (resultPayload == null) {
+//                    resultPayload
+                } else if (resultPayload instanceof Document) {
                     payloadDto = DocMapper.toDto((Document) resultPayload);
 //                    log.info("payloadDto2 : {}", payloadDto);
                 } else if (resultPayload instanceof Operation) {

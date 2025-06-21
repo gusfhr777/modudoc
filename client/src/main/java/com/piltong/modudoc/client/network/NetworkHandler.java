@@ -162,7 +162,7 @@ public class NetworkHandler implements Runnable{
 
                     case RECEIVE_OPERATION:
                         listener.onOperationReceived(OperationMapper.toEntity((List<OperationDto>) dto.getPayload()));
-
+                        break;
                     case LOGIN:
                         listener.onCommandSuccess(command, UserMapper.toEntity((UserDto) dto.getPayload()));
                         break;
