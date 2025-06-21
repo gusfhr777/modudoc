@@ -201,18 +201,22 @@ public class DashboardController{
         }
         document.setTitle(title);
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
+
+        this.dialogStage.close();
     }
 
     // 내부 호출. 문서에 접속한다. -> EditorView Open, READ_DOCUMENT
     public void requestConnect(Document document) {
         log.info("requestConnect()");
 
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT, document);
     }
 
     // 내부 호출. 문서를 삭제한다. -> REMOVE_DOCUMENT
     public void removeDocument(Document document) {
         log.info("removeDocument()");
-
+        networkHandler.sendCommand(ClientCommand.DELETE_DOCUMENT, document.getId());
+        deleteDocument(document.getId());
     }
 
 
@@ -232,6 +236,14 @@ public class DashboardController{
         log.info("addDocument()");
         this.documentList.add(document);
         this.dashboardView.getDocumentTable().getItems().add(document);
+    }
+
+    public void deleteDocument(Integer id) {
+        log.info("DeleteDocument()");
+        documentList.stream().filter(doc -> doc.getId().equals(id)).findFirst().ifPresent(doc -> {
+            this.documentList.remove(doc);
+            this.dashboardView.getDocumentTable().getItems().remove(doc);
+        });
     }
 
 
