@@ -110,8 +110,12 @@ public class MainController {
 
     // 에디터 씬 활성화
     public void showEditor(Document document) {
-        editorController.setDocument(document);
-        stage.getScene().setRoot(editorController.getView());
+        Platform.runLater(() -> {
+            editorController.setDocument(document);
+            stage.getScene().setRoot(editorController.getView());
+            editorController.setContent(document.getContent());
+        });
+
         log.info("Editor Open");
 
     }

@@ -4,6 +4,7 @@ import com.piltong.modudoc.client.controller.MainController;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.model.*;
 
+import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.common.network.ClientCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -172,13 +173,13 @@ public class NetworkListenerImpl implements ClientNetworkListener {
 
     @Override
     public void onOperationReceived(Operation op) {
-//        if(mainController.getEditorController() != null && mainController.getEditorController().getDocument().getId() == op.getDocId()) {
-//            if (op.getOperationType() == OperationType.INSERT) {
-//                mainController.getEditorController().insertText(op.getContent(), op.getPosition());
-//            } else if (op.getOperationType() == OperationType.DELETE) {
-//                mainController.getEditorController().deleteText(op.getPosition(), op.getContent().length());
-//            }
-//        }
+        if(mainController.getEditorController().getDocument().getId() == op.getDocId()) {
+            if (op.getOperationType() == OperationType.INSERT) {
+                mainController.getEditorController().insertText(op.getContent(), op.getPosition());
+            } else if (op.getOperationType() == OperationType.DELETE) {
+                mainController.getEditorController().deleteText(op.getContent(), op.getPosition());
+            }
+        }
     }
 
     @Override

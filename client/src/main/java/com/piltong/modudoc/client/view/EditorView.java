@@ -9,6 +9,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.model.StyleSpan;
@@ -21,13 +22,19 @@ import com.piltong.modudoc.client.model.Document;
 //텍스트 편집기를 생성
 public class EditorView {
     InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
+
+    Button backButton = new Button("🔙");
+
     Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
     Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
     ColorPicker colorPicker = new ColorPicker(); //문자의 색깔을 선택하는 선택기
-    ToolBar toolBar = new ToolBar(); //텍스트 편집에 사용될 요소들이 들어갈 창
-    VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
     ComboBox<Integer> fontSizeBox = new ComboBox<>(); //폰트 크기를 설정하는 선택기
     ComboBox<String> fontFamilyBox = new ComboBox<>();
+
+
+    ToolBar menuBar;
+    ToolBar toolBar; //텍스트 편집에 사용될 요소들이 들어갈 창
+    VBox root = new VBox(); //구성요소들을 세로로 배치하는 레이아웃
 
     Stage textEditorStage = new Stage();
 //
@@ -73,9 +80,12 @@ public class EditorView {
         //기본 폰트 설정
         fontFamilyBox.setValue("Arial");
 
+        backButton.setFont(new Font("Arial", 15));
+
+        menuBar = new ToolBar(backButton);
         toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox,fontFamilyBox);
         root = new VBox();
-        root.getChildren().addAll(toolBar,editor);
+        root.getChildren().addAll(menuBar,toolBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
 
     }
@@ -87,6 +97,7 @@ public class EditorView {
 
     public InlineCssTextArea getEditor() {return editor;}
 
+    public Button getBackButton() {return backButton;}
     public Button getBoldButton() {return boldButton;}
     public Button getUnderbarButton() {return underbarButton;}
     public ColorPicker getColorPicker() {return colorPicker;}

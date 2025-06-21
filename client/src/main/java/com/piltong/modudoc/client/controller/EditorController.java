@@ -42,7 +42,17 @@ public class EditorController {
         this.document = document;
     }
 
+    public void setContent(String content) {
+        editorView.getEditor().replaceText(content);
+    }
+    public Document getDocument() {
+        return this.document;
+    }
+
     public void initListeners() {
+        this.editorView.getBackButton().setOnAction(event->{
+            mainController.showDashboard();
+        });
         this.editorView.getBoldButton().setOnAction(event -> {
             toggleCssStyle(this.editorView.getEditor(),"-fx-font-weight: BOLD;");
         });
