@@ -4,6 +4,8 @@ package com.piltong.modudoc.client.controller;
 import com.piltong.modudoc.client.view.EditorView;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.model.*;
+import com.piltong.modudoc.common.model.OperationType;
+import com.piltong.modudoc.common.network.ClientCommand;
 import javafx.scene.Parent;
 import javafx.scene.paint.Color;
 import org.apache.logging.log4j.LogManager;
@@ -28,8 +30,8 @@ public class EditorController {
     public EditorController(MainController mainController, NetworkHandler networkHandler) {
         this.mainController = mainController;
         this.networkHandler = networkHandler;
-
         this.editorView = new EditorView();
+        initListeners();
     }
 
     public Parent getView() {
@@ -52,22 +54,44 @@ public class EditorController {
             addCssStyle(this.editorView.getEditor(),"-fx-fill",toCssColor(selectedColor));
         });
         this.editorView.getFontSizeBox().setOnAction(event -> {
-            addCssStyle(this.editorView.getEditor(),"-fx-font-size",this.editorView.getFontSizeBox().getValue()+"px");
+            addCssStyle(this.editorView.getEditor(),"-fx-font-scale",this.editorView.getFontSizeBox().getValue()+"px");
         });
         this.editorView.getFontFamilyBox().setOnAction(event -> {
-
+            addCssStyle(this.editorView.getEditor(),"-fx-font-family",this.editorView.getFontFamilyBox().getValue());
         });
         this.editorView.getEditor().richChanges()
                 .filter(ch -> !ch.getInserted().getText().isEmpty() || !ch.getRemoved().getText().isEmpty())
                 .subscribe(change -> {
+                    int from = change.getPosition();
+                    int to = from + change.getNetLength();
+                    String insertedText = change.getInserted().getText();
+                    String removedText = change.getRemoved().getText();
 
+                    if(!insertedText.equals(removedText)) {
+                        if(!removedText.isEmpty()) {
+                            sendDeleteText(removedText,to);                        }
+                        if(!insertedText.isEmpty()) {
+                            sendInsertText(insertedText,from);
+                        }
+                    }
                 });
     }
 
-    public void sendInsertText(String text) {
+    public void sendInsertText(String text,int from) {
+        networkHandler.sendCommand(ClientCommand.PROPAGATE_OPERATION,new Operation(OperationType.INSERT,document.getId(),from,text));
+
+    }
+    public void sendDeleteText(String text,int from) {
+        networkHandler.sendCommand(ClientCommand.PROPAGATE_OPERATION,new Operation(OperationType.DELETE,document.getId(),from,text));
 
     }
 
+    public void insertText(String text,int from) {
+        editorView.getEditor().insertText(from,text);
+    }
+    public void deleteText(String text,int from) {
+        editorView.getEditor().deleteText(from,from+text.length());
+    }
     //토글 형식의 스타일 변경용 메소드
     void toggleCssStyle(InlineCssTextArea area, String cssFragment) {
         int start = area.getSelection().getStart();

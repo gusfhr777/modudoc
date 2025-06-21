@@ -73,7 +73,7 @@ public class EditorView {
         //기본 폰트 설정
         fontFamilyBox.setValue("Arial");
 
-        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox);
+        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox,fontFamilyBox);
         root = new VBox();
         root.getChildren().addAll(toolBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
