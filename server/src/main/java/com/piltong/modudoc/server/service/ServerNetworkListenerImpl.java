@@ -130,7 +130,7 @@ public class ServerNetworkListenerImpl implements ServerNetworkListener {
                     }
 
                     log.info("동기화 시작: docID={}, fromClient=null", docId);
-                    syncService.syncUpdate(docId, opDto, null);
+                    syncService.syncUpdate(docId, opDto, "");
                     log.info("동기화 완료: docId={}", docId);
                     return null;
 
