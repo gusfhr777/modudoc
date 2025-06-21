@@ -4,6 +4,7 @@ import com.piltong.modudoc.server.model.Document;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 // DB나 파일 기반 문서 저장소와 직접 연동
@@ -19,7 +20,14 @@ public class MapDocumentRepository implements DocumentRepository {
             log.error(errMsg);
             throw new IllegalArgumentException(errMsg);
         }
+
+        document.setId(documentStorage.size()+1);
+        document.setModifiedDate(LocalDateTime.now());
+        document.setCreatedDate(LocalDateTime.now());
+
         documentStorage.put(document.getId(), document);
+
+
         return document;
     }
 

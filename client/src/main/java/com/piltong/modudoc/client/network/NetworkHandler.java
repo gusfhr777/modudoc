@@ -25,22 +25,50 @@ public class NetworkHandler implements Runnable{
      *
      * @param listener 네트워크 이벤트를 처리할 {@link ClientNetworkListener} 구현체
      */
-    public NetworkHandler(String host, int port, ClientNetworkListener listener) {
-        log.info("Network Handler initalize.");
-
+    public NetworkHandler(String host, int port, ClientNetworkListener listener)  {
+        log.info("Network Handler Initializing...");
         this.listener = listener;
+
+        int maxAttempts = 5; // 최대 연결 시도
+        int timeoutMillis = 5000; // Timeout 대기 시간
+
+        Socket tmpSocket = null;
         try {
-            Thread.sleep(2000);
-            this.socket = new Socket(host, port);
-        } catch (UnknownHostException e) {
-            String msg = "Unknown Hostname Detected.";
-            log.error(msg, e);
-        } catch (IOException e) {
-            String msg = "IOException occured.";
-            log.error(msg, e);
+            tmpSocket = new Socket();
+            for(int i=0; i < maxAttempts; i++) {
+                try {
+                    tmpSocket.connect(new InetSocketAddress(host, port), timeoutMillis);
+                    break;
+                } catch (IOException e) {
+                    log.error("connection failed. retry..");
+                }
+                Thread.sleep(1000);
+            }
         } catch (InterruptedException e) {
-            String msg = "InterruptedException occured.";
+            log.error("Thread Interrupted while Initializing Networkhandler.");
+        }
+
+
+
+
+
+        try {
+            this.socket = new Socket(host, port);
+            this.out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
+            log.info("Connection established with {}:{}", host, port);
+        } catch (SocketTimeoutException e) {
+            String msg = "Connection timed out after 5 seconds.";
             log.error(msg, e);
+            throw new RuntimeException(msg, e);
+        } catch (UnknownHostException e) {
+            String msg = "Unknown host: " + host;
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
+        } catch (IOException e) {
+            String msg = "I/O error during connection to " + host + ":" + port;
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
         }
 
     }
@@ -53,15 +81,6 @@ public class NetworkHandler implements Runnable{
     @Override
     public void run() {
         log.info("Client Thread Start.");
-        try {
-            // 스트림 초기화 순서 주의 : out 다음 in을 해야한다.
-            this.out = new ObjectOutputStream(socket.getOutputStream());
-            this.in = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException e) {
-            String msg = "Client Handler Thread Initialize Failed: ObjectStream error.";
-            log.error(msg, e);
-            throw new RuntimeException(e);
-        }
 
 
         try {
