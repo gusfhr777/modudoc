@@ -24,6 +24,7 @@ public class JDBCUserRepository implements UserRepository {
     private static final String UPDATE_SQL = "UPDATE users SET id = ?, username = ?, password = ? WHERE id = ?";
     private static final String SELECT_ALL_SQL = "SELECT * FROM users";
 
+    // 생성자: DB 연결 초기화
     public JDBCUserRepository() {
         try {
             this.conn = DBManager.getConnection();
@@ -34,6 +35,11 @@ public class JDBCUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * 사용자 저장 (생성 or 수정)
+     * @param user 저장할 유저 객체
+     * @return 저장 완료된 유저 객체
+     */
     @Override
     public void save(User user) {
         if (Objects.isNull(user.getId())) { // ID가 없는 경우 -> 생성
@@ -44,6 +50,7 @@ public class JDBCUserRepository implements UserRepository {
 
                 pstmt.executeUpdate();
 
+                // created_date, modified_date 포함 전체 유저 반환
             } catch (SQLException e) {
                 String msg = "Document Create Failed.";
                 log.error(msg, e);
@@ -65,10 +72,13 @@ public class JDBCUserRepository implements UserRepository {
                 throw new RuntimeException(msg, e);
             }
         }
-
     }
 
-
+    /**
+     * 사용자 단건 조회
+     * @param id 유저 아이디
+     * @return Optional<user>
+     */
     @Override
     public Optional<User> findById(String id) {
 
@@ -90,6 +100,10 @@ public class JDBCUserRepository implements UserRepository {
         return null;
     }
 
+    /**
+     * 전체 사용자 목록 조회
+     * @return 유저 리스트
+     */
     @Override
     public List<User> findAll() {
         List<User> list = new ArrayList<User>();
@@ -111,6 +125,11 @@ public class JDBCUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * 사용자 삭제
+     * @param id 삭제할 유저 아이디
+     * @return 성공 여부 (true: 삭제)
+     */
     @Override
     public boolean delete(String id) {
         try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SQL)){
