@@ -15,25 +15,36 @@ public class MapDocumentRepository implements DocumentRepository {
 
     // DB 또는 파일 시스템에 저장
     public synchronized Document save(Document document) {
-        if (document == null) {
-            String errMsg = "Invalid document Argument.";
+        if (document == null) { // 파라미터 검사
+            String errMsg = "document is null.";
             log.error(errMsg);
             throw new IllegalArgumentException(errMsg);
         }
 
+
+
+        document.setModifiedDate(LocalDateTime.now()); // 수정일 업데이트
+
+        // 널값 처리
         if (document.getTitle() == null) {
             document.setTitle("");
         }
-
         if (document.getContent() == null) {
             document.setContent("");
         }
+        if (document.getCreatedDate() == null) {
+            document.setCreatedDate(LocalDateTime.now());
+        }
+        if (document.getId() == null) {
+            document.setId(documentStorage.size()+1);
+        }
 
-        document.setId(documentStorage.size()+1);
-        document.setModifiedDate(LocalDateTime.now());
-        document.setCreatedDate(LocalDateTime.now());
+        if (documentStorage.containsKey(document.getId())) { // 아이디 여부에 따라 생성, 수정을 분기한다.
+            documentStorage.put(document.getId(), document);
+        } else { // 수정 작업
+            documentStorage.replace(document.getId(), document);
+        }
 
-        documentStorage.put(document.getId(), document);
 
 
         return document;
