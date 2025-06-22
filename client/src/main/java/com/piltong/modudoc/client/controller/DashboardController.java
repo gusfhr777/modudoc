@@ -202,9 +202,7 @@ public class DashboardController{
         document.setTitle(title);
         document.setContent("");
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
-        deleteDocument(document.getId());
-        log.info(document.getTitle());
-        addDocument(document);
+        changeDocument(document);
 
         this.dialogStage.close();
     }
@@ -253,12 +251,15 @@ public class DashboardController{
         }
     }
 
-    public void editDocument(Integer id, String title) {
+    public void changeDocument(Document document) {
         log.info("editDocument()");
         for(Document doc: dashboardView.getDocumentTable().getItems()) {
-            if(doc.getId().equals(id)) {
-                doc.setTitle(title);
-
+            if(doc.getId().equals(document.getId())) {
+                this.documentList.remove(doc);
+                doc.setTitle(document.getTitle());
+                doc.setModifiedDate(document.getModifiedDate());
+                this.documentList.add(document);
+                dashboardView.getDocumentTable().refresh();
             }
         }
 

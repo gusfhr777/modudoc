@@ -53,7 +53,6 @@ public class DashboardView {
     Label consoleLabel = new Label("");
 
 
-
     // Getter
     public TableView<Document> getDocumentTable() {
         return documentTable;
@@ -94,6 +93,7 @@ public class DashboardView {
         selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
+        documentTable.setEditable(true);
 
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton);
         root.getChildren().addAll(hBox, documentTable, consoleLabel);
