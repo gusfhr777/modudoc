@@ -32,9 +32,8 @@ public class SyncService {
     public synchronized void syncUpdate(Integer docId, OperationDto dto, String senderId) {
         // null 값의 파라미터가 들어올 시 오류
         if (docId == null || dto == null || senderId == null) {
-            String msg = "Invalid docId, dto or senderId";
-            log.error(msg);
-            throw new RuntimeException(msg);
+            log.error("Invalid docId, dto or senderId");
+            throw new RuntimeException("Invalid docId, dto or senderId");
         }
 
         // 현재 문서 가져오기
@@ -43,14 +42,12 @@ public class SyncService {
         try {
             doc = docService.findById(docId);
             if (doc == null) {
-                String msg = "Invalid doc";
-                log.error(msg);
-                throw new RuntimeException(msg);
+                log.error("Invalid doc");
+                throw new RuntimeException("Invalid doc");
             }
         } catch (Exception e) {
-            String msg = "Exception on syncUpdate";
-            log.error(msg, e);
-            throw new RuntimeException(msg);
+            log.error("Exception on syncUpdate: {}", e.getMessage());
+            throw new RuntimeException("Exception on syncUpdate" + e.getMessage());
         }
 
         String current = doc.getContent();
@@ -64,11 +61,11 @@ public class SyncService {
             op = OperationMapper.toEntity(dto);
             // op 객체로 변환 실패 시 오류
             if (op == null) {
-                System.err.println("[Error] OperationDto를 Operation 으로 변환 실패");
+                log.warn("OperationDto -> Operation 변환 실패");
                 return;
             }
         } catch (Exception e) {
-            System.err.println("[Error] Operation 변환 중 예외 발생: " + e);
+            log.warn("Operation 변환 중 예외 발생: {}", e.getMessage());
             return;
         }
 
@@ -81,18 +78,17 @@ public class SyncService {
         try {
             transformedOp = ot.transformAgainstAll(op, history);
             if (transformedOp == null) {
-                System.err.println("[Error] OT transform 결과가 null");
+                log.warn("OT transform 결과가 null");
                 return;
             }
         } catch (Exception e) {
-            System.err.println("[Error] OT transform 과정에서 예외 발생: " + e);
-            e.printStackTrace();
+            log.warn("OT transform 중 예외 발생: {}", e.getMessage());
             return;
         }
 
         // 무시 연산 일 경우 처리 중단
         if (transformedOp.getPosition() == -1) {
-            System.out.println("무시된 연산(Skip)");
+            log.info("무시된 연산(Skip)");
             return;
         }
 
@@ -101,17 +97,16 @@ public class SyncService {
         try {
             updated = ot.apply(current, transformedOp);
             if (updated == null) {
-                System.err.println("[Error] apply() 결과가 null");
+                log.warn("apply() 결과가 null");
                 return;
             }
             doc.setContent(updated);
             docService.update(doc);
         } catch (IllegalArgumentException e) {
-            System.err.println("[Error] apply 또는 저장 중 좌표 오류: " + e);
+            log.warn("apply 또는 저장 중 좌표 오류: {}", e.getMessage());
             return;
         } catch (Exception e) {
-            System.err.println("[Error] 문서 저장 실패: " + e);
-            e.printStackTrace();
+            log.error("문서 저장 실패: {}", e.getMessage());
             return;
         }
 
@@ -122,7 +117,7 @@ public class SyncService {
         try {
             broadcastToOthers(docId, updated, senderId);
         } catch (Exception e) {
-            System.err.println("[Error] 브로드캐스트 중 예외 발생: " + e);
+            log.warn("브로드캐스트 중 예외 발생: {}", e.getMessage());
         }
 
     }
