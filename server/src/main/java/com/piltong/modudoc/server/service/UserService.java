@@ -30,14 +30,13 @@ public class UserService {
      * @param user 유저 객체
      * @return 저장된 유저 객체 (id가 자동 채워질 수 있음)
      */
-    public User save(User user) {
+    public void save(User user) {
         if (user == null || user.getUsername() == null || user.getPassword() == null) {
             String msg = "Invalid user data";
             log.error(msg);
             throw new IllegalArgumentException(msg);
         }
-
-        return userRepo.save(user);
+        userRepo.save(user);
     }
 
     /**
