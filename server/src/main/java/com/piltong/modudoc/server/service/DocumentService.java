@@ -57,16 +57,11 @@ public class DocumentService {
             throw new IllegalArgumentException(msg);
         }
 
-        Optional<Document> opt = docRepo.findById(docId);
-        if (opt.isPresent()) {
-            Document document = opt.get();
-            log.info("document read : " + document);
-            return document;
-        } else {
-            String msg = "Select Failed from Document ID : " + docId.toString();
+        return docRepo.findById(docId).orElseThrow(() -> {
+            String msg = "Document not found. ID = " + docId;
             log.error(msg);
-            throw new NoSuchElementException();
-        }
+            return new RuntimeException(msg);
+        });
     }
 
     // 모든 문서를 획득하는 메서드

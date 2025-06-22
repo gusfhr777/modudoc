@@ -50,10 +50,13 @@ public class SyncService {
         Document doc;
         try {
             doc = docService.findById(docId);
-        } catch (NoSuchElementException e) {
-            String msg = "Invalid Document ID";
-            log.error(msg, e);
-            throw new RuntimeException(msg);
+            if (doc == null) {
+                log.error("Invalid doc");
+                throw new RuntimeException("Invalid doc");
+            }
+        } catch (Exception e) {
+            log.error("Exception on syncUpdate: {}", e.getMessage());
+            throw new RuntimeException("Exception on syncUpdate" + e.getMessage());
         }
 
         String content = doc.getContent();
@@ -61,6 +64,19 @@ public class SyncService {
         // 수정사항이 null 값일 시 오류
         if (content == null) content = "";
 
+        // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
+        Operation op;
+        try {
+            op = OperationMapper.toEntity(dto);
+            // op 객체로 변환 실패 시 오류
+            if (op == null) {
+                log.warn("OperationDto -> Operation 변환 실패");
+                return;
+            }
+        } catch (Exception e) {
+            log.warn("Operation 변환 중 예외 발생: {}", e.getMessage());
+            return;
+        }
 
         // 문서별 히스토리가 없다면 새로 생성
         operationHistory.putIfAbsent(docId, new ArrayList<>());
@@ -88,7 +104,7 @@ public class SyncService {
 
         // 무시 연산 일 경우 처리 중단
         if (transformedOp.getPosition() == -1) {
-            System.out.println("무시된 연산(Skip)");
+            log.info("무시된 연산(Skip)");
             return;
         }
 
@@ -97,17 +113,16 @@ public class SyncService {
         try {
             updated = ot.apply(content, transformedOp);
             if (updated == null) {
-                System.err.println("[Error] apply() 결과가 null");
+                log.warn("apply() 결과가 null");
                 return;
             }
             doc.setContent(updated);
             docService.update(doc);
         } catch (IllegalArgumentException e) {
-            System.err.println("[Error] apply 또는 저장 중 좌표 오류: " + e);
+            log.warn("apply 또는 저장 중 좌표 오류: {}", e.getMessage());
             return;
         } catch (Exception e) {
-            System.err.println("[Error] 문서 저장 실패: " + e);
-            e.printStackTrace();
+            log.error("문서 저장 실패: {}", e.getMessage());
             return;
         }
 
@@ -118,7 +133,7 @@ public class SyncService {
         try {
             broadcastToOthers(docId, updated, senderId);
         } catch (Exception e) {
-            System.err.println("[Error] 브로드캐스트 중 예외 발생: " + e);
+            log.warn("브로드캐스트 중 예외 발생: {}", e.getMessage());
         }
 
     }
