@@ -112,8 +112,8 @@ public class networkService implements networkHandlerListener {
             case DELETE_DOCUMENT:
                 break;
 
-            case READ_DASHBOARD:
-                mainController.getDashboardController().loadDashboard((List<DashDoc>) payload);
+            case READ_DOCUMENT_LIST:
+                mainController.getDashboardController().loadDocumentList((List<Document>) payload);
                 break;
 
             case PROPAGATE_OPERATION:
@@ -132,7 +132,7 @@ public class networkService implements networkHandlerListener {
     // 요청 별 처리 함수
 
     public void onLoginResponse() {
-        networkHandler.sendCommand(ClientCommand.READ_DASHBOARD, null);
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
         mainController.showDashboard();
 
     }

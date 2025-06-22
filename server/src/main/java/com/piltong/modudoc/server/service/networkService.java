@@ -97,7 +97,7 @@ public class networkService implements networkHandlerListener {
                     return null;
 
                 // 문서 조회 요청 처리 - 본문(content) 없이
-                case READ_DASHBOARD: {
+                case READ_DOCUMENT_LIST: {
                     List<Document> allDocs = documentService.findAll();
 
                     List<DocumentDto> dtoList = allDocs.stream()

@@ -5,11 +5,13 @@ import com.piltong.modudoc.client.model.Document;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DashboardView {

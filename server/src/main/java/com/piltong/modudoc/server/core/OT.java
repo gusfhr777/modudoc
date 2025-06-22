@@ -1,6 +1,5 @@
 package com.piltong.modudoc.server.core;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.piltong.modudoc.common.model.OperationType;
@@ -105,41 +104,6 @@ public class OT {
             default -> throw new UnsupportedOperationException(
                     "지원하지 않는 연산 타입: " + op.getOperationType());
         };
-    }
-
-    /**
-     * 각 연산을 순서대로 적용하여 최종 문자열 만듦
-     * 잘못된 위치에 대한 연산은 무시한다
-     * @param original : 원본 문자열
-     * @param ops : 적용할 Operation 리스트
-     * @return 연산이 모두 적용된 문자열
-     */
-    public String applyAll(String original, List<Operation> ops) {
-        String result = original;
-        for (Operation op : ops) {
-            if (op.getPosition() < 0 || op.getPosition() > result.length()) {
-                log.warn("applyAll() 스킵된 연산: 위치 {}, 현재 문자열 길이 {}", op.getPosition(), result.length());
-                continue;
-            }
-            result = apply(result, op);
-        }
-        return result;
-    }
-
-    /**
-     * 서버 히스토리에 대해 순차적으로 transform 하여 최종 적용 가능한 연산 리스트 반환
-     * @param ops : 클라이언트가 보낸 연산 리스트
-     * @param history : 서버에 저장된 이전 연산 리스트
-     * @return transform된 연산 리스트
-     */
-    public List<Operation> transformAll(List<Operation> ops, List<Operation> history) {
-        List<Operation> result = new ArrayList<>();
-        for (Operation op : ops) {
-            Operation transformed = transformAgainstAll(op, history);
-            if (transformed.getPosition() != -1)
-                result.add(transformed);
-        }
-        return result;
     }
 
     // Operation 복사
