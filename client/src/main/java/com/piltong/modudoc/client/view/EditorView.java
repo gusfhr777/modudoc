@@ -24,6 +24,7 @@ public class EditorView {
     InlineCssTextArea editor = new InlineCssTextArea(); //텍스트를 입력할 수 있는 영역
 
     Button backButton = new Button("🔙");
+    Button saveButton = new Button("SAVE");
 
     Button boldButton = new Button("Bold"); //문자의 볼드체 적용 여부를 선택하는 버튼
     Button underbarButton = new Button("Underbar"); //문자의 및줄 적용 여부를 선택하는 버튼
@@ -82,7 +83,7 @@ public class EditorView {
 
         backButton.setFont(new Font("Arial", 15));
 
-        menuBar = new ToolBar(backButton);
+        menuBar = new ToolBar(backButton,saveButton);
         toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox,fontFamilyBox);
         root = new VBox();
         root.getChildren().addAll(menuBar,toolBar,editor);
@@ -98,6 +99,7 @@ public class EditorView {
     public InlineCssTextArea getEditor() {return editor;}
 
     public Button getBackButton() {return backButton;}
+    public Button getSaveButton() {return saveButton;}
     public Button getBoldButton() {return boldButton;}
     public Button getUnderbarButton() {return underbarButton;}
     public ColorPicker getColorPicker() {return colorPicker;}

@@ -23,7 +23,6 @@ public class DashboardView {
     TableColumn<Document, String> titleColumn = new TableColumn<>("파일 이름");
     TableColumn<Document, String> createdDateColumn = new TableColumn<>("생성 일자");
     TableColumn<Document, String> modifiedDateColumn = new TableColumn<>("수정 일자");
-    TableColumn<Document, Integer> usercountColumn = new TableColumn<>("접속 인원");
 
     public TableView.TableViewSelectionModel<Document> getSelectionModel() {
         return selectionModel;
@@ -89,6 +88,7 @@ public class DashboardView {
             return new SimpleStringProperty(celldata.getValue().getModifiedDate().format(formatter));
         });
 
+
         //도표에서 원하는 문서를 선택할 때 필요한 선택 모델 설정
         selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
@@ -97,7 +97,7 @@ public class DashboardView {
 
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton);
         root.getChildren().addAll(hBox, documentTable, consoleLabel);
-        documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn, usercountColumn);
+        documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn);
 //        Scene scene = new Scene(vBox);
 //        DocumentListStage.setScene(scene);
 //        DocumentListStage.setTitle("파일 목록");

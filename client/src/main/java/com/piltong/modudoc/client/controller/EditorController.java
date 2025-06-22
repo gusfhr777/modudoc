@@ -1,6 +1,7 @@
 package com.piltong.modudoc.client.controller;
 
 
+import com.piltong.modudoc.client.view.DirectoryDialog;
 import com.piltong.modudoc.client.view.EditorView;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.model.*;
@@ -15,6 +16,9 @@ import org.fxmisc.richtext.model.StyleSpan;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class EditorController {
@@ -60,6 +64,9 @@ public class EditorController {
         this.editorView.getBackButton().setOnAction(event->{
             mainController.showDashboard();
         });
+        this.editorView.getSaveButton().setOnAction(event->{
+           saveFile(document);
+        });
         this.editorView.getBoldButton().setOnAction(event -> {
             toggleCssStyle(this.editorView.getEditor(),"-fx-font-weight: BOLD;");
         });
@@ -79,10 +86,10 @@ public class EditorController {
         this.editorView.getEditor().richChanges()
                 .filter(ch -> (!ch.getInserted().getText().isEmpty() || !ch.getRemoved().getText().isEmpty())&&!programmaticChange)
                 .subscribe(change -> {
+                    document.setContent(editorView.getEditor().getText());
                     int from = change.getPosition();
                     String insertedText = change.getInserted().getText();
                     String removedText = change.getRemoved().getText();
-
                     if(!insertedText.equals(removedText)) {
                         if(!removedText.isEmpty()) {
                             log.info(removedText+" position : "+from);
@@ -114,6 +121,19 @@ public class EditorController {
         programmaticChange = true;
         editorView.getEditor().deleteText(from,from+text.length());
         programmaticChange = false;
+    }
+
+    public void saveFile(Document document) {
+        DirectoryDialog dlg = new DirectoryDialog();
+        dlg.getFileChooser().setInitialFileName(document.getTitle());
+        File saveFile = dlg.getFileChooser().showSaveDialog(mainController.getStage());
+        try {
+            OutputStream output = new FileOutputStream(saveFile);
+            output.write(document.getContent().getBytes());
+            output.close();
+        }catch (Exception e) {
+            log.error(e);
+        }
     }
 
     public void getOperations(Operation op) {

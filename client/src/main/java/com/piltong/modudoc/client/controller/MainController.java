@@ -38,6 +38,10 @@ public class MainController {
         return dashboardController;
     }
 
+    public Stage getStage() {
+        return stage;
+    }
+
     
     
     // 생성자

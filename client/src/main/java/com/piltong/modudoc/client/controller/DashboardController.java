@@ -256,9 +256,9 @@ public class DashboardController{
         for(Document doc: dashboardView.getDocumentTable().getItems()) {
             if(doc.getId().equals(document.getId())) {
                 this.documentList.remove(doc);
+                this.documentList.add(document);
                 doc.setTitle(document.getTitle());
                 doc.setModifiedDate(document.getModifiedDate());
-                this.documentList.add(document);
                 dashboardView.getDocumentTable().refresh();
             }
         }
