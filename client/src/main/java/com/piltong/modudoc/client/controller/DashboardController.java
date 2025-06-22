@@ -122,7 +122,7 @@ public class DashboardController{
         createDocumentDialog.getEditButton().setText("문서 생성");
 
         this.dialogStage = new Stage();
-        dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 200));
+        dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 60));
 
         createDocumentDialog.getEditButton().setOnAction(e -> {
             //생성 버튼을 입력했을 때 이벤트
@@ -169,7 +169,7 @@ public class DashboardController{
         createDocumentDialog.getEditButton().setText("문서 수정");
 
         this.dialogStage = new Stage();
-        dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 200));
+        dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 60));
 
 
 
@@ -203,6 +203,7 @@ public class DashboardController{
         document.setContent("");
         networkHandler.sendCommand(ClientCommand.UPDATE_DOCUMENT, document);
         deleteDocument(document.getId());
+        log.info(document.getTitle());
         addDocument(document);
 
         this.dialogStage.close();

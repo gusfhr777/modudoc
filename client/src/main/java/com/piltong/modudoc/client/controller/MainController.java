@@ -97,7 +97,11 @@ public class MainController {
     // 대시보드 씬 활성화
     public void showDashboard() {
         try {
-            stage.getScene().setRoot(dashboardController.getView());
+            Platform.runLater(() -> {
+                stage.getScene().setRoot(dashboardController.getView());
+                stage.setWidth(500);
+                stage.setHeight(300);
+            });
             log.info("Dashboard Open");
         } catch (RuntimeException e) {
             String errMsg = "show Dashboard Failed.";
@@ -114,6 +118,8 @@ public class MainController {
             editorController.setDocument(document);
             stage.getScene().setRoot(editorController.getView());
             editorController.setContent(document.getContent());
+            stage.setWidth(900);
+            stage.setHeight(600);
         });
 
         log.info("Editor Open");
