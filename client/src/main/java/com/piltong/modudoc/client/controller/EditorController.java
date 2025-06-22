@@ -80,15 +80,16 @@ public class EditorController {
                 .filter(ch -> (!ch.getInserted().getText().isEmpty() || !ch.getRemoved().getText().isEmpty())&&!programmaticChange)
                 .subscribe(change -> {
                     int from = change.getPosition();
-                    int to = from + change.getNetLength();
                     String insertedText = change.getInserted().getText();
                     String removedText = change.getRemoved().getText();
 
                     if(!insertedText.equals(removedText)) {
                         if(!removedText.isEmpty()) {
-                            sendDeleteText(removedText,to);
+                            log.info(removedText+" position : "+from);
+                            sendDeleteText(removedText,from);
                         }
                         if(!insertedText.isEmpty()) {
+                            log.info(insertedText+" position : "+from);
                             sendInsertText(insertedText,from);
                         }
                     }
@@ -114,6 +115,45 @@ public class EditorController {
         editorView.getEditor().deleteText(from,from+text.length());
         programmaticChange = false;
     }
+
+    public void getOperations(Operation op) {
+        //마지막 op와 입력된 op 모두 insert일 때
+        if(operations.getLast().getOperationType() == OperationType.INSERT&&op.getOperationType() == OperationType.INSERT) {
+            //연속적으로 입력될 때
+            if(operations.getLast().getPosition()+operations.getLast().getContent().length() == op.getPosition())
+                operations.getLast().setContent(operations.getLast().getContent()+op.getContent());
+        }
+        //마지막 op와 입력된 op 모두 delete일 때
+        if(operations.getLast().getOperationType() == OperationType.DELETE&&op.getOperationType() == OperationType.DELETE) {
+            //연속적으로 지워질 때
+            if(op.getPosition()+op.getContent().length() == op.getPosition()) {
+                operations.getLast().setContent(operations.getLast().getContent() + op.getContent());
+                operations.getLast().setPosition(op.getPosition());
+            }
+        }
+        //마지막 op는 insert, 입력된 op는 delete
+        if(operations.getLast().getOperationType() == OperationType.INSERT&&op.getOperationType() == OperationType.DELETE) {
+            if(operations.getLast().getPosition()+operations.getLast().getContent().length() == op.getPosition()+op.getContent().length()) {
+                //입력값이 더 많을 때
+                if(operations.getLast().getContent().length() > op.getContent().length()) {
+                    operations.getLast().setContent(operations.getLast().getContent().substring(0, operations.getLast().getContent().length()-op.getContent().length()));
+                }
+                //입력값과 제거값이 같을 때
+                else if(operations.getLast().getContent().length() == op.getContent().length()){
+                    operations.removeLast();
+                }
+                //제거값이 더 많을 때
+                else if(operations.getLast().getContent().length() < op.getContent().length()) {
+                    op.setContent(op.getContent().substring(0, op.getContent().length()-operations.getLast().getContent().length()));
+                    operations.removeLast();
+                    operations.addLast(op);
+                }
+            }
+        }
+        if(operations.getLast().getOperationType() == OperationType.DELETE&&op.getOperationType() == OperationType.INSERT) {}
+
+    }
+
     //토글 형식의 스타일 변경용 메소드
     void toggleCssStyle(InlineCssTextArea area, String cssFragment) {
         int start = area.getSelection().getStart();
