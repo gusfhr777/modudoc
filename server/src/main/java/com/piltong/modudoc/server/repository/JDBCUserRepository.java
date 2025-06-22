@@ -1,36 +1,27 @@
 package com.piltong.modudoc.server.repository;
 
+import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.server.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-/**
- * [JDBCUserRepository]
- *
- * UserRepository 인터페이스를 구현한 클래스
- * JDBC를 통해 MySQL과 직접 연결하여 user 데이터를 조회, 생성, 수정, 삭제
- * 내부적으로 DB 연결을 유지하고 SQL 문을 통해 영속 계층과 통신
- *
- * - 사용자 생성 (INSERT)
- * - 사용자 조회 (SELECT)
- * - 사용자 수정 (UPDATE)
- * - 사용자 삭제 (DELETE)
- *
- */
+// User 객체에 대한 CRUD 기능을 제공하는 인터페이스.
+// 전형적인 DAO 혹은 리포지토리 패턴에 해당한다.
 public class JDBCUserRepository implements UserRepository {
 
-    private final Connection conn;  // JDBC 연결 객체
-    private static final Logger log = LogManager.getLogger(JDBCUserRepository.class);
-
-    // SQL 상수 정의
-    private static final String INSERT_SQL = "INSERT INTO users (username, password, created_date, modified_date) VALUES (?, ?, NOW(), NOW())";
+    // 필드
+    private final Connection conn;
+    private static final Logger log = LogManager.getLogger(JDBCDocumentRepository.class);
+    private static final String INSERT_SQL = "INSERT INTO users (id, username, password) VALUES (?, ?, ?)";
     private static final String SELECT_SQL = "SELECT * FROM users WHERE id = ?";
     private static final String DELETE_SQL = "DELETE FROM users WHERE id = ?";
-    private static final String UPDATE_SQL = "UPDATE users SET username = ?, password = ?, modified_date = NOW() WHERE id = ?";
+    private static final String UPDATE_SQL = "UPDATE users SET id = ?, username = ?, password = ? WHERE id = ?";
     private static final String SELECT_ALL_SQL = "SELECT * FROM users";
 
     // 생성자: DB 연결 초기화
@@ -38,8 +29,9 @@ public class JDBCUserRepository implements UserRepository {
         try {
             this.conn = DBManager.getConnection();
         } catch (SQLException e) {
-            log.fatal("UserRepository 초기화 실패", e);
-            throw new RuntimeException("DB 연결 실패", e);
+            String msg = "JDBCUserRepository initialize failed. : DBManager getConnection() failed.";
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
         }
     }
 
@@ -49,35 +41,35 @@ public class JDBCUserRepository implements UserRepository {
      * @return 저장 완료된 유저 객체
      */
     @Override
-    public User save(User user) {
-        if (user.getId() == null) { // 생성
-            try (PreparedStatement PreState = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
-                PreState.setString(1, user.getUsername());
-                PreState.setString(2, user.getPassword());
-                PreState.executeUpdate();
+    public void save(User user) {
+        if (Objects.isNull(user.getId())) { // ID가 없는 경우 -> 생성
+            try (PreparedStatement pstmt = conn.prepareStatement(INSERT_SQL)) {
+                pstmt.setString(1, user.getId());
+                pstmt.setString(2, user.getUsername());
+                pstmt.setString(3, user.getPassword());
 
-                // 자동 생성된 id 반환
-                try (ResultSet rs = PreState.getGeneratedKeys()) {
-                    if (rs.next())
-                        user.setId(rs.getString(1));
-                }
+                pstmt.executeUpdate();
 
                 // created_date, modified_date 포함 전체 유저 반환
-                return findById(user.getId()).orElse(user); // c
             } catch (SQLException e) {
-                log.error("User 생성 실패", e);
-                throw new RuntimeException("User 생성 실패", e);
+                String msg = "Document Create Failed.";
+                log.error(msg, e);
+                throw new RuntimeException(msg, e);
             }
-        } else { // 업데이트
-            try (PreparedStatement PreState = conn.prepareStatement(UPDATE_SQL)) {
-                PreState.setString(1, user.getUsername());
-                PreState.setString(2, user.getPassword());
-                PreState.setString(3, user.getId());
-                PreState.executeUpdate();
-                return findById(user.getId()).orElse(user);
+
+
+        } else { // ID가 있는 경우 -> 업데이트
+            try (PreparedStatement pstmt = conn.prepareStatement(UPDATE_SQL)){
+                pstmt.setString(1, user.getId());
+                pstmt.setString(2, user.getUsername());
+                pstmt.setString(3, user.getPassword());
+
+                pstmt.executeUpdate();
+
             } catch (SQLException e) {
-                log.error("User 업데이트 실패", e);
-                throw new RuntimeException("User 업데이트 실패", e);
+                String msg = "Document Update Failed.";
+                log.error(msg, e);
+                throw new RuntimeException(msg, e);
             }
         }
     }
@@ -89,22 +81,23 @@ public class JDBCUserRepository implements UserRepository {
      */
     @Override
     public Optional<User> findById(String id) {
-        try (PreparedStatement PreState = conn.prepareStatement(SELECT_SQL)) {
-            PreState.setString(1, id);
-            try (ResultSet rs = PreState.executeQuery()) {
+
+        try (PreparedStatement pstmt = conn.prepareStatement(SELECT_SQL)){
+            pstmt.setString(1, id);
+            try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return Optional.of(new User(
-                            rs.getString("id"),
-                            rs.getString("username"),
-                            rs.getString("password")
-                    ));
+                    return Optional.of(new User(rs.getString(1), rs.getString(2), rs.getString(3)));
+
                 }
+            } catch (SQLException e) {
                 return Optional.empty();
             }
         } catch (SQLException e) {
-            log.error("User 조회 실패", e);
-            return Optional.empty();
+            String msg = "Document Select Failed.";
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
         }
+        return null;
     }
 
     /**
@@ -113,20 +106,23 @@ public class JDBCUserRepository implements UserRepository {
      */
     @Override
     public List<User> findAll() {
-        List<User> list = new ArrayList<>();
-        try (PreparedStatement PreState = conn.prepareStatement(SELECT_ALL_SQL);
-             ResultSet rs = PreState.executeQuery()) {
-            while (rs.next()) {
-                list.add(new User(
-                        rs.getString("id"),
-                        rs.getString("username"),
-                        rs.getString("password")
-                ));
+        List<User> list = new ArrayList<User>();
+
+        try (PreparedStatement pstmt = conn.prepareStatement(SELECT_ALL_SQL)){
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(new User(
+                            rs.getString(1),
+                            rs.getString(2),
+                            rs.getString(3)));
+                }
             }
+            return list;
         } catch (SQLException e) {
-            log.error("User 전체 조회 실패", e);
+            String msg = "Document Select Failed.";
+            log.error(msg, e);
+            throw new RuntimeException(msg, e);
         }
-        return list;
     }
 
     /**
@@ -136,12 +132,15 @@ public class JDBCUserRepository implements UserRepository {
      */
     @Override
     public boolean delete(String id) {
-        try (PreparedStatement PteState = conn.prepareStatement(DELETE_SQL)) {
-            PteState.setString(1, id);
-            return PteState.executeUpdate() > 0;
+        try (PreparedStatement pstmt = conn.prepareStatement(DELETE_SQL)){
+            pstmt.setString(1, id);
+            pstmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
-            log.error("User 삭제 실패", e);
+            String msg = "Document Select Failed.";
+            log.error(msg, e);
             return false;
         }
     }
+
 }

@@ -56,4 +56,15 @@ public class Operation {
         this.content = content;
     }
 
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "operationType=" + operationType +
+                ", docId=" + docId +
+                ", position=" + position +
+                ", content='" + content + '\'' +
+                '}';
+    }
+
+
 }

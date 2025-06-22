@@ -47,4 +47,16 @@ public class DocumentDto implements Serializable {
     }
 
 
+    @Override
+    public String toString() {
+        return "Document{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                '}';
+    }
+
+
 }

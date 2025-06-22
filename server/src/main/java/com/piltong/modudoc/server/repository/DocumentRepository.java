@@ -27,7 +27,7 @@ public interface DocumentRepository {
      * @param id : 문서 아이디
      * @return Optional<Document> : Optional 객체를 리턴하여 Null을 안전하게 처리한다.
      */
-    Optional<Document> findById(int id) ;
+    Optional<Document> findById(Integer id) ;
 
     /**
      * 문서 전체를 조회한다.
@@ -40,6 +40,6 @@ public interface DocumentRepository {
      * @param id : 문서 아이디
      * @return : 문서의 삭제 성공 여부를 반환한다.
      */
-    boolean delete(int id);
+    boolean delete(Integer id);
 
 }

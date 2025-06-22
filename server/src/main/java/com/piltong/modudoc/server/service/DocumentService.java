@@ -2,10 +2,13 @@ package com.piltong.modudoc.server.service;
 
 import com.piltong.modudoc.server.model.Document;
 import com.piltong.modudoc.server.repository.DocumentRepository;
+import com.piltong.modudoc.server.repository.exception.document.DocumentReadException;
+import com.piltong.modudoc.server.repository.exception.document.DocumentSaveException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 // 문서 관련 비즈니스 로직 처리 클래스
@@ -20,19 +23,27 @@ public class DocumentService {
     // 생성자: 저장소 객체 초기화
     public DocumentService(DocumentRepository documentRepository) {
         this.docRepo = documentRepository;
+        log.info("DocumentService initialized");
     }
 
 
     // 제목만 가진 문서 생성
     public Document create(String title, String content) {
+        log.info("Document create");
         if (title == null || content == null) {
-            String msg = "Invalid title or content Parameter.";
-            log.error(msg);
-            throw new IllegalArgumentException(msg);
+            String errMsg = "Invalid title or content Parameter.";
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
         }
 
         Document doc = new Document(title, content);
-        docRepo.save(doc);
+        try {
+            docRepo.save(doc);
+        } catch (DocumentSaveException e) {
+            String errMsg = "document create Failed.";
+            log.error(errMsg);
+        }
+
         return doc;
     }
 
@@ -46,16 +57,26 @@ public class DocumentService {
             throw new IllegalArgumentException(msg);
         }
 
-        return docRepo.findById(docId).orElseThrow(() -> {
-            String msg = "Document not found. ID = " + docId;
+        Optional<Document> opt = docRepo.findById(docId);
+        if (opt.isPresent()) {
+            Document document = opt.get();
+            log.info("document read : " + document);
+            return document;
+        } else {
+            String msg = "Select Failed from Document ID : " + docId.toString();
             log.error(msg);
-            return new RuntimeException(msg);
-        });
+            throw new NoSuchElementException();
+        }
     }
 
     // 모든 문서를 획득하는 메서드
     public List<Document> findAll() {
-        return docRepo.findAll();
+        try {
+            return docRepo.findAll();
+        } catch (DocumentReadException e) { // 읽기 실패
+            String errMsg = "document read failed.";
+            throw e;
+        }
     }
 
 
@@ -66,6 +87,7 @@ public class DocumentService {
      * - 주로 사용자가 새로운 문서를 생성하거나, 전부 다시 저장할 때 사용
      */
     public void update(Integer docId, String title, String content) {
+        log.info("Document update : {} : {} : {}", docId, title, content);
         if (docId == null || title == null || content == null) {
             String msg = "Invalid docId, title or content.";
             log.error(msg);
@@ -85,6 +107,7 @@ public class DocumentService {
 
 
     public void update(Document doc) {
+        log.info("Document update : " + doc);
         if (doc.getId() == null || doc.getTitle() == null || doc.getContent() == null) {
             String msg = "Invalid docId, title or content.";
             log.error(msg);
@@ -115,15 +138,19 @@ public class DocumentService {
 
         // 삭제 실패 시
         if (!docRepo.delete(docId)) {
+            log.info("Document delete failed : {}", docId);
             String msg = "Delete Failed from Document ID : " + docId.toString();
             log.error(msg);
             throw new RuntimeException(msg);
         }
+        log.info("Document delete success : {}", docId);
     }
 
     // 문서의 존재 여부 반환
     public boolean exists(Integer docId) {
-        return docRepo.findById(docId).isPresent();
+        boolean exists = docRepo.findById(docId).isPresent();
+        log.info("Document exists : {}", exists);
+        return exists;
     }
 
 //    public void deleteDocument(Integer docId) {

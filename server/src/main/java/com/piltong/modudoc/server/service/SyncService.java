@@ -26,65 +26,65 @@ public class SyncService {
     public SyncService(DocumentService docService) {
         this.docService = docService;
         this.ot = new OT();
+        log.info("SyncService initialized");
     }
 
     // 클라이언트 변경사항 반영 및 브로드캐스트
-    public synchronized void syncUpdate(Integer docId, OperationDto dto, String senderId) {
-        // null 값의 파라미터가 들어올 시 오류
-        if (docId == null || dto == null || senderId == null) {
-            log.error("Invalid docId, dto or senderId");
-            throw new RuntimeException("Invalid docId, dto or senderId");
+    // docId : ㅂsenderId : 보낸 사람 아이디
+
+    /**
+     * 클라이언트로부터 수신한 Operation을 이용해 server.document.content를 client.document.content와 동기화한다.
+     * @param docId : 수정할 문서의 아이디
+     * @param operation : 수정할 Operation
+     * @param senderId : 전송자의 유저 아이디
+     */
+    public synchronized void syncUpdate(Integer docId, Operation operation, String senderId) {
+        log.info("sync update : {}, {}, {}",  docId, operation, senderId);
+        if (docId == null || operation == null || senderId == null) {
+            String errMsg = "Invalid docId, dto or senderId";
+            log.error(errMsg);
+            throw new IllegalArgumentException(errMsg);
         }
 
         // 현재 문서 가져오기
         Document doc;
-        // Document가 null 값일 시 오류
         try {
             doc = docService.findById(docId);
-            if (doc == null) {
-                log.error("Invalid doc");
-                throw new RuntimeException("Invalid doc");
-            }
-        } catch (Exception e) {
-            log.error("Exception on syncUpdate: {}", e.getMessage());
-            throw new RuntimeException("Exception on syncUpdate" + e.getMessage());
+        } catch (NoSuchElementException e) {
+            String msg = "Invalid Document ID";
+            log.error(msg, e);
+            throw new RuntimeException(msg);
         }
 
-        String current = doc.getContent();
+        String content = doc.getContent();
 
         // 수정사항이 null 값일 시 오류
-        if (current == null) current = "";
+        if (content == null) content = "";
 
-        // 클라이언트에서 보낸 DTO를 실제 Operation 객체로 변환
-        Operation op;
-        try {
-            op = OperationMapper.toEntity(dto);
-            // op 객체로 변환 실패 시 오류
-            if (op == null) {
-                log.warn("OperationDto -> Operation 변환 실패");
-                return;
-            }
-        } catch (Exception e) {
-            log.warn("Operation 변환 중 예외 발생: {}", e.getMessage());
-            return;
-        }
 
         // 문서별 히스토리가 없다면 새로 생성
         operationHistory.putIfAbsent(docId, new ArrayList<>());
         List<Operation> history = operationHistory.get(docId);
 
+
+        /**
+         * 예외 발생 원인 -> Opration 결과 이후 또 Operation 수신 시, 결과 위치가 달라지는 오류 발생.
+         * 하나의 List<Operation> 만을 수신했다면, 송신한 클라의 document가 제일 최신이라고 가정해야한다.
+         */
         // 이전 모든 연산을 기준으로 현재 연산 위치 조정(OT 알고리즘 적용)
-        Operation transformedOp;
-        try {
-            transformedOp = ot.transformAgainstAll(op, history);
-            if (transformedOp == null) {
-                log.warn("OT transform 결과가 null");
-                return;
-            }
-        } catch (Exception e) {
-            log.warn("OT transform 중 예외 발생: {}", e.getMessage());
-            return;
-        }
+//        Operation transformedOp;
+//        try {
+//            transformedOp = ot.transformAgainstAll(operation, history);
+//            if (transformedOp == null) {
+//                System.err.println("[Error] OT transform 결과가 null");
+//                return;
+//            }
+//        } catch (Exception e) {
+//            System.err.println("[Error] OT transform 과정에서 예외 발생: " + e);
+//            e.printStackTrace();
+//            return;
+//        }
+        Operation transformedOp = operation;
 
         // 무시 연산 일 경우 처리 중단
         if (transformedOp.getPosition() == -1) {
@@ -95,7 +95,7 @@ public class SyncService {
         // 문서 내용 적용 및 저장
         String updated;
         try {
-            updated = ot.apply(current, transformedOp);
+            updated = ot.apply(content, transformedOp);
             if (updated == null) {
                 log.warn("apply() 결과가 null");
                 return;

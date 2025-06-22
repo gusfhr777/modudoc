@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.server.model.Operation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /** 추후 확장 기능
  * Undo 기능 (history가 필요함)
@@ -12,7 +14,14 @@ import com.piltong.modudoc.server.model.Operation;
 
 // 동시 편집 충돌 해결 알고리즘
 public class OT {
-    // 두 연산 간 충돌 해결
+    private static final Logger log = LogManager.getLogger(OT.class);
+
+    /**
+     * 하나의 수신 단위에서 두 Operation이 동시에 수신된 경우, 두 Operation 사이의 충돌을 해결하는 함수.
+     * @param prior
+     * @param current
+     * @return
+     */
     public Operation[] transform(Operation prior, Operation current) {
         // 복사하여 원본은 유지
         Operation op1 = copy(prior);
@@ -58,7 +67,13 @@ public class OT {
         return new Operation[]{op1, op2};
     }
 
-    // 여러 선행 연산에 대해 순차적으로 조정
+
+    /**
+     * 여러 선행 연산에 대해 순차적으로 조정
+     * @param op
+     * @param priorOps
+     * @return
+     */
     public Operation transformAgainstAll(Operation op, List<Operation> priorOps) {
         Operation result = copy(op);
         for (Operation prior : priorOps) {
@@ -69,6 +84,7 @@ public class OT {
 
     // 문자열에 연산 적용
     public String apply(String original, Operation op) {
+        log.info("apply() original: {}, op: {}", original, op);
         int pos = op.getPosition();
         if (pos < 0 || pos > original.length())  // ← 여기서 `>=`이 아니라 `>` 이어야 함
             throw new IllegalArgumentException("잘못된 위치: " + pos + " / 길이: " + original.length());

@@ -2,12 +2,10 @@ package com.piltong.modudoc.server.network;
 
 
 import com.piltong.modudoc.common.Constants;
-import com.piltong.modudoc.common.network.ClientCommand;
-import com.piltong.modudoc.common.network.ResponseCommandDto;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 // 서버측에서 외부와의 통신을 처리하는 클래스
@@ -16,14 +14,16 @@ import java.util.concurrent.ExecutorService;
 public class NetworkHandler implements Runnable {
 
     private final int port; // 네트워크 핸들러가 시작되는 포트
-    private final ExecutorService executor; // 스레드 풀
     private final ServerSocket serverSocket; // 데이터를 관장하는 서버 소켓
-    private final ServerNetworkListener listener; //
+    private final ExecutorService executor; // 스레드 풀
+    private final networkHandlerListener listener; // 네트워크 핸들러에서 비즈니스 로직을 처리하는 객체
+
+    private final ConcurrentHashMap<SocketAddress, ClientHandler> sessionMap = new ConcurrentHashMap<>();
 
 
 
     // 핸들러 초기화 함수
-    public NetworkHandler(int port, ExecutorService executor, ServerNetworkListener listener) {
+    public NetworkHandler(int port, ExecutorService executor, networkHandlerListener listener) {
         // 변수 할당
         this.port = port;
         this.executor = executor;
@@ -31,7 +31,7 @@ public class NetworkHandler implements Runnable {
 
         // 서버 소켓 초기화
         try {
-            serverSocket = new ServerSocket(Constants.SERVER_PORT);
+            serverSocket = new ServerSocket(this.port);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -44,15 +44,15 @@ public class NetworkHandler implements Runnable {
     // 스레드를 통해 실행할 때, 처음 실행되는 지점이다.
     @Override
     public void run() {
-
         try {
             // 스레드가 중지되지 않을 때까지 반복한다.
             // 클라이언트 접속 무한대기
             while (!Thread.currentThread().isInterrupted()) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New connection from " + clientSocket.getRemoteSocketAddress());
+                ClientHandler clientHandler = new ClientHandler(clientSocket, listener);
 
-                Runnable clientHandler = new ClientHandler(clientSocket, listener);
+                sessionMap.put(clientSocket.getRemoteSocketAddress(), clientHandler);
                 executor.submit(clientHandler); // 스레드 풀에 할당한다.
             }
 

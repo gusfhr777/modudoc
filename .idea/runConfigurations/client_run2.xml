@@ -1,16 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Server" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="client run2" type="GradleRunConfiguration" factoryName="Gradle" singleton="true">
     <ExternalSystemSettings>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$/server" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="--debug" />
+      <option name="scriptParameters" value="--info" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
-          <option value=":server:run" />
+          <option value=":client:run" />
         </list>
       </option>
       <option name="vmOptions" />

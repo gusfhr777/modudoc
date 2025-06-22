@@ -1,69 +1,84 @@
 package com.piltong.modudoc.client.controller;
 
-import com.piltong.modudoc.client.view.DashboardScene;
-import com.piltong.modudoc.client.view.LoginScene;
-import com.piltong.modudoc.client.network.ClientNetworkHandler;
+import com.piltong.modudoc.client.model.LoginRequest;
+import com.piltong.modudoc.client.network.NetworkHandler;
+import com.piltong.modudoc.client.view.LoginView;
+import com.piltong.modudoc.common.network.ClientCommand;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+// LoginController.java
+import javafx.scene.Parent;
 
-public class LoginController {
-    private LoginScene loginScene;
 
-    //생성자,
-    public LoginController(LoginScene startview) {
-        this.loginScene = startview;
-        this.loginScene.initialize();
+public class LoginController{
+    private static final Logger log = LogManager.getLogger(LoginController.class);
+    private final MainController mainController;
+    private final NetworkHandler networkHandler;
+    private final LoginView loginView;
+
+    public LoginController(MainController mainController, NetworkHandler networkHandler) {
+        this.mainController = mainController;
+        this.networkHandler = networkHandler;
+        this.loginView = new LoginView();
+
+        loginView.getLoginButton().setOnAction(e -> onLogin());
     }
-    public LoginController() {}
 
+    public void onLogin() {
+        LoginRequest payload = new LoginRequest(loginView.getUserId(), loginView.getPassword());
+        networkHandler.sendCommand(ClientCommand.LOGIN, payload);
+        log.info("Login Pressed.");
+    }
 
-
-    public void setView(LoginScene loginScene) {
-        this.loginScene = loginScene;
-        this.loginScene.initialize();
+    public Parent getView() {
+        return this.loginView.getRoot();
     }
 
 
-    //연결 버튼을 눌렀을 때 호출되는 메소드
-    public void connect(String host, String Stringport) {
-        if(host == null || host.isEmpty()) {
-            this.host = "localhost";
-        }
-        else {
-            this.host = host;
-        }
-
-
-        try {
-            port = Integer.parseInt(Stringport);
-        }
-        catch (NumberFormatException e) {
-            port = 4433;
-            e.printStackTrace();
-        }
-
-
-        if(port <= 0|| port > 65535) {
-            port = 4433;
-        }
-
-        try {
-            NetworkController networkController = new NetworkController();
-            ClientNetworkHandler networkHandler = new ClientNetworkHandler(this.host,port, networkController);
-            DashboardController dashboardController = new DashboardController(networkHandler);
-            networkController.setDocumentListController(dashboardController);
-            DashboardScene dashboardScene = new DashboardScene();
-            dashboardScene.setController(dashboardController);
-            dashboardController.setView(dashboardScene);
-            dashboardScene.showView();
-            dashboardController.start();
-            loginScene.closeView();
-        }catch (RuntimeException e) {
-            System.out.println("Error: "+e.getMessage());
-            loginScene.setPromptText("Error: "+e.getMessage());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    // 컨트롤러, 뷰, 서비스
+//    private MainController mainController;
+//    private MainView mainView;
+//    private LoginView loginView;
+//    private networkService networkController;
+//
+//    //생성자. 컨트롤러 초기화 담당.
+//    public LoginController(MainController mainController) {
+//        this.mainController = mainController;
+//    }
+//
+//
+//    // 뷰 설정
+//    public void setView(View view) {
+//        this.mainView = (MainView) view;
+//        this.loginView = this.mainView.getLoginView();
+//    }
+//
+//    // 시작을 위한 초기화
+//    public void init() {
+//        loginView.initLayout();
+//        loginView.initListeners(this);
+//    }
+//
+//    // 시작
+//    public void start() {
+//        this.loginView.start();
+//
+//    }
+//
+//    // 끝
+//    public void end() {
+//
+//    }
+//
+//    // 종료
+//    public void shutdown() {
+//
+//    }
+//
+//    //연결 버튼을 눌렀을 때, 네트워크 연결
+//    public void connect(String host, int port) {
+//        networkController.connect(host, port);
+//    }
 
 }
