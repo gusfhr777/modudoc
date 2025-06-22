@@ -72,19 +72,19 @@ public class SyncService {
          * 하나의 List<Operation> 만을 수신했다면, 송신한 클라의 document가 제일 최신이라고 가정해야한다.
          */
         // 이전 모든 연산을 기준으로 현재 연산 위치 조정(OT 알고리즘 적용)
-//        Operation transformedOp;
-//        try {
-//            transformedOp = ot.transformAgainstAll(operation, history);
-//            if (transformedOp == null) {
-//                System.err.println("[Error] OT transform 결과가 null");
-//                return;
-//            }
-//        } catch (Exception e) {
-//            System.err.println("[Error] OT transform 과정에서 예외 발생: " + e);
-//            e.printStackTrace();
-//            return;
-//        }
-        Operation transformedOp = operation;
+        Operation transformedOp;
+        try {
+            transformedOp = ot.transformAgainstAll(operation, history);
+            if (transformedOp == null) {
+                System.err.println("[Error] OT transform 결과가 null");
+                return;
+            }
+        } catch (Exception e) {
+            System.err.println("[Error] OT transform 과정에서 예외 발생: " + e);
+            e.printStackTrace();
+            return;
+        }
+//        Operation transformedOp = operation;
 
         // 무시 연산 일 경우 처리 중단
         if (transformedOp.getPosition() == -1) {
@@ -120,6 +120,59 @@ public class SyncService {
             log.warn("브로드캐스트 중 예외 발생: {}", e.getMessage());
         }
 
+    }
+
+    /**
+     * 클라이언트가 여러 연산을 리스트로 보냈을 때 처리하는 메서드
+     * @param docId : 수정 대상 문서 ID
+     * @param operations : 연산 리스트
+     * @param senderId : 연산을 보낸 유저 ID
+     */
+    public synchronized void syncUpdateBatch(Integer docId, List<Operation> operations, String senderId) {
+        log.info("syncUpdateBatch: docId={}, senderId={}, ops.size={}", docId, senderId, operations.size());
+
+        if (docId == null || senderId == null) {
+            log.error("파라미터 값이 null임");
+            throw new IllegalArgumentException("Invalid sync batch input");
+        }
+
+        Document doc;
+        try {
+            doc = docService.findById(docId);
+        } catch (NoSuchElementException e) {
+            log.error("Invalid Document ID", e);
+            throw new RuntimeException("Invalid Document");
+        }
+
+        String current = doc.getContent();
+        if (current == null) current = "";
+
+        operationHistory.putIfAbsent(docId, new ArrayList<>());
+        List<Operation> history = operationHistory.get(docId);
+
+        List<Operation> transformed = ot.transformAll(operations, history);
+
+        String updated;
+        try {
+            updated = ot.applyAll(current, transformed);
+            doc.setContent(updated);
+            docService.update(doc);
+        } catch (IllegalArgumentException e) {
+            log.warn("applyAll 예외: {}", e.getMessage());
+            return;
+        } catch (Exception e) {
+            log.error("문서 저장 실패: {}", e.getMessage());
+            return;
+        }
+
+        history.addAll(transformed);
+
+        // 브로드캐스트
+        try {
+            broadcastToOthers(docId, updated, senderId);
+        } catch (Exception e) {
+            log.warn("브로드캐스트 중 예외 발생: {}", e.getMessage());
+        }
     }
 
     // 변경 내용을 모든 다른 사용자에게 전달

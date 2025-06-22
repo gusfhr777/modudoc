@@ -1,21 +1,13 @@
 package com.piltong.modudoc.client.view;
 
-import com.piltong.modudoc.client.controller.EditorController;
-import javafx.application.Platform;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.fxmisc.richtext.InlineCssTextArea;
-import org.fxmisc.richtext.model.StyleSpan;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.fxmisc.richtext.model.StyledDocument;
 
 import com.piltong.modudoc.client.model.Document;
 
