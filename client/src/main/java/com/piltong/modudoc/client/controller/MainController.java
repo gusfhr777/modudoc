@@ -122,7 +122,7 @@ public class MainController {
         Platform.runLater(() -> {
             try {
                 editorController.setContent(document.getContent());
-                stage.getScene().setRoot(editorController.getView());
+                stage.setScene(new Scene(editorController.getView()));
                 log.info("Editor Open");
             } catch (RuntimeException e) {
                 String errMsg = "show Editor Failed.";
