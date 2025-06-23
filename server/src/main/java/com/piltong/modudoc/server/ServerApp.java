@@ -59,7 +59,8 @@ public class ServerApp {
             UserRepository userRepo;
             if (Constants.DEBUG) {
                 userRepo = new MapUserRepository();
-                userRepo.save(new User("test", "테스트유저", "123"));
+                userRepo.save(new User("test1", "User1", "123"));
+                userRepo.save(new User("test2", "User2", "456"));
             } else {
                 userRepo = new JDBCUserRepository();
             }
