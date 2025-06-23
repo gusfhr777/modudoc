@@ -54,7 +54,7 @@ public class EditorController {
     public void setContent(String content) {
         programmaticChange = true;
         editorView.getEditor().clear();
-        editorView.getEditor().insertText(0, content);
+        editorView.getEditor().replaceText(content);
         programmaticChange = false;
     }
     public Document getDocument() {
@@ -122,9 +122,12 @@ public class EditorController {
         });
     }
     public void deleteText(String text,int from) {
-        programmaticChange = true;
-        editorView.getEditor().deleteText(from,from+text.length());
-        programmaticChange = false;
+        Platform.runLater(()->{
+            programmaticChange = true;
+            editorView.getEditor().deleteText(from,from+text.length());
+            programmaticChange = false;
+        });
+
     }
 
     public void saveFile(Document document) {

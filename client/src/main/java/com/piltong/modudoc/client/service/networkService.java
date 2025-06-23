@@ -7,6 +7,7 @@ import com.piltong.modudoc.client.model.*;
 import com.piltong.modudoc.client.network.networkHandlerListener;
 import com.piltong.modudoc.common.model.OperationType;
 import com.piltong.modudoc.common.network.ClientCommand;
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
