@@ -50,7 +50,7 @@ public class LoginView{
     public LoginView() {
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(40));
-        root.setStyle("-fx-background-color: #f5f5f5");
+        root.setStyle("-fx-background-color: #F8FBFF");
 
         useridField.setPromptText("아이디를 입력하세요");
         passwordField.setPromptText("비밀번호를 입력하세요");
@@ -58,12 +58,26 @@ public class LoginView{
         useridField.setMaxWidth(220);
         passwordField.setMaxWidth(220);
         loginButton.setStyle(
-                "-fx-background-color: #20C997;" +  // 산뜻한 진한 민트
+                "-fx-background-color: #42A5F5;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
                 "-fx-background-radius: 8px;" +
                 "-fx-padding: 8 16;"
         );
+
+        String defaultStyle = "-fx-background-color: #42A5F5;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-padding: 8 16;";
+        String hoverStyle = "-fx-background-color: #1E88E5;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-padding: 8 16;";
+        loginButton.setStyle(defaultStyle);
+        loginButton.setOnMouseEntered(e -> loginButton.setStyle(hoverStyle));
+        loginButton.setOnMouseExited(e -> loginButton.setStyle(defaultStyle));
     }
 
     public Parent getRoot() {

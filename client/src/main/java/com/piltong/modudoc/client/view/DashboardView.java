@@ -115,7 +115,7 @@ public class DashboardView {
 
         root.setSpacing(10);
         root.setPadding(new Insets(15));
-        root.setStyle("-fx-background-color: #f5f5f5;");
+        root.setStyle("-fx-background-color: #F8FBFF;");
 
         refreshHbox.setAlignment(Pos.CENTER_RIGHT);
         refreshHbox.getChildren().add(refreshButton);
@@ -129,14 +129,25 @@ public class DashboardView {
     }
 
     private void styleButton(Button button) {
-        button.setStyle(
-                "-fx-background-color: #20C997;" +
-                "-fx-text-fill: white;" +
-                "-fx-font-weight: bold;" +
-                "-fx-font-size: 10px;" +
-                "-fx-background-radius: 10px;" +
-                "-fx-padding: 8 16 8 16;"
-        );
+        String defaultStyle =
+                "-fx-background-color: #42A5F5;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-padding: 8 16 8 16;";
+
+        String hoverStyle =
+                "-fx-background-color: #1E88E5;" +  // 좀 더 진한 파란색
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-padding: 8 16 8 16;";
+
+        button.setStyle(defaultStyle);
+        button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
+        button.setOnMouseExited(e -> button.setStyle(defaultStyle));
     }
 
 
