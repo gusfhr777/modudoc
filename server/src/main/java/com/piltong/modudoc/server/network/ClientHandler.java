@@ -3,6 +3,7 @@ package com.piltong.modudoc.server.network;
 
 import com.piltong.modudoc.common.network.*;
 import com.piltong.modudoc.server.model.*;
+import com.piltong.modudoc.server.repository.UserManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,15 +18,17 @@ public class ClientHandler implements Runnable {
     private static final Logger log = LogManager.getLogger(ClientHandler.class);
     private final Socket socket;                    // 연결된 클라이언트 소켓
     private final networkHandlerListener listener;   // 서버 비즈니스 네트워크 처리용 리스너
+    private final NetworkHandler networkHandler;
+    private String userId = null;
     protected ObjectInputStream in;                 // 클라이언트 입력 스트림
     protected ObjectOutputStream out;               // 클라이언트 출력 스트림
 
     // 생성자: 클라이언트 소켓과 서버 로직 핸들러 주입
-    public ClientHandler(Socket socket, networkHandlerListener listener) {
+    public ClientHandler(Socket socket, networkHandlerListener listener, NetworkHandler networkHandler) {
         // 변수 할당
         this.listener = listener;
         this.socket = socket;
-
+        this.networkHandler = networkHandler;
     }
 
     @Override
@@ -139,10 +142,19 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     // 핸들러 종료
     public void shutdown() {
         log.info("client NetworkHandler shutdown: {}", socket.getRemoteSocketAddress());
 
+        if (userId != null) {
+            UserManager.getInstance().logout(userId);
+            log.info("User {} logged out", userId);
+        }
+        networkHandler.removeClient(socket.getRemoteSocketAddress());
         try {
             if (in != null) in.close();
             if (out != null) out.close();

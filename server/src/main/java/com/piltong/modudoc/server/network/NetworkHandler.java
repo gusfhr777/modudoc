@@ -55,7 +55,7 @@ public class NetworkHandler implements Runnable {
             while (!Thread.currentThread().isInterrupted()) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New connection from " + clientSocket.getRemoteSocketAddress());
-                ClientHandler clientHandler = new ClientHandler(clientSocket, listener);
+                ClientHandler clientHandler = new ClientHandler(clientSocket, listener, this);
 
                 sessionMap.put(clientSocket.getRemoteSocketAddress(), clientHandler);
                 log.info("SessionMap : {}", sessionMap);
@@ -111,6 +111,15 @@ public class NetworkHandler implements Runnable {
 //            e.printStackTrace();
 //        }
 //    }
+
+    public ClientHandler getClientHandler(SocketAddress address) {
+        return sessionMap.get(address);
+    }
+
+    public void removeClient(SocketAddress address) {
+        sessionMap.remove(address);
+        log.info("removeClient : {}", address);
+    }
 
     // 핸들러 종료 함수
     public void shutdown() {

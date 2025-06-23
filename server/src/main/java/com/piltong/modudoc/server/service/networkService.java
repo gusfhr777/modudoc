@@ -6,6 +6,7 @@ import com.piltong.modudoc.common.model.LoginRequestDto;
 import com.piltong.modudoc.common.model.OperationDto;
 import com.piltong.modudoc.server.model.*;
 import com.piltong.modudoc.common.network.*;
+import com.piltong.modudoc.server.network.ClientHandler;
 import com.piltong.modudoc.server.network.NetworkHandler;
 import com.piltong.modudoc.server.network.networkHandlerListener;
 import org.apache.logging.log4j.LogManager;
@@ -170,17 +171,19 @@ public class networkService implements networkHandlerListener {
                         throw new CommandException("LOGIN: 잘못된 payload 타입입니다.");
                     }
 
-                    LoginRequest loginRequest = LoginRequestMapper.toEntity((LoginRequestDto) payload);
-
-                    if (Constants.DEBUG) {
-                        return (R) new User(loginRequest.getId(), "testUser", loginRequest.getPassword());
-                    }
+                    LoginRequest loginRequest = LoginRequestMapper.toEntity(loginRequestDto);
+                    String id = loginRequest.getId();
+                    String pw = loginRequest.getPassword();
 
                     Optional<User> userOpt = userService.findById(loginRequest.getId());
 
-                    if (userOpt.isPresent() && userOpt.get().getPassword().equals(loginRequest.getPassword())) {
+                    if (userOpt.isPresent() && userOpt.get().getPassword().equals(pw)) {
+                        ClientHandler client = networkHandler.getClientHandler(socketAddress);
+                        if (client != null)
+                            client.setUserId(id);
                         return (R) userOpt.get();
                     } else {
+                        log.warn("로그인 실패: id={}, pw={}", id, pw);
                         return null;    // 로그인 실패시 null 보냄
                     }
                 }
