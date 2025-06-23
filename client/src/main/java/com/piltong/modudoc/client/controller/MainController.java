@@ -58,10 +58,10 @@ public class MainController {
             this.editorController = new EditorController(this, networkHandler);
 
             // 로그인 씬
-//            showLogin();
-            if (Constants.DEBUG) {
-                networkService.onLoginResponse();
-            }
+            showLogin();
+//            if (Constants.DEBUG) {
+//                networkService.onLoginResponse();
+//            }
         } catch (RuntimeException e) {
             log.fatal("MainController initialize Failed.");
             showFatalErrorAndExit("MainController initialize Failed.");
