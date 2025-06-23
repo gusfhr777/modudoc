@@ -5,6 +5,7 @@ import com.piltong.modudoc.client.controller.LoginController;
 
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -21,26 +22,24 @@ import javafx.stage.Stage;
 public class LoginView{
 
 
-    GridPane serverGrid = new GridPane();
-    GridPane userGrid = new GridPane();
-    GridPane consoleGrid = new GridPane();
-    Separator separator = new Separator(Orientation.HORIZONTAL);
+//    GridPane serverGrid = new GridPane();
+//    GridPane userGrid = new GridPane();
+//    GridPane consoleGrid = new GridPane();
+//    Separator separator = new Separator(Orientation.HORIZONTAL);
 
-    Label nameLabel = new Label("서버 주소");
-    TextField nameField = new TextField();
-    Label portLabel = new Label("서버 포트");
-    TextField portField = new TextField();
+//    Label nameLabel = new Label("서버 주소");
+//    TextField nameField = new TextField();
+//    Label portLabel = new Label("서버 포트");
+//    TextField portField = new TextField();
     Button loginButton = new Button("로그인");
     Label promptLabel = new Label("");
 
-    Label useridLabel = new Label("아이디");
     TextField useridField = new TextField();
-    Label passwordLabel = new Label("비밀번호");
     PasswordField passwordField = new PasswordField();
 
 
     VBox root = new VBox(10,
-            new Label("Login"),
+            new Label("모두문서 로그인"),
             useridField,
             passwordField,
             loginButton,
@@ -50,6 +49,21 @@ public class LoginView{
 
     public LoginView() {
         root.setAlignment(Pos.CENTER);
+        root.setPadding(new Insets(40));
+        root.setStyle("-fx-background-color: #f5f5f5");
+
+        useridField.setPromptText("아이디를 입력하세요");
+        passwordField.setPromptText("비밀번호를 입력하세요");
+
+        useridField.setMaxWidth(220);
+        passwordField.setMaxWidth(220);
+        loginButton.setStyle(
+                "-fx-background-color: #20C997;" +  // 산뜻한 진한 민트
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-background-radius: 8px;" +
+                "-fx-padding: 8 16;"
+        );
     }
 
     public Parent getRoot() {

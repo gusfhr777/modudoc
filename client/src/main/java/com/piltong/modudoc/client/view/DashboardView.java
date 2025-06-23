@@ -4,6 +4,7 @@ import com.piltong.modudoc.client.model.Document;
 
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -100,6 +101,22 @@ public class DashboardView {
 
         documentTable.setEditable(false);
 
+        styleButton(createButton);
+        styleButton(InButton);
+        styleButton(ModifyButton);
+        styleButton(RemoveButton);
+        styleButton(refreshButton);
+
+        createButton.setMinWidth(80);
+        InButton.setMinWidth(80);
+        ModifyButton.setMinWidth(80);
+        RemoveButton.setMinWidth(80);
+        refreshButton.setMinWidth(43);
+
+        root.setSpacing(10);
+        root.setPadding(new Insets(15));
+        root.setStyle("-fx-background-color: #f5f5f5;");
+
         refreshHbox.setAlignment(Pos.CENTER_RIGHT);
         refreshHbox.getChildren().add(refreshButton);
         hBox.setSpacing(5);
@@ -111,7 +128,16 @@ public class DashboardView {
 //        DocumentListStage.setTitle("파일 목록");
     }
 
-
+    private void styleButton(Button button) {
+        button.setStyle(
+                "-fx-background-color: #20C997;" +
+                "-fx-text-fill: white;" +
+                "-fx-font-weight: bold;" +
+                "-fx-font-size: 10px;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-padding: 8 16 8 16;"
+        );
+    }
 
 
 
