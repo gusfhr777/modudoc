@@ -163,7 +163,7 @@ public class networkService implements networkHandlerListener {
     public void onOperationReceived(List<Operation> opList) {
         log.info("Operation Recevied : " + opList);
         for (Operation op : opList) {
-            if(mainController.getEditorController().getDocument().getId() == op.getDocId()) {
+            if(mainController.getEditorController().getDocument()!=null&&mainController.getEditorController().getDocument().getId() == op.getDocId()) {
                 if (op.getOperationType() == OperationType.INSERT) {
 
                     mainController.getEditorController().insertText(op.getContent(), op.getPosition());

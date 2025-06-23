@@ -51,7 +51,7 @@ public class MainController {
         this.stage = stage;
         try {
             networkService networkService = new networkService(this);
-            this.networkHandler = new NetworkHandler("localhost", 4433, networkService);
+            this.networkHandler = new NetworkHandler(Constants.SERVER_IP, 4433, networkService);
             new Thread(this.networkHandler).start();
             networkService.setNetworkHandler(this.networkHandler); // 의존성 주입
 
