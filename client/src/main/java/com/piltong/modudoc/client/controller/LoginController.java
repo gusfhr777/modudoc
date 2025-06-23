@@ -4,7 +4,6 @@ import com.piltong.modudoc.client.model.LoginRequest;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.view.LoginView;
 import com.piltong.modudoc.common.network.ClientCommand;
-import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,9 +43,7 @@ public class LoginController{
     }
 
     public void setPrompt(String prompt) {
-        Platform.runLater(() -> {
-            loginView.setPrompt(prompt);
-        });
+        loginView.setPrompt(prompt);
     }
 
 //    // 컨트롤러, 뷰, 서비스

@@ -172,16 +172,16 @@ public class networkService implements networkHandlerListener {
 
                     LoginRequest loginRequest = LoginRequestMapper.toEntity((LoginRequestDto) payload);
 
-//                    if (Constants.DEBUG) {
-//                        return (R) new User(loginRequest.getId(), "testUser", loginRequest.getPassword());
-//                    }
+                    if (Constants.DEBUG) {
+                        return (R) new User(loginRequest.getId(), "testUser", loginRequest.getPassword());
+                    }
 
                     Optional<User> userOpt = userService.findById(loginRequest.getId());
 
                     if (userOpt.isPresent() && userOpt.get().getPassword().equals(loginRequest.getPassword())) {
                         return (R) userOpt.get();
                     } else {
-                        return (R) new User(null,null,null);    // 로그인 실패시 null 보냄
+                        return null;    // 로그인 실패시 null 보냄
                     }
                 }
                     // 정의되지 않은 커맨드 처리
