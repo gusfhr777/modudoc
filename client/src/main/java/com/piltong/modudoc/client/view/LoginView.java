@@ -68,12 +68,12 @@ public class LoginView{
         String defaultStyle = "-fx-background-color: #42A5F5;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 8px;" +
+                "-fx-background-radius: 5px;" +
                 "-fx-padding: 8 16;";
         String hoverStyle = "-fx-background-color: #1E88E5;" +
                 "-fx-text-fill: white;" +
                 "-fx-font-weight: bold;" +
-                "-fx-background-radius: 8px;" +
+                "-fx-background-radius: 5px;" +
                 "-fx-padding: 8 16;";
         loginButton.setStyle(defaultStyle);
         loginButton.setOnMouseEntered(e -> loginButton.setStyle(hoverStyle));

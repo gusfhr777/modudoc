@@ -85,6 +85,11 @@ public class EditorView {
 //        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox,fontFamilyBox);
         menuBar = new ToolBar(backButton,saveButton);
 
+        styleButton(backButton);
+        styleButton(saveButton);
+        styleButton(boldButton);
+        styleButton(underbarButton);
+
         root = new VBox();
         root.getChildren().addAll(menuBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
@@ -106,6 +111,27 @@ public class EditorView {
     public ComboBox<Integer> getFontSizeBox() {return fontSizeBox;}
     public ComboBox<String> getFontFamilyBox() {return fontFamilyBox;}
 
+    private void styleButton(Button button) {
+        String defaultStyle =
+                "-fx-background-color: #42A5F5;" +
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-padding: 6 14 6 14;";
+
+        String hoverStyle =
+                "-fx-background-color: #1E88E5;" +  // hover 시 진한 파랑
+                        "-fx-text-fill: white;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 10px;" +
+                        "-fx-background-radius: 10px;" +
+                        "-fx-padding: 6 14 6 14;";
+
+        button.setStyle(defaultStyle);
+        button.setOnMouseEntered(e -> button.setStyle(hoverStyle));
+        button.setOnMouseExited(e -> button.setStyle(defaultStyle));
+    }
 //
 //
 //

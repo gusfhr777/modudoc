@@ -18,7 +18,6 @@ import java.time.format.DateTimeFormatter;
 
 public class DashboardView {
 
-
     TableView<Document> documentTable = new TableView<>(); //문서 목록이 표시될 도표
 //
 //    //도표에 첫번째 행에 각 열의 정보 표시
@@ -123,6 +122,7 @@ public class DashboardView {
         hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton,refreshHbox);
         root.getChildren().addAll(hBox, documentTable, consoleLabel);
         documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn);
+        styleTable(documentTable);
 //        Scene scene = new Scene(vBox);
 //        DocumentListStage.setScene(scene);
 //        DocumentListStage.setTitle("파일 목록");
@@ -134,7 +134,7 @@ public class DashboardView {
                         "-fx-text-fill: white;" +
                         "-fx-font-weight: bold;" +
                         "-fx-font-size: 10px;" +
-                        "-fx-background-radius: 10px;" +
+                        "-fx-background-radius: 7px;" +
                         "-fx-padding: 8 16 8 16;";
 
         String hoverStyle =
@@ -142,7 +142,7 @@ public class DashboardView {
                         "-fx-text-fill: white;" +
                         "-fx-font-weight: bold;" +
                         "-fx-font-size: 10px;" +
-                        "-fx-background-radius: 10px;" +
+                        "-fx-background-radius: 7px;" +
                         "-fx-padding: 8 16 8 16;";
 
         button.setStyle(defaultStyle);
@@ -150,8 +150,18 @@ public class DashboardView {
         button.setOnMouseExited(e -> button.setStyle(defaultStyle));
     }
 
+    private void styleTable(TableView<Document> table) {
+        table.setStyle("-fx-background-color: white; " +
+                "-fx-border-color: #B0BEC5; " +
+                "-fx-border-radius: 2px; " +
+                "-fx-table-cell-border-color: transparent;");
 
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // 컬럼 폭 자동 분배
+        table.setFixedCellSize(25); // 셀 높이
 
+        // 헤더 스타일 커스터마이징은 CSS 파일로 별도 처리 가능
+        table.setPlaceholder(new Label("표시할 문서가 없습니다."));
+    }
 
 
 //
