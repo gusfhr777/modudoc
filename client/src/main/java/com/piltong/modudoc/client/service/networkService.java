@@ -121,7 +121,7 @@ public class networkService implements networkHandlerListener {
                 break;
 
             case LOGIN:
-                onLoginResponse();
+                onLoginResponse((User)payload);
                 break;
 
             default:
@@ -132,7 +132,13 @@ public class networkService implements networkHandlerListener {
 
     // 요청 별 처리 함수
 
-    public void onLoginResponse() {
+    public void onLoginResponse(User payload) {
+        if(payload.getId()==null||payload.getPassword()==null||payload.getUsername()==null) {
+            log.info("Login Failed");
+            mainController.getLoginController().setPrompt("아이디나 비밀번호가 일치하지 않습니다.");
+            return;
+        }
+        log.info("Login Success");
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST, null);
         mainController.showDashboard();
 

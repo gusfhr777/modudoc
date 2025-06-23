@@ -42,7 +42,8 @@ public class LoginView{
             new Label("Login"),
             useridField,
             passwordField,
-            loginButton
+            loginButton,
+            promptLabel
     );
 
     public LoginView() {
@@ -62,6 +63,10 @@ public class LoginView{
 
     public String getPassword() {
         return passwordField.getText();
+    }
+
+    public void setPrompt(String prompt) {
+        promptLabel.setText(prompt);
     }
 
 

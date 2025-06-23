@@ -22,7 +22,14 @@ public class LoginController{
         this.networkHandler = networkHandler;
         this.loginView = new LoginView();
 
-        loginView.getLoginButton().setOnAction(e -> onLogin());
+        loginView.getLoginButton().setOnAction(e -> {
+            if (loginView.getUserId().isEmpty() || loginView.getPassword().isEmpty())
+                setPrompt("아이디와 비밀번호를 입력해주세요");
+            else {
+                onLogin();
+            }
+        }
+        );
     }
 
     public void onLogin() {
@@ -35,6 +42,9 @@ public class LoginController{
         return this.loginView.getRoot();
     }
 
+    public void setPrompt(String prompt) {
+        loginView.setPrompt(prompt);
+    }
 
 //    // 컨트롤러, 뷰, 서비스
 //    private MainController mainController;
