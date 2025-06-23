@@ -127,8 +127,8 @@ public class MainController {
             try {
                 editorController.setContent(document.getContent());
                 stage.getScene().setRoot(editorController.getView());
-                stage.setWidth(800);
-                stage.setHeight(600);
+                stage.setWidth(500);
+                stage.setHeight(450);
                 stage.setResizable(true);
                 log.info("Editor Open");
             } catch (RuntimeException e) {

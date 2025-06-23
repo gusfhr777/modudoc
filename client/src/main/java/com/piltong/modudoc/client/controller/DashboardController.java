@@ -125,6 +125,7 @@ public class DashboardController{
         createDocumentDialog.getEditButton().setText("문서 생성");
 
         this.dialogStage = new Stage();
+        dialogStage.setResizable(false);
         dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 60));
 
         createDocumentDialog.getEditButton().setOnAction(e -> {
@@ -172,6 +173,7 @@ public class DashboardController{
         createDocumentDialog.getEditButton().setText("문서 수정");
 
         this.dialogStage = new Stage();
+        dialogStage.setResizable(false);
         dialogStage.setScene(new Scene(createDocumentDialog.getGrid(), 300, 60));
 
 
