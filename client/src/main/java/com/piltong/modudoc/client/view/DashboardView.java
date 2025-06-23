@@ -44,6 +44,7 @@ public class DashboardView {
     Button InButton = new Button("문서 접속");
     Button RemoveButton = new Button("문서 삭제");
     Button ModifyButton = new Button("문서 수정");
+    Button refreshButton = new Button("🔄");
 
     public void setConsoleText(String text) {
         this.consoleLabel.setText(text);
@@ -73,6 +74,8 @@ public class DashboardView {
         return ModifyButton;
     }
 
+    public Button getRefreshButton() {return refreshButton;}
+
     public Parent getRoot() {
         return root;
     }
@@ -95,7 +98,7 @@ public class DashboardView {
 
         documentTable.setEditable(true);
 
-        hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton);
+        hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton,refreshButton);
         root.getChildren().addAll(hBox, documentTable, consoleLabel);
         documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn);
 //        Scene scene = new Scene(vBox);

@@ -90,6 +90,9 @@ public class DashboardController{
                 this.dashboardView.setConsoleText("문서를 선택해 주세요");
             }
         });
+        this.dashboardView.getRefreshButton().setOnAction(e -> {
+           networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST,null);
+        });
 
 //        editButton.setOnAction(e -> {
 //            //생성 버튼을 입력했을 때 이벤트
@@ -229,7 +232,7 @@ public class DashboardController{
         this.documentList.clear();
         this.documentList.addAll(documentList);
         this.dashboardView.getDocumentTable().getItems().clear();
-        
+
         for (Document document: this.documentList) {
             this.dashboardView.getDocumentTable().getItems().add(document);
         }
