@@ -3,10 +3,10 @@ package com.piltong.modudoc.server;
 
 import com.piltong.modudoc.common.Constants;
 import com.piltong.modudoc.server.model.Document;
+import com.piltong.modudoc.server.model.User;
 import com.piltong.modudoc.server.network.NetworkHandler;
-import com.piltong.modudoc.server.repository.DocumentRepository;
-import com.piltong.modudoc.server.repository.JDBCDocumentRepository;
-import com.piltong.modudoc.server.repository.MapDocumentRepository;
+import com.piltong.modudoc.server.repository.*;
+import com.piltong.modudoc.server.service.UserService;
 import com.piltong.modudoc.server.service.networkService;
 import com.piltong.modudoc.server.service.DocumentService;
 import com.piltong.modudoc.server.service.SyncService;
@@ -41,7 +41,7 @@ public class ServerApp {
 
             DocumentRepository docRepo;
 
-
+            // === 문서 저장소 ===
             if (Constants.DEBUG) { // 문서 테스트용 : 추후 삭제
                 docRepo = new MapDocumentRepository();
                 docRepo.save(new Document(1, "DocumentTest1", "c1", LocalDateTime.now(), LocalDateTime.now()));
@@ -54,7 +54,20 @@ public class ServerApp {
 
             DocumentService docService = new DocumentService(docRepo);
             SyncService syncService = new SyncService(docService);
-            networkService listener = new networkService(docService, syncService);
+
+            // === 유저 저장소 ===
+            UserRepository userRepo;
+            if (Constants.DEBUG) {
+                userRepo = new MapUserRepository();
+                userRepo.save(new User("test", "테스트유저", "123"));
+            } else {
+                userRepo = new JDBCUserRepository();
+            }
+
+            UserService userService = new UserService(userRepo);
+
+            // === 네크워크 서비스 생성 ===
+            networkService listener = new networkService(docService, syncService, userService);
             log.info("Service started.");
 
             // ServerNetworkHandler 스레드 생성 및 시작

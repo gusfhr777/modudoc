@@ -16,6 +16,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 // 서버 측에서 클라이언트 요청을 처리하는 리스너 구현체
@@ -24,11 +25,13 @@ public class networkService implements networkHandlerListener {
     private static final Logger log = LogManager.getLogger(networkService.class);
     private final DocumentService documentService;  // 문서 저장/조회/수정/삭제 처리
     private final SyncService syncService;          // 실시간 편집 동기화 처리
+    private final UserService userService;          // 유저 생성/조회/삭제 처리
     private NetworkHandler networkHandler; // 네트워크 핸들러
 
-    public networkService(DocumentService documentService, SyncService syncService) {
+    public networkService(DocumentService documentService, SyncService syncService, UserService userService) {
         this.documentService = documentService;
         this.syncService = syncService;
+        this.userService = userService;
     }
 
     public void setNetworkHandler(NetworkHandler networkHandler) {
@@ -161,7 +164,7 @@ public class networkService implements networkHandlerListener {
                     return null;
 
                 // 로그인 명령
-                case LOGIN:
+                case LOGIN: {
                     if (!(payload instanceof LoginRequestDto loginRequestDto)) {
                         log.error("LOGIN: payload 타입 오류");
                         throw new CommandException("LOGIN: 잘못된 payload 타입입니다.");
@@ -174,6 +177,14 @@ public class networkService implements networkHandlerListener {
                         return (R) new User(loginRequest.getId(), "testUser", loginRequest.getPassword());
                     }
 
+                    Optional<User> userOpt = userService.findById(loginRequest.getId());
+
+                    if (userOpt.isPresent() && userOpt.get().getPassword().equals(loginRequest.getPassword())) {
+                        return (R) userOpt.get();
+                    } else {
+                        return null;    // 로그인 실패시 null 보냄
+                    }
+                }
                     // 정의되지 않은 커맨드 처리
                 default:
                     String msg = "정의되지 않은 커맨드 수신: " + command;
