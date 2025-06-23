@@ -165,7 +165,6 @@ public class networkService implements networkHandlerListener {
                     if (!(payload instanceof LoginRequestDto loginRequestDto)) {
                         log.error("LOGIN: payload 타입 오류");
                         throw new CommandException("LOGIN: 잘못된 payload 타입입니다.");
-
                     }
 
                     LoginRequest loginRequest = LoginRequestMapper.toEntity((LoginRequestDto) payload);
