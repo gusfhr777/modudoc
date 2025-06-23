@@ -184,7 +184,7 @@ public class networkService implements networkHandlerListener {
                         return (R) userOpt.get();
                     } else {
                         log.warn("로그인 실패: id={}, pw={}", id, pw);
-                        return null;    // 로그인 실패시 null 보냄
+                        return (R) new User(null, null, null);    // 로그인 실패시 null 보냄
                     }
                 }
                     // 정의되지 않은 커맨드 처리
