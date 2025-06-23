@@ -27,6 +27,16 @@ public class MapDocumentRepository implements DocumentRepository {
         if (document.getTitle() == null) {
             document.setTitle("");
         }
+        if(documentStorage.containsKey(document.getId())) {
+            Document existing = documentStorage.get(document.getId());
+
+            if (document.getContent() == null || document.getContent().isBlank()) {
+                document.setContent(existing.getContent());
+            }
+            if (document.getCreatedDate() == null) {
+                document.setCreatedDate(existing.getCreatedDate());
+            }
+        }
         if (document.getContent() == null) {
             document.setContent("");
         }
