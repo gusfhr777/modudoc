@@ -41,11 +41,17 @@ public class CreateDocumentDialog {
     Button editButton = new Button();
 
     public CreateDocumentDialog() {
+        nameLabel.setText("문서 제목:");
+        editButton.setText("생성");
+        promptLabel.setText("");
+
         grid.add(nameLabel, 0, 0);
         grid.add(titleField, 1, 0);
         grid.add(editButton, 0, 1);
         grid.add(promptLabel, 1, 1);
         grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setStyle("-fx-padding: 20; -fx-background-color: #f4f4f4;");
     }
 
 
