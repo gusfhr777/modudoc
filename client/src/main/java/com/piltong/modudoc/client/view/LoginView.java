@@ -6,6 +6,7 @@ import com.piltong.modudoc.client.controller.LoginController;
 
 import javafx.application.Platform;
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -46,7 +47,9 @@ public class LoginView{
             promptLabel
     );
 
+
     public LoginView() {
+        root.setAlignment(Pos.CENTER);
     }
 
     public Parent getRoot() {

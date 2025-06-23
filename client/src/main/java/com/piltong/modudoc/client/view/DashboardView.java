@@ -4,6 +4,7 @@ import com.piltong.modudoc.client.model.Document;
 
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -36,6 +37,7 @@ public class DashboardView {
     VBox root = new VBox();
     //각 버튼들이 들어갈 가로로 배치하는 틀
     HBox hBox = new HBox();
+    HBox refreshHbox = new HBox();
     //시간 정보들을 string으로 바꾸기 위한 formatter
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -96,9 +98,12 @@ public class DashboardView {
         selectionModel = documentTable.getSelectionModel();
         selectionModel.setSelectionMode(SelectionMode.SINGLE);
 
-        documentTable.setEditable(true);
+        documentTable.setEditable(false);
 
-        hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton,refreshButton);
+        refreshHbox.setAlignment(Pos.CENTER_RIGHT);
+        refreshHbox.getChildren().add(refreshButton);
+        hBox.setSpacing(5);
+        hBox.getChildren().addAll(createButton, InButton,ModifyButton, RemoveButton,refreshHbox);
         root.getChildren().addAll(hBox, documentTable, consoleLabel);
         documentTable.getColumns().addAll(titleColumn, createdDateColumn, modifiedDateColumn);
 //        Scene scene = new Scene(vBox);

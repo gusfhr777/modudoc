@@ -69,24 +69,24 @@ public class EditorView {
     public EditorView() {
         //기본 스타일 설정
         editor.setStyle("-fx-font-family: Arial; -fx-font-scale: 14;");
-        //폰트 선택 박스 설정
-        for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
-            fontSizeBox.getItems().add(size);
-        }
-        for(String font : new String[]{"Arial", "Helvetica"}) {
-            fontFamilyBox.getItems().add(font);
-        }
-        //기본 폰트 값 설정
-        fontSizeBox.setValue(14);
-        //기본 폰트 설정
-        fontFamilyBox.setValue("Arial");
-
-        backButton.setFont(new Font("Arial", 15));
-
+//        //폰트 선택 박스 설정
+//        for (int size : new int[]{8, 10, 12, 14, 16, 18, 24, 32, 40}) {
+//            fontSizeBox.getItems().add(size);
+//        }
+//        for(String font : new String[]{"Arial", "Helvetica"}) {
+//            fontFamilyBox.getItems().add(font);
+//        }
+//        //기본 폰트 값 설정
+//        fontSizeBox.setValue(14);
+//        //기본 폰트 설정
+//        fontFamilyBox.setValue("Arial");
+//
+//        backButton.setFont(new Font("Arial", 15));
+//        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox,fontFamilyBox);
         menuBar = new ToolBar(backButton,saveButton);
-        toolBar = new ToolBar(boldButton, underbarButton,colorPicker, fontSizeBox,fontFamilyBox);
+
         root = new VBox();
-        root.getChildren().addAll(menuBar,toolBar,editor);
+        root.getChildren().addAll(menuBar,editor);
         VBox.setVgrow(editor, Priority.ALWAYS);
 
     }

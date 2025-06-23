@@ -83,8 +83,8 @@ public class MainController {
                 stage.setScene(new Scene(loginController.getView(), 300, 200));
                 stage.setMinWidth(300);
                 stage.setMinHeight(200);
-                stage.setMaxWidth(300);
-                stage.setMaxHeight(200);
+//                stage.setMaxWidth(300);
+//                stage.setMaxHeight(200);
                 stage.setResizable(false);
                 log.info("Login Open");
 
@@ -106,8 +106,11 @@ public class MainController {
                 stage.setScene(new Scene(dashboardController.getView(), DASHBOARD_WIDTH, DASHBOARD_HEIGHT));
                 stage.setMinWidth(DASHBOARD_WIDTH);
                 stage.setMinHeight(DASHBOARD_HEIGHT);
-                stage.setMaxWidth(DASHBOARD_WIDTH);
-                stage.setMaxHeight(DASHBOARD_HEIGHT);
+                stage.setWidth(DASHBOARD_WIDTH);
+                stage.setHeight(DASHBOARD_HEIGHT);
+//                stage.setMaxWidth(DASHBOARD_WIDTH);
+//                stage.setMaxHeight(DASHBOARD_HEIGHT);
+                stage.setResizable(false);
                 log.info("Dashboard Open");
             } catch (RuntimeException e) {
                 String errMsg = "show Dashboard Failed.";
@@ -124,6 +127,9 @@ public class MainController {
             try {
                 editorController.setContent(document.getContent());
                 stage.getScene().setRoot(editorController.getView());
+                stage.setWidth(800);
+                stage.setHeight(600);
+                stage.setResizable(true);
                 log.info("Editor Open");
             } catch (RuntimeException e) {
                 String errMsg = "show Editor Failed.";
@@ -134,6 +140,11 @@ public class MainController {
     }
     public void reshowDashboard() {
         stage.getScene().setRoot(dashboardController.getView());
+        stage.setMinWidth(420);
+        stage.setMinHeight(430);
+        stage.setWidth(420);
+        stage.setHeight(430);
+        stage.setResizable(false);
         networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST,null);
     }
 
