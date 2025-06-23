@@ -63,7 +63,7 @@ public class EditorController {
 
     public void initListeners() {
         this.editorView.getBackButton().setOnAction(event->{
-            mainController.showDashboard();
+            mainController.reshowDashboard();
         });
         this.editorView.getSaveButton().setOnAction(event->{
            saveFile(document);

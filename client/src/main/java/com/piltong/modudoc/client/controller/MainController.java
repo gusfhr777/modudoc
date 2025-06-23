@@ -5,6 +5,7 @@ import com.piltong.modudoc.client.model.Document;
 import com.piltong.modudoc.client.network.NetworkHandler;
 import com.piltong.modudoc.client.service.networkService;
 import com.piltong.modudoc.common.Constants;
+import com.piltong.modudoc.common.network.ClientCommand;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -131,7 +132,10 @@ public class MainController {
             }
         });
     }
-
+    public void reshowDashboard() {
+        stage.getScene().setRoot(dashboardController.getView());
+        networkHandler.sendCommand(ClientCommand.READ_DOCUMENT_LIST,null);
+    }
 
     // 클라이언트 종료
     private void showFatalErrorAndExit(String message) {

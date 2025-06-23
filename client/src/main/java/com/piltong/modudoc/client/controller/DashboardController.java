@@ -228,7 +228,8 @@ public class DashboardController{
 
         this.documentList.clear();
         this.documentList.addAll(documentList);
-
+        this.dashboardView.getDocumentTable().getItems().clear();
+        
         for (Document document: this.documentList) {
             this.dashboardView.getDocumentTable().getItems().add(document);
         }
