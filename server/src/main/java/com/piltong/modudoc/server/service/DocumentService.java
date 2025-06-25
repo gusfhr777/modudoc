@@ -110,15 +110,6 @@ public class DocumentService {
         }
 
         docRepo.save(doc);
-//        // 변경 사항이 있을때마다 새로운 객체를 생성 후 저장한다.
-//        Optional<Document> opt = docRepo.findById(doc.getId());
-//        if (opt.isPresent()) {
-//            doc = opt.get();
-//        } else {
-//            String msg = "Select Failed from Document ID : " + doc.getId().toString();
-//            log.error(msg);
-//            throw new RuntimeException(msg);
-//        }
     }
 
 
@@ -148,63 +139,5 @@ public class DocumentService {
         return exists;
     }
 
-//    public void deleteDocument(Integer docId) {
-//        if (docId == null) {
-//            String msg = "Invalid docId Parameter.";
-//            log.error(msg);
-//            throw new IllegalArgumentException(msg);
-//        }
-//
-//        if(docRepo.delete(docId)) {
-//            return;
-//        } else {
-//            String msg = "Select Failed from Document ID : " + docId.toString();
-//            log.error(msg);
-//            throw new RuntimeException(msg);
-//
-//        }
-//    }
-//
-//    /**
-//     * [수정된 Document 객체 그대로 저장할 때 사용]
-//     * - 이미 생성된 Document 객체를 받아 저장소에 저장
-//     * - 문서를 가져온 후 내용만 일부 수정하는 경우에 사용
-//     * - OT 적용, 자동 저장 등 내부 처리 로직에서 자주 사용됨
-//     */
-//    public void saveDocument(Document document) {
-//        if (document == null || document.getId() == null) {
-//            throw new IllegalArgumentException("문서 또는 문서 ID를 찾을 수 없음");
-//        }
-//        docRepo.saveDocument(document);
-//    }
-//
-//    // 문서를 불러옴
-//    public Document getDocument(String documentId) {
-//        if (documentId == null) {
-//            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
-//        }
-//        return docRepo.loadDocument(documentId);
-//    }
-//
-//    // 문서 존재여부 판단
-//    public Document findDocument(String documentId) {
-//        if (documentId == null) {
-//            return null;
-//        }
-//        return docRepo.findDocument(documentId);
-//    }
-//
-//    // 문서를 삭제함
-//    public void removeDocument(String documentId) {
-//        if (documentId == null) {
-//            throw new IllegalArgumentException("문서 ID를 찾을 수 없음");
-//        }
-//        docRepo.deleteDocument(documentId);
-//    }
-//
-//    // 전체 문서 목록 반환
-//    public List<Document> getAllDocuments() {
-//        return docRepo.findAllDocuments();
-//    }
 
 }

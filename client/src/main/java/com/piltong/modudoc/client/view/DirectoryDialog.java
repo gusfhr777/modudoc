@@ -2,6 +2,7 @@ package com.piltong.modudoc.client.view;
 
 import javafx.stage.FileChooser;
 
+// 파일 저장용 다일로그
 public class DirectoryDialog {
 
 

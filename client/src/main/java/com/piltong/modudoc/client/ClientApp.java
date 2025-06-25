@@ -19,9 +19,11 @@ public class ClientApp extends Application {
     }
 
 
+    // 메인 메서드
     public static void main(String[] args) {
         log.info("Client Started.");
         launch(args); // JavaFX 앱 초기화
     }
+
 
 }

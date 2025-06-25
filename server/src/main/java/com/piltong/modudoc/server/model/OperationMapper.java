@@ -5,7 +5,8 @@ import com.piltong.modudoc.common.model.OperationDto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class OperationMapper {
+public class
+OperationMapper {
 
 
     // DTO 객체로 변환하는 함수

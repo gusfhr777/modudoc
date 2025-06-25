@@ -36,63 +36,6 @@ public class networkService implements networkHandlerListener {
         this.networkHandler = networkHandler;
     }
 
-    // 뷰 설정
-//    public void setView(View view) {
-//        this.mainView = (MainView) view;
-//
-//    }
-//
-//    public void start() {
-//
-//    }
-//
-//    public void end() {
-//
-//    }
-//
-//    public void shutdown() {
-//
-//    }
-//
-
-
-
-
-    // 서버와 접속한다.
-//    public boolean connect(String host, int port) {
-//
-//        if(host == null || host.isEmpty() || port <= 0 || port > 65535) {
-//            String msg = "Invalid Argument : host or port";
-//            log.error(msg);
-//            throw new IllegalArgumentException(msg);
-//        }
-//
-//
-//        try {
-//            this.networkHandler = new NetworkHandler(host, port, this);
-//            new Thread(networkHandler).start();
-//
-////            networkService.setDocumentListController(dashboardController);
-////            DashboardView dashboardView = new DashboardView();
-////            dashboardView.setController(dashboardController);
-////            dashboardController.setView(dashboardView);
-//
-//
-////            dashboardView.showView();
-////
-////            dashboardController.start();
-////            loginScene.closeView();
-//            return true;
-//        }catch (RuntimeException e) {
-//            System.out.println("Error: "+e.getMessage());
-////            loginView.setPromptText("Error: "+e.getMessage());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//        return true;
-//    }
-
 
     @Override
     public <T> void onCommandSuccess(ClientCommand command, T payload) {
@@ -188,17 +131,4 @@ public class networkService implements networkHandlerListener {
 
     }
 
-//
-//    public void setDocumentListController(DashboardController dashboardController) {
-//        this.dashboardController = dashboardController;
-//    }
-//    public void deleteDocumentListController() {
-//        this.dashboardController = null;
-//    }
-//    public void setTextEditorController(EditorController editorController) {
-//        this.editorController = editorController;
-//    }
-//    public void deleteTextEditorController() {
-//        this.editorController = null;
-//    }
 }

@@ -37,7 +37,7 @@ public class JDBCUserRepository implements UserRepository {
     // 생성자: DB 연결 초기화
     public JDBCUserRepository() {
         try {
-            this.conn = DBManager.getConnection();
+            this.conn = JDBCHandler.getConnection();
         } catch (SQLException e) {
             log.fatal("UserRepository 초기화 실패", e);
             throw new RuntimeException("DB 연결 실패", e);

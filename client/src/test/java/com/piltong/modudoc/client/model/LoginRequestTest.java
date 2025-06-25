@@ -3,7 +3,7 @@ package com.piltong.modudoc.client.model;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class LoginRequest {
+public class LoginRequestTest {
 
     @Test
     void testConstructorAndGetters() {

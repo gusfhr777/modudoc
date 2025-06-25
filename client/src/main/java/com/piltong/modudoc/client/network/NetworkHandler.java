@@ -223,36 +223,6 @@ public class NetworkHandler implements Runnable{
     }
 
 
-//    // Operation 요청 함수
-//    public Operation requestOperation() {
-//        try {
-//            return OperationMapper.toEntity((OperationDto) in.readObject());
-//        } catch (IOException | ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//    }
-//
-//    // Operation 전송 함수
-//    public void sendOperation(Operation operation) {
-//        try {
-//            out.writeObject(OperationMapper.toDto(operation)); // 전송 버퍼에 로드
-//            out.flush(); // 전송
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-
-    // Document 요청 함수
-//    public Document requestDocument() {
-//        try {
-//            return DocMapper.toEntity((DocumentDto) in.readObject());
-//        } catch (IOException | ClassNotFoundException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
 
     // 핸들러 종료 함수
     public void shutdown() {
