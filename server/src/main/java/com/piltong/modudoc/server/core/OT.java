@@ -86,13 +86,13 @@ public class OT {
     public String apply(String original, Operation op) {
         log.info("apply() original: {}, op: {}", original, op);
         int pos = op.getPosition();
-        if (pos < 0 || pos > original.length())  // ← 여기서 `>=`이 아니라 `>` 이어야 함
+        if (pos < 0 || pos > original.length())
             throw new IllegalArgumentException("잘못된 위치: " + pos + " / 길이: " + original.length());
 
         return switch (op.getOperationType()) {
             case INSERT -> {
                 String before = original.substring(0, pos);
-                String after = (pos == original.length()) ? "" : original.substring(pos); // ← 핵심 수정
+                String after = (pos == original.length()) ? "" : original.substring(pos);
                 yield before + op.getContent() + after;
             }
             case DELETE -> {
