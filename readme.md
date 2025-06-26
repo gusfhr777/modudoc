@@ -20,5 +20,4 @@ modudoc is implemented through multi-threading, object-oriented programming, jav
 ---
 
 ## Demo
-
-[media.mp4](/resources/media.mp4)
+[![demo](https://img.youtube.com/vi/UpT48nxXQzU/0.jpg)](https://www.youtube.com/watch?v=UpT48nxXQzU)
